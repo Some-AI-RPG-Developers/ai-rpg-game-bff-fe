@@ -1,0 +1,59 @@
+@baseUrl = http://localhost:3000
+
+### 1. Create a new game
+# @name createGame
+POST {{baseUrl}}/api/v1/games
+Content-Type: application/json
+
+{
+  "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
+  "characters": [
+    {
+      "name": "Sir Roland",
+      "characterPrompt": "A noble knight who values honor and courage above all else"
+    },
+    {
+      "name": "Lady Elara",
+      "characterPrompt": "A wise mage seeking to protect the realm with her magical powers"
+    },
+    {
+      "name": "Thorne",
+      "characterPrompt": "A skilled ranger with a deep connection to nature and exceptional tracking abilities"
+    }
+  ]
+}
+
+> {% client.global.set("gameId", response.body['gameId']) %}
+
+### 2. Get game details
+GET {{baseUrl}}/api/v1/games/{{gameId}}
+
+### 3. Start the game
+POST {{baseUrl}}/api/v1/games/{{gameId}}
+
+### 4. Get updated game details after starting
+GET {{baseUrl}}/api/v1/games/{{gameId}}
+
+### 5. Submit a turn
+POST {{baseUrl}}/api/v1/games/{{gameId}}/turns
+Content-Type: application/json
+
+{
+  "characterActions": [
+    {
+      "characterName": "Sir Roland",
+      "chosenOption": "Charge in with shield raised to protect the party"
+    },
+    {
+      "characterName": "Lady Elara",
+      "chosenOption": "Cast a protective barrier spell around the group"
+    },
+    {
+      "characterName": "Thorne",
+      "chosenOption": "Take position on high ground with bow ready"
+    }
+  ]
+}
+
+### 6. Get final game state
+GET {{baseUrl}}/api/v1/games/{{gameId}} 

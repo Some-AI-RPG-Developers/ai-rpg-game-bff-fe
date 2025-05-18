@@ -1,0 +1,433 @@
+openapi: 3.0.0
+info:
+  title: RPG Game BFF API
+  version: 1.0.0
+  description: Backend for Frontend API for the RPG Game
+paths:
+  /api/v1/games:
+    post:
+      operationId: createNewGame
+      summary: Create a new game
+      requestBody:
+        $ref: '#/components/requestBodies/PostNewGame'
+      responses:
+        '202':
+          $ref: '#/components/responses/202_GameCreationAccepted'
+        '400':
+          $ref: '#/components/responses/400_BadRequest'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
+  /api/v1/games/{gameId}:
+    get:
+      operationId: getGame
+      summary: Get game by ID
+      parameters:
+        - $ref: '#/components/parameters/gameId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200_GameRetrieved'
+        '404':
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
+    post:
+      operationId: startGame
+      summary: Start a game by ID
+      parameters:
+        - $ref: '#/components/parameters/gameId'
+      responses:
+        '200':
+          $ref: '#/components/responses/200_GameStarted'
+        '404':
+          $ref: '#/components/responses/404_NotFound'
+        "409":
+          $ref: '#/components/responses/409_Conflict'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'   
+  /api/v1/games/{gameId}/turns:
+    post:
+      operationId: submitTurn
+      summary: Submit a new turn for the game
+      parameters:
+       - $ref: '#/components/parameters/gameId'
+      requestBody:
+        $ref: '#/components/requestBodies/PostNewTurn'
+      responses:
+        '202':
+          $ref: '#/components/responses/202_TurnSubmissionAccepted'
+        '400':
+          $ref: '#/components/responses/400_BadRequest'
+        '404':
+          $ref: '#/components/responses/404_NotFound'
+        '500':
+          $ref: '#/components/responses/500_InternalServerError'
+components:
+  parameters:
+    gameId:
+      name: gameId
+      in: path
+      required: true
+      description: The ID of the game
+      schema:
+        type: string
+        example: "123e4567-e89b-12d3-a456-426614174000"
+  requestBodies:
+    PostNewGame:
+      description: New game request
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NewGame'
+          example:
+            gamePrompt: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+            characters:
+              - name: "Sir Roland"
+                characterPrompt: "A noble knight who values honor and courage above all else"
+              - name: "Lady Elara"
+                characterPrompt: "A wise mage seeking to protect the realm with her magical powers"
+              - name: "Thorne"
+                characterPrompt: "A skilled ranger with a deep connection to nature and exceptional tracking abilities"
+    PostNewTurn:
+      description: Submits a turn 
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NewTurn'
+          example:
+            characterActions:
+              - characterName: "Sir Roland"
+                chosenOption: "Charge in with shield raised to protect the party"
+              - characterName: "Lady Elara"
+                chosenOption: "Cast a protective barrier spell around the group"
+              - characterName: "Thorne"
+                chosenOption: "Take position on high ground with bow ready"
+  responses:
+    200_GameRetrieved:
+      description: Game successfuly retrieved
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Game'
+          example:
+            gameId: "123e4567-e89b-12d3-a456-426614174000"
+            gamePrompt: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+            synopsis: "A brave band of heroes embarks on a perilous journey to defend their kingdom from an ancient dragon"
+            maxScenesNumber: 5
+            characters:
+              - name: "Sir Roland"
+                description: "A brave knight with shining armor and unwavering loyalty"
+                prompt: "You are a noble knight who values honor and courage above all else"
+                status: "active"
+              - name: "Lady Elara"
+                description: "A powerful mage with deep knowledge of arcane arts"
+                prompt: "You are a wise mage seeking to protect the realm"
+                status: "active"
+              - name: "Thorne"
+                description: "A sharp-eyed ranger skilled in wilderness survival"
+                prompt: "You are a skilled ranger with deep connection to nature"
+                status: "active"
+            scenes:
+              - sceneId: "123e4567-e89b-12d3-a456-426614174000"
+                description: "The heroes arrive at the entrance of the dragon's lair"
+                turns:
+                  - turnId: "123e4567-e89b-12d3-a456-426614174000"
+                    description: "The heroes must decide how to approach the dragon's lair"
+                    options:
+                      - name: "Sir Roland"
+                        descriptions:
+                          - "Charge in directly with shield raised"
+                          - "Try to sneak past the sleeping dragon"
+                          - "Attempt to negotiate with the dragon"
+                    actions:
+                      - name: "Sir Roland"
+                        message: "I will distract the dragon while you flank from behind"
+                    consequences: "The stealthy approach allowed the heroes to gain a surprise advantage"
+                consequences: "The dragon was alerted to the heroes' presence"
+            objectives:
+              - description: "Reach the dragon's lair without being detected"
+                progress: "2/3 steps completed"
+                completed: false
+                requiredSteps:
+                  - "Find the secret entrance"
+                  - "Avoid the guard dragons"
+                  - "Disable the magical barriers"
+            finalObjective:
+              description: "Defeat the dragon and save the kingdom"
+              progress: "Planning the final assault"
+              completed: false
+              requiredSteps:
+                - "Weaken the dragon's defenses"
+                - "Coordinate team attack"
+                - "Land the final blow"
+    202_GameCreationAccepted:
+      description: Game creation accepted
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GameId'
+          example:
+            gameId: "123e4567-e89b-12d3-a456-426614174000"
+    200_GameStarted:
+      description: Game started successfully
+    202_TurnSubmissionAccepted:
+      description: Turn submission accepted, processing turn
+    400_BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 400
+            message: "Invalid request format: missing required field 'gamePrompt'"
+    404_NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 404
+            message: "Game with ID 'game_123' not found"
+    409_Conflict:
+      description: Conflict with the current state of the resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 409
+            message: "Game has already been started"
+    500_InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            status: 500
+            message: "Internal server error occurred while processing the request"
+  schemas:
+    Game:
+      type: object
+      required:
+        - gameId
+        - gamePrompt
+        - characters
+        - scenes
+        - objectives
+        - finalObjective
+      properties:
+        gameId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        gamePrompt:
+          type: string
+          example: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+        synopsis:
+          type: string
+          example: "A band of heroes embarks on a perilous journey to defend their kingdom from an ancient dragon that has awakened"
+        conclusion:
+          type: string
+          example: "After a fierce battle, the heroes managed to defeat the dragon and save their kingdom"
+        maxScenesNumber:
+          type: integer
+          example: 5
+        characters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Character'
+        scenes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scene'
+        objectives:
+          type: array
+          items:
+            $ref: '#/components/schemas/Objective'
+        finalObjective:
+          $ref: '#/components/schemas/Objective'
+    Character:
+      type: object
+      required:
+        - name
+        - description
+        - prompt
+        - status
+      properties:
+        name:
+          type: string
+          example: "Sir Roland"
+        description:
+          type: string
+          example: "A brave knight with shining armor and unwavering loyalty"
+        prompt:
+          type: string
+          example: "You are a noble knight who values honor and courage above all else"
+        status:
+          type: string
+          example: "active"
+    Scene:
+      type: object
+      required:
+        - sceneId
+        - description
+        - turns
+      properties:
+        sceneId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        description:
+          type: string
+          example: "The heroes arrive at the entrance of the dragon's lair"
+        turns:
+          type: array
+          items:
+            $ref: '#/components/schemas/Turn'
+        consequences:
+          type: string
+          example: "The dragon was alerted to the heroes' presence"
+    Turn:
+      type: object
+      required:
+        - turnId
+        - description
+        - options
+        - actions
+      properties:
+        turnId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        description:
+          type: string
+          example: "The heroes must decide how to approach the dragon's lair"
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/CharacterOptions'
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/GameCharacterAction'
+        consequences:
+          type: string
+          example: "The stealthy approach allowed the heroes to gain a surprise advantage"
+    GameCharacterAction:
+      type: object
+      required:
+        - name
+        - message
+      properties:
+        name:
+          type: string
+          example: "Sir Roland"
+        message:
+          type: string
+          example: "I will distract the dragon while you flank from behind"
+    CharacterOptions:
+      type: object
+      required:
+        - name
+        - descriptions
+      properties:
+        name:
+          type: string
+          example: "Sir Roland"
+        descriptions:
+          type: array
+          items:
+            type: string
+          example:
+            - "Charge in directly with shield raised"
+            - "Try to sneak past the sleeping dragon"
+            - "Attempt to negotiate with the dragon"
+    Objective:
+      type: object
+      required:
+        - description
+        - completed
+      properties:
+        description:
+          type: string
+          example: "Reach the dragon's lair without being detected"
+        progress:
+          type: string
+          example: "2/3 steps completed"
+        requiredSteps:
+          type: array
+          items:
+            type: string
+          example:
+            - "Find the secret entrance"
+            - "Avoid the guard dragons"
+            - "Disable the magical barriers"
+        completed:
+          type: boolean
+          example: false
+    GameId:
+      type: object
+      required:
+        - gameId
+      properties:
+        gameId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+    NewGame:
+      type: object
+      required:
+        - gamePrompt
+        - characters
+      properties:
+        gamePrompt:
+          type: string
+          example: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+        characters:
+          type: array
+          items:
+            $ref: '#/components/schemas/NewCharacter'
+    NewCharacter:
+      type: object
+      required:
+        - name
+        - characterPrompt
+      properties:
+        name:
+          type: string
+          example: "Sir Roland"
+        characterPrompt:
+          type: string
+          example: "A noble knight who values honor and courage above all else"
+    NewTurn:
+      type: object
+      required:
+        - characterActions
+      properties:
+        characterActions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CharacterAction'
+    CharacterAction:
+      type: object
+      required:
+        - characterName
+        - chosenOption
+      properties:
+        characterName:
+          type: string
+          example: "Sir Roland"
+        chosenOption:
+          type: string
+          example: "Try to sneak past the sleeping dragon"
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          description: HTTP status code
+          example: 400
+        message:
+          type: string
+          description: Error message
+          example: "Invalid game ID format" 
