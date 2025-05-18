@@ -1,12 +1,5 @@
 import {v4 as uuidv4} from 'uuid';
-import {components} from '@/types/api';
-
-// Convenient type aliases using the generated types
-type Game = components['schemas']['Game'];
-type GameId = components['schemas']['GameId'];
-type NewGame = components['schemas']['NewGame'];
-type NewTurn = components['schemas']['NewTurn'];
-type CharacterAction = components['schemas']['CharacterAction'];
+import {GameId, NewGame, NewTurn, Game, CharacterAction} from '@/types/api-alias';
 
 // Interfaces for our API service
 export interface IGameService {
