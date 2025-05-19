@@ -1,7 +1,8 @@
 import {v4 as uuidv4} from 'uuid';
-import {GameId, NewGame, NewTurn, Game, CharacterAction} from '@/types/api-alias';
+import {CharacterAction, Game, GameId, NewGame, NewTurn} from '@/types/api-alias';
+import {GameRepository, getGameRepository} from "@/database/repository/game.repository";
+import {DatabaseType} from "@/database/database.client";
 
-// Interfaces for our API service
 export interface IGameService {
   createGame(newGame: NewGame): Promise<GameId>;
   getGame(gameId: string): Promise<Game | null>;
@@ -9,19 +10,20 @@ export interface IGameService {
   submitTurn(gameId: string, newTurn: NewTurn): Promise<boolean>;
 }
 
-// In-memory storage for our dummy implementation
 const gamesStore: Record<string, Game> = {};
 
-// Default maximum number of scenes
 const DEFAULT_MAX_SCENES = 5;
 
-// Dummy implementation of the GameService
 export class GameService implements IGameService {
+  private gameRepository: GameRepository
+
+  constructor(gameRepository: GameRepository) {
+    this.gameRepository = gameRepository;
+  }
+
   async createGame(newGame: NewGame): Promise<GameId> {
     const gameId = uuidv4();
-    
-    // Create a dummy game structure
-    // Store the game
+
     gamesStore[gameId] = {
       gameId,
       gamePrompt: newGame.gamePrompt,
@@ -49,12 +51,11 @@ export class GameService implements IGameService {
         completed: false
       }
     };
-    
     return { gameId };
   }
 
   async getGame(gameId: string): Promise<Game | null> {
-    return gamesStore[gameId] || null;
+      return this.gameRepository.getGame(gameId);
   }
 
   async startGame(gameId: string): Promise<boolean> {
@@ -129,10 +130,10 @@ export class GameService implements IGameService {
       game.conclusion = "The heroes completed their adventure!";
       game.finalObjective.completed = true;
     }
-    
     return true;
   }
 }
 
 // Export singleton instance of the service
-export const gameService = new GameService(); 
+const gameRepository = getGameRepository(DatabaseType.MONGODB);
+export const gameService = new GameService(gameRepository);

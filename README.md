@@ -154,3 +154,44 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## MongoDB Integration
+
+The application now supports MongoDB for data persistence. The implementation focuses on the GetGame endpoint which retrieves game data from MongoDB.
+
+### Setup
+
+1. Install MongoDB locally or use MongoDB Atlas
+2. Create a `.env.local` file in the project root with:
+   ```
+   MONGODB_URI=mongodb://localhost:27017
+   ```
+   (Change the URI if using MongoDB Atlas)
+
+3. Seed the database with sample data:
+   ```bash
+   npm run seed-db
+   ```
+
+### Implementation Details
+
+- The application uses a layered architecture for database operations:
+  - `MongodbClient`: Handles database connection management
+  - `GameRepository`: Manages game collection operations
+
+- The code follows SOLID principles:
+  - Single Responsibility: Each class has one responsibility
+  - Open-Closed: Interfaces allow extending functionality without modifying code
+  - Liskov Substitution: Implementations can be substituted for interfaces
+  - Interface Segregation: Clean, focused interfaces for each concern
+  - Dependency Inversion: High-level modules depend on abstractions
+
+- The application maintains fallback to in-memory storage if MongoDB is unavailable
+
+### Testing
+
+You can test the MongoDB integration by:
+
+1. Seeding the database with `npm run seed-db`
+2. Starting the application with `npm run dev`
+3. Using the sample game IDs printed from the seed script to test the GetGame endpoint
