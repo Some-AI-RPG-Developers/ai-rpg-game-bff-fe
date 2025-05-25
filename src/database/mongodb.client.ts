@@ -40,6 +40,13 @@ export class MongodbClient implements DatabaseClient {
           version: ServerApiVersion.v1,
           strict: true,
           deprecationErrors: true,
+        },
+        tls: true,
+        tlsAllowInvalidCertificates: false,
+        tlsAllowInvalidHostnames: false,
+        retryWrites: true,
+        writeConcern: {
+          w: "majority"
         }
       });
       await this.client.connect();

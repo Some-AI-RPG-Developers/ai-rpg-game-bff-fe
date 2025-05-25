@@ -82,7 +82,7 @@ export class GameMongodbChangeStream implements GameChangeStream{
         this.watching = false;
       });
       this.watching = true;
-      console.log('MongoDB change stream started successfully');
+      console.log('MongoDB change stream started successfully for games collection!');
     } catch (error) {
       console.error('Failed to start change stream:', error);
       this.watching = false;
