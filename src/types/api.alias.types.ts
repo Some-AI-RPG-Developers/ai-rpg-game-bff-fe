@@ -1,4 +1,4 @@
-import { components } from './api';
+import { components } from './api.types';
 
 export type GameId = components['schemas']['GameId'];
 export type NewGame = components['schemas']['NewGame'];

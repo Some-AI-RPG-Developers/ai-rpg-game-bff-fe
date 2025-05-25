@@ -1,5 +1,5 @@
-import {ChangeStream, ChangeStreamDocument as MongoChangeStreamDocument, Collection} from 'mongodb';
-import {Game} from '@/types/api-alias';
+import {ChangeStream, ChangeStreamDocument as MongoChangeStreamDocument, Collection, ResumeToken} from 'mongodb';
+import {Game} from '@/types/api.alias.types';
 import {ChangeStreamConfig, ChangeStreamDocument, GameDocument, MongodbClient} from '@/database/mongodb.client';
 import {GameChangeStream} from "@/database/stream/game.stream";
 
@@ -18,8 +18,8 @@ export class GameMongodbChangeStream implements GameChangeStream{
     return this.watching
   }
 
-  public getResumeToken(): string | undefined {
-    return this.changeStream?.resumeToken as string
+  public getResumeToken(): ResumeToken | undefined {
+    return this.changeStream?.resumeToken
   }
 
   public async *getGamesChangeEvents(config: ChangeStreamConfig = {}): AsyncGenerator<ChangeStreamDocument<Game>> {
@@ -34,10 +34,10 @@ export class GameMongodbChangeStream implements GameChangeStream{
         const fullDocument: Game = this.getFullDocument(changeEvent)
         const fullDocumentBeforeChange: Game | undefined = this.getFullDocumentBeforeChange(changeEvent)
         yield {
-          resumeToken: changeEvent._id as string,
+          resumeToken: changeEvent._id,
           operationType: changeEvent.operationType,
           fullDocument: fullDocument,
-          ...(fullDocumentBeforeChange && {fullDocumentBeforeChange: fullDocumentBeforeChange }),
+          ...(fullDocumentBeforeChange && {fullDocumentBeforeChange: fullDocumentBeforeChange}),
         };
       }
     } finally {
@@ -67,6 +67,7 @@ export class GameMongodbChangeStream implements GameChangeStream{
       const pipeline = config.pipeline ?? defaultPipeline;
       const options = {
         fullDocument: config.fullDocument ?? 'updateLookup' as const,
+        fullDocumentBeforeChange: config.fullDocumentBeforeChange ?? 'off' as const,
         ...(config.resumeAfter && { resumeAfter: config.resumeAfter }),
         ...(config.startAfter && { startAfter: config.startAfter })
       };
@@ -90,7 +91,7 @@ export class GameMongodbChangeStream implements GameChangeStream{
     }
   }
 
-  public async closeChangeStream(): Promise<void> {
+  public async closeChangeStream(isFatal: boolean = false): Promise<void> {
     console.log('Stopping MongoDB change stream for games collection...');
     if (this.changeStream) {
       try {
@@ -100,6 +101,9 @@ export class GameMongodbChangeStream implements GameChangeStream{
         console.log('Change stream stopped');
       } catch (error) {
         console.error('Error stopping change stream:', error);
+      }
+      if (isFatal) {
+        throw new Error("MongoDB change stream stopped for an unexpected error.");
       }
     }
   }
@@ -111,14 +115,14 @@ export class GameMongodbChangeStream implements GameChangeStream{
       await this.restartChangeStream();
     } else {
       console.error('Non-resumable error, stopping MongoDB change stream');
-      await this.closeChangeStream();
+      await this.closeChangeStream(true);
     }
   }
 
   private async restartChangeStream(): Promise<void> {
     if (this.changeStream) {
       try {
-        const resumeToken: string = this.changeStream.resumeToken as string;
+        const resumeToken: ResumeToken = this.changeStream.resumeToken;
         await this.closeChangeStream();
         await this.initChangeStream({ resumeAfter: resumeToken });
       } catch (error) {
@@ -133,11 +137,13 @@ export class GameMongodbChangeStream implements GameChangeStream{
       case "update":
       case "replace":
         if (!changeEvent.fullDocument) {
-          throw new Error(`Missing updated document from change event: ${changeEvent._id}`)
+          throw new Error(
+              `Missing updated document from change event with txnNumber: ${changeEvent.txnNumber}`);
         }
         return changeEvent.fullDocument;
       default:
-        throw new Error(`Unsupported operation type for change event: ${changeEvent._id}`)
+        throw new Error(
+            `Unsupported operation type for change event with txnNumber: ${changeEvent.txnNumber}`);
     }
   }
 
@@ -147,12 +153,10 @@ export class GameMongodbChangeStream implements GameChangeStream{
         return undefined
       case "update":
       case "replace":
-        if (!changeEvent.fullDocumentBeforeChange) {
-          throw new Error(`Missing document before update from change event: ${changeEvent._id}`)
-        }
         return changeEvent.fullDocumentBeforeChange;
       default:
-        throw new Error(`Unsupported operation type for change event: ${changeEvent._id}`)
+        throw new Error(
+            `Unsupported operation type for change event with txnNumber: ${changeEvent.txnNumber}`);
     }
   }
 } 

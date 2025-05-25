@@ -1,11 +1,8 @@
 import {v4 as uuid} from 'uuid';
-import {CharacterAction, Game, GameId, NewGame, NewTurn} from '@/types/api-alias';
-import {GameRepository, getMongodbGameRepository} from "@/database/repository/game.repository";
-import {GameChangeStream, getMongodbGameChangeStreamInstance} from "@/database/stream/game.stream";
-import {getSSEBroadcasterInstance, SSEBroadcaster} from "@/sse/sse.broadcaster";
-
-
-const gamesStore: Record<string, Game> = {};
+import {CharacterAction, Game, GameId, NewGame, NewTurn} from '@/types/api.alias.types';
+import {GameRepository} from "@/database/repository/game.repository";
+import {GameChangeStream} from "@/database/stream/game.stream";
+import {SSEBroadcaster} from "@/sse/sse.broadcaster";
 
 const DEFAULT_MAX_SCENES = 5;
 
@@ -26,7 +23,7 @@ export class GameService {
   async createGame(newGame: NewGame): Promise<GameId> {
     const gameId = uuid();
 
-    gamesStore[gameId] = {
+    const game: Game = {
       gameId,
       gamePrompt: newGame.gamePrompt,
       synopsis: `A brave band of heroes embarks on a journey based on: ${newGame.gamePrompt}`,
@@ -53,7 +50,8 @@ export class GameService {
         completed: false
       }
     };
-    return { gameId };
+
+    return await this.gameRepository.createGame(game);
   }
 
   async getGame(gameId: string): Promise<Game | null> {
@@ -61,7 +59,7 @@ export class GameService {
   }
 
   async startGame(gameId: string): Promise<boolean> {
-    const game = gamesStore[gameId];
+    const game = await this.gameRepository.getGame(gameId);
     if (!game) {
       return false;
     }
@@ -87,11 +85,11 @@ export class GameService {
       ]
     });
     
-    return true;
+    return await this.gameRepository.updateGame(gameId, game);
   }
 
   async submitTurn(gameId: string, newTurn: NewTurn): Promise<boolean> {
-    const game = gamesStore[gameId];
+    const game = await this.gameRepository.getGame(gameId);
     if (!game || game.scenes.length === 0) {
       return false;
     }
@@ -132,7 +130,8 @@ export class GameService {
       game.conclusion = "The heroes completed their adventure!";
       game.finalObjective.completed = true;
     }
-    return true;
+    
+    return await this.gameRepository.updateGame(gameId, game);
   }
 
   async getGamesUpdates(): Promise<void>{
@@ -149,17 +148,5 @@ export class GameService {
 
   async stopGamesUpdates(): Promise<void> {
     await this.gameChangeStream.closeChangeStream();
-    this.sseBroadcaster.stopBroadcastingEventsToClients()
   }
-}
-
-let gameService: GameService;
-export function getGameServiceInstance(): GameService {
-  if (gameService) {
-    return gameService
-  }
-  const gameRepository = getMongodbGameRepository();
-  const gameChangeStream = getMongodbGameChangeStreamInstance()
-  const sseBroadcaster = getSSEBroadcasterInstance()
-  return gameService = new GameService(gameRepository, gameChangeStream, sseBroadcaster);
 }

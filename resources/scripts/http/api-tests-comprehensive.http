@@ -1,0 +1,399 @@
+# AI RPG Game BFF API - Comprehensive Test Suite
+# This file tests all endpoints under /api/v1 and health endpoints
+# Use with REST Client extension in VS Code or similar HTTP client
+
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### ========================================
+### HEALTH CHECK ENDPOINTS
+### ========================================
+
+### 1. General Health Check
+# @name healthCheck
+GET {{baseUrl}}/api/health
+Accept: application/json
+
+### 2. Liveness Probe
+# @name livenessCheck
+GET {{baseUrl}}/api/health/liveness
+Accept: application/json
+
+### 3. Readiness Probe
+# @name readinessCheck
+GET {{baseUrl}}/api/health/readiness
+Accept: application/json
+
+### ========================================
+### GAME MANAGEMENT ENDPOINTS
+### ========================================
+
+### 4. Create a new game (Medieval Fantasy)
+# @name createGame1
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
+  "characters": [
+    {
+      "name": "Sir Roland",
+      "characterPrompt": "A noble knight who values honor and courage above all else"
+    },
+    {
+      "name": "Lady Elara",
+      "characterPrompt": "A wise mage seeking to protect the realm with her magical powers"
+    },
+    {
+      "name": "Thorne",
+      "characterPrompt": "A skilled ranger with a deep connection to nature and exceptional tracking abilities"
+    }
+  ]
+}
+
+> {% client.global.set("gameId1", response.body['gameId']) %}
+
+### 5. Create a second game (Sci-Fi Adventure)
+# @name createGame2
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Create a space exploration adventure where a crew discovers an ancient alien artifact",
+  "characters": [
+    {
+      "name": "Captain Nova",
+      "characterPrompt": "A seasoned space captain with excellent leadership skills and tactical expertise"
+    },
+    {
+      "name": "Dr. Zara",
+      "characterPrompt": "A brilliant xenobiologist fascinated by alien life forms and technologies"
+    },
+    {
+      "name": "Engineer Rex",
+      "characterPrompt": "A resourceful engineer who can fix anything and loves tinkering with alien tech"
+    }
+  ]
+}
+
+> {% client.global.set("gameId2", response.body['gameId']) %}
+
+### 6. Get first game details (before starting)
+# @name getGame1Initial
+GET {{baseUrl}}/api/v1/games/{{gameId1}}
+Accept: application/json
+
+### 7. Get second game details (before starting)
+# @name getGame2Initial
+GET {{baseUrl}}/api/v1/games/{{gameId2}}
+Accept: application/json
+
+### 8. Start the first game
+# @name startGame1
+POST {{baseUrl}}/api/v1/games/{{gameId1}}
+Content-Type: {{contentType}}
+
+### 9. Start the second game
+# @name startGame2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}
+Content-Type: {{contentType}}
+
+### 10. Get first game details (after starting)
+# @name getGame1AfterStart
+GET {{baseUrl}}/api/v1/games/{{gameId1}}
+Accept: application/json
+
+### 11. Get second game details (after starting)
+# @name getGame2AfterStart
+GET {{baseUrl}}/api/v1/games/{{gameId2}}
+Accept: application/json
+
+### ========================================
+### TURN SUBMISSION ENDPOINTS
+### ========================================
+
+### 12. Submit first turn for Game 1 (Medieval Fantasy)
+# @name submitTurn1Game1
+POST {{baseUrl}}/api/v1/games/{{gameId1}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Sir Roland",
+      "chosenOption": "Charge in with shield raised to protect the party"
+    },
+    {
+      "characterName": "Lady Elara",
+      "chosenOption": "Cast a protective barrier spell around the group"
+    },
+    {
+      "characterName": "Thorne",
+      "chosenOption": "Take position on high ground with bow ready"
+    }
+  ]
+}
+
+### 13. Submit first turn for Game 2 (Sci-Fi Adventure)
+# @name submitTurn1Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Approach the artifact cautiously while scanning for threats"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Begin detailed scans of the artifact's composition and energy signatures"
+    },
+    {
+      "characterName": "Engineer Rex",
+      "chosenOption": "Set up a portable workstation to analyze any technological components"
+    }
+  ]
+}
+
+### 14. Submit second turn for Game 1
+# @name submitTurn2Game1
+POST {{baseUrl}}/api/v1/games/{{gameId1}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Sir Roland",
+      "chosenOption": "Advance forward while maintaining defensive formation"
+    },
+    {
+      "characterName": "Lady Elara",
+      "chosenOption": "Prepare a powerful offensive spell for the upcoming battle"
+    },
+    {
+      "characterName": "Thorne",
+      "chosenOption": "Scout ahead to gather intelligence on enemy positions"
+    }
+  ]
+}
+
+### 15. Submit second turn for Game 2
+# @name submitTurn2Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Establish a secure perimeter around the artifact site"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Attempt to interface with the artifact using universal translation protocols"
+    },
+    {
+      "characterName": "Engineer Rex",
+      "chosenOption": "Deploy sensor drones to map the surrounding area for hidden dangers"
+    }
+  ]
+}
+
+### 16. Submit third turn for Game 1
+# @name submitTurn3Game1
+POST {{baseUrl}}/api/v1/games/{{gameId1}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Sir Roland",
+      "chosenOption": "Engage the dragon in direct combat to draw its attention"
+    },
+    {
+      "characterName": "Lady Elara",
+      "chosenOption": "Cast a binding spell to restrict the dragon's movements"
+    },
+    {
+      "characterName": "Thorne",
+      "chosenOption": "Target the dragon's weak spots with precision arrows"
+    }
+  ]
+}
+
+### 17. Submit third turn for Game 2
+# @name submitTurn3Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Make first contact with any alien intelligence within the artifact"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Document all findings and prepare a comprehensive report"
+    },
+    {
+      "characterName": "Engineer Rex",
+      "chosenOption": "Attempt to safely extract a small sample for further analysis"
+    }
+  ]
+}
+
+### ========================================
+### GAME STATE VERIFICATION
+### ========================================
+
+### 18. Get final state of Game 1
+# @name getGame1Final
+GET {{baseUrl}}/api/v1/games/{{gameId1}}
+Accept: application/json
+
+### 19. Get final state of Game 2
+# @name getGame2Final
+GET {{baseUrl}}/api/v1/games/{{gameId2}}
+Accept: application/json
+
+### ========================================
+### ERROR HANDLING TESTS
+### ========================================
+
+### 20. Test invalid game creation (missing required fields)
+# @name createGameInvalid
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Test game without characters"
+}
+
+### 21. Test get non-existent game
+# @name getNonExistentGame
+GET {{baseUrl}}/api/v1/games/00000000-0000-0000-0000-000000000000
+Accept: application/json
+
+### 22. Test start non-existent game
+# @name startNonExistentGame
+POST {{baseUrl}}/api/v1/games/00000000-0000-0000-0000-000000000000
+Content-Type: {{contentType}}
+
+### 23. Test submit turn to non-existent game
+# @name submitTurnNonExistentGame
+POST {{baseUrl}}/api/v1/games/00000000-0000-0000-0000-000000000000/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "TestCharacter",
+      "chosenOption": "Test action"
+    }
+  ]
+}
+
+### 24. Test submit turn with invalid data (missing characterActions)
+# @name submitTurnInvalid
+POST {{baseUrl}}/api/v1/games/{{gameId1}}/turns
+Content-Type: {{contentType}}
+
+{
+  "invalidField": "test"
+}
+
+### 25. Test start already started game
+# @name startAlreadyStartedGame
+POST {{baseUrl}}/api/v1/games/{{gameId1}}
+Content-Type: {{contentType}}
+
+### ========================================
+### REAL-TIME UPDATES (SSE) ENDPOINTS
+### Note: These endpoints return Server-Sent Events streams
+### They should be tested with appropriate SSE clients
+### ========================================
+
+### 26. Subscribe to Game 1 updates (SSE)
+# @name subscribeGame1Updates
+# Note: This will open an SSE connection - use appropriate client
+GET {{baseUrl}}/api/v1/games/{{gameId1}}/updates
+Accept: text/event-stream
+Cache-Control: no-cache
+
+### 27. Subscribe to Game 2 updates (SSE)
+# @name subscribeGame2Updates
+# Note: This will open an SSE connection - use appropriate client
+GET {{baseUrl}}/api/v1/games/{{gameId2}}/updates
+Accept: text/event-stream
+Cache-Control: no-cache
+
+### 28. Test SSE with non-existent game
+# @name subscribeNonExistentGameUpdates
+GET {{baseUrl}}/api/v1/games/00000000-0000-0000-0000-000000000000/updates
+Accept: text/event-stream
+Cache-Control: no-cache
+
+### ========================================
+### PERFORMANCE AND LOAD TESTS
+### ========================================
+
+### 29. Create multiple games rapidly (Performance Test)
+# @name createGamePerf1
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Performance test game 1",
+  "characters": [
+    {
+      "name": "TestChar1",
+      "characterPrompt": "Test character for performance testing"
+    }
+  ]
+}
+
+### 30. Create multiple games rapidly (Performance Test)
+# @name createGamePerf2
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Performance test game 2",
+  "characters": [
+    {
+      "name": "TestChar2",
+      "characterPrompt": "Test character for performance testing"
+    }
+  ]
+}
+
+### ========================================
+### CLEANUP VERIFICATION
+### ========================================
+
+### 31. Final health check after all operations
+# @name finalHealthCheck
+GET {{baseUrl}}/api/health
+Accept: application/json
+
+### 32. Final readiness check
+# @name finalReadinessCheck
+GET {{baseUrl}}/api/health/readiness
+Accept: application/json
+
+### ========================================
+### NOTES FOR TESTING
+### ========================================
+
+# 1. Ensure MongoDB is running before executing these tests
+# 2. Set up environment variables in .env.local:
+#    - MONGODB_URI=mongodb://localhost:27017
+#    - MONGODB_DATABASE=ai-rpg
+#    - GAMES_COLLECTION=games
+# 3. SSE endpoints (updates) require special handling in HTTP clients
+# 4. Some tests depend on previous test results (gameId variables)
+# 5. Run tests in sequence for best results
+# 6. Check MongoDB collections to verify data persistence
+# 7. Monitor application logs for any errors during testing 

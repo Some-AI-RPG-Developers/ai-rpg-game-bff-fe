@@ -1,18 +1,19 @@
-import {Collection, Db, MongoClient, ServerApiVersion} from 'mongodb';
+import {Collection, Db, MongoClient, ResumeToken, ServerApiVersion} from 'mongodb';
 import {DatabaseClient} from "@/database/database.client";
-import {Game} from "@/types/api-alias";
+import {Game} from "@/types/api.alias.types";
 
 export type GameDocument = Game & Document
 
 export interface ChangeStreamConfig {
   pipeline?: Document[];
   fullDocument?: 'default' | 'updateLookup' | 'whenAvailable' | 'required';
-  resumeAfter?: string;
-  startAfter?: string;
+  fullDocumentBeforeChange?: 'whenAvailable' | 'required' | 'off';
+  resumeAfter?: ResumeToken;
+  startAfter?: ResumeToken;
 }
 
 export interface ChangeStreamDocument<T> {
-  resumeToken: string
+  resumeToken: ResumeToken
   operationType: string
   fullDocument: T
   fullDocumentBeforeChange?: T

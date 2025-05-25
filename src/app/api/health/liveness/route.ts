@@ -1,8 +1,7 @@
 import {NextResponse} from 'next/server';
-import {GameChangeStream, getMongodbGameChangeStreamInstance} from "@/database/stream/game.stream";
-import {getSSEBroadcasterInstance} from "@/sse/sse.broadcaster";
-import {getMongoDbClientInstance} from "@/database/database.client";
+import {GameChangeStream} from "@/database/stream/game.stream";
 import {DatabaseType} from "@/database/database.type";
+import {getMongoDbClientInstance, getMongodbGameChangeStreamInstance, getSSEBroadcasterInstance} from "@/global";
 
 /**
  * Liveness probe endpoint

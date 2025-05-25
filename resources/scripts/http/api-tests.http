@@ -1,0 +1,277 @@
+# AI RPG Game API v1 - Core Endpoint Tests
+# Focused testing for /api/v1/* endpoints
+# Use with REST Client extension in VS Code
+
+@baseUrl = http://localhost:3000
+@contentType = application/json
+
+### ========================================
+### API V1 ENDPOINTS - CORE FUNCTIONALITY
+### ========================================
+
+### 1. Create Game - POST /api/v1/games
+# @name createGame
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
+  "characters": [
+    {
+      "name": "Sir Roland",
+      "characterPrompt": "A noble knight who values honor and courage above all else"
+    },
+    {
+      "name": "Lady Elara",
+      "characterPrompt": "A wise mage seeking to protect the realm with her magical powers"
+    },
+    {
+      "name": "Thorne",
+      "characterPrompt": "A skilled ranger with a deep connection to nature and exceptional tracking abilities"
+    }
+  ]
+}
+
+> {% client.global.set("gameId", response.body['gameId']) %}
+
+### 2. Get Game - GET /api/v1/games/{gameId}
+# @name getGame
+GET {{baseUrl}}/api/v1/games/{{gameId}}
+Accept: application/json
+
+### 3. Start Game - POST /api/v1/games/{gameId}
+# @name startGame
+POST {{baseUrl}}/api/v1/games/{{gameId}}
+Content-Type: {{contentType}}
+
+### 4. Get Game After Start - GET /api/v1/games/{gameId}
+# @name getGameAfterStart
+GET {{baseUrl}}/api/v1/games/{{gameId}}
+Accept: application/json
+
+### 5. Submit Turn - POST /api/v1/games/{gameId}/turns
+# @name submitTurn
+POST {{baseUrl}}/api/v1/games/{{gameId}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Sir Roland",
+      "chosenOption": "Charge in with shield raised to protect the party"
+    },
+    {
+      "characterName": "Lady Elara",
+      "chosenOption": "Cast a protective barrier spell around the group"
+    },
+    {
+      "characterName": "Thorne",
+      "chosenOption": "Take position on high ground with bow ready"
+    }
+  ]
+}
+
+### 6. Get Game After Turn - GET /api/v1/games/{gameId}
+# @name getGameAfterTurn
+GET {{baseUrl}}/api/v1/games/{{gameId}}
+Accept: application/json
+
+### 7. Subscribe to Game Updates (SSE) - GET /api/v1/games/{gameId}/updates
+# @name subscribeUpdates
+# Note: This opens an SSE stream - use appropriate SSE client
+GET {{baseUrl}}/api/v1/games/{{gameId}}/updates
+Accept: text/event-stream
+Cache-Control: no-cache
+
+### ========================================
+### ERROR SCENARIOS
+### ========================================
+
+### 8. Invalid Game Creation (Missing Characters)
+# @name createGameInvalid
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Test game without characters"
+}
+
+### 9. Get Non-Existent Game
+# @name getNonExistentGame
+GET {{baseUrl}}/api/v1/games/invalid-game-id
+Accept: application/json
+
+### 10. Start Non-Existent Game
+# @name startNonExistentGame
+POST {{baseUrl}}/api/v1/games/invalid-game-id
+Content-Type: {{contentType}}
+
+### 11. Submit Turn to Non-Existent Game
+# @name submitTurnNonExistentGame
+POST {{baseUrl}}/api/v1/games/invalid-game-id/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "TestCharacter",
+      "chosenOption": "Test action"
+    }
+  ]
+}
+
+### 12. Submit Invalid Turn (Missing characterActions)
+# @name submitInvalidTurn
+POST {{baseUrl}}/api/v1/games/{{gameId}}/turns
+Content-Type: {{contentType}}
+
+{
+  "invalidField": "test"
+}
+
+### ========================================
+### COMPLETE GAME FLOW TEST
+### ========================================
+
+### 13. Create Second Game for Complete Flow
+# @name createGame2
+POST {{baseUrl}}/api/v1/games
+Content-Type: {{contentType}}
+
+{
+  "gamePrompt": "Create a space exploration adventure where a crew discovers an ancient alien artifact",
+  "characters": [
+    {
+      "name": "Captain Nova",
+      "characterPrompt": "A seasoned space captain with excellent leadership skills"
+    },
+    {
+      "name": "Dr. Zara",
+      "characterPrompt": "A brilliant scientist fascinated by alien technologies"
+    }
+  ]
+}
+
+> {% client.global.set("gameId2", response.body['gameId']) %}
+
+### 14. Start Second Game
+# @name startGame2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}
+Content-Type: {{contentType}}
+
+### 15. Submit Multiple Turns to Complete Game
+# @name submitTurn1Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Approach the artifact cautiously"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Begin scanning the artifact"
+    }
+  ]
+}
+
+### 16. Submit Turn 2
+# @name submitTurn2Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Establish secure perimeter"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Attempt to interface with artifact"
+    }
+  ]
+}
+
+### 17. Submit Turn 3
+# @name submitTurn3Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Make first contact"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Document all findings"
+    }
+  ]
+}
+
+### 18. Submit Turn 4
+# @name submitTurn4Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Negotiate peaceful resolution"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Share scientific knowledge"
+    }
+  ]
+}
+
+### 19. Submit Turn 5 (Final Turn)
+# @name submitTurn5Game2
+POST {{baseUrl}}/api/v1/games/{{gameId2}}/turns
+Content-Type: {{contentType}}
+
+{
+  "characterActions": [
+    {
+      "characterName": "Captain Nova",
+      "chosenOption": "Establish diplomatic relations"
+    },
+    {
+      "characterName": "Dr. Zara",
+      "chosenOption": "Prepare comprehensive report for Earth"
+    }
+  ]
+}
+
+### 20. Get Final Game State
+# @name getFinalGameState
+GET {{baseUrl}}/api/v1/games/{{gameId2}}
+Accept: application/json
+
+### ========================================
+### TESTING NOTES
+### ========================================
+
+# API v1 Endpoints Covered:
+# ✅ POST /api/v1/games - Create game
+# ✅ GET /api/v1/games/{gameId} - Get game details
+# ✅ POST /api/v1/games/{gameId} - Start game
+# ✅ POST /api/v1/games/{gameId}/turns - Submit turn
+# ✅ GET /api/v1/games/{gameId}/updates - Subscribe to updates (SSE)
+
+# Prerequisites:
+# 1. MongoDB running locally or configured
+# 2. Environment variables set in .env.local
+# 3. Application running on http://localhost:3000
+
+# Test Execution:
+# 1. Run tests in sequence for dependency management
+# 2. Check response status codes and payloads
+# 3. Verify data persistence in MongoDB
+# 4. Monitor application logs for errors 

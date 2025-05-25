@@ -1,6 +1,7 @@
 import {NextRequest, NextResponse} from 'next/server';
-import {GameService, getGameServiceInstance} from "@/services/game.service";
-import {Game} from "@/types/api-alias";
+import {GameService} from "@/services/game.service";
+import {Game} from "@/types/api.alias.types";
+import {getGameServiceInstance} from "@/global";
 
 // GET /api/v1/games/{gameId} - Get game by ID
 export async function GET(

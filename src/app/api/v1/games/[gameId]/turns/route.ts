@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NewTurn } from '@/types/api-alias';
-import {GameService, getGameServiceInstance} from "@/services/game.service";
+import { NewTurn } from '@/types/api.alias.types';
+import {GameService} from "@/services/game.service";
+import {getGameServiceInstance} from "@/global";
 
 // POST /api/v1/games/{gameId}/turns - Submit a new turn for the game
 export async function POST(

@@ -4,40 +4,41 @@ export interface SSEClient {
 
 export interface SSEBroadcaster {
   getSubscribedClients(): string[]
-  startBroadcastingEventToClient(clientId: string, controller: ReadableStreamDefaultController): void
+  addClientSubscription(clientId: string, controller: ReadableStreamDefaultController): void
   broadcastEventToClients(event: string, clientIds?: string[]): void
   broadcastEventToClient(event: string, clientId: string): void
-  stopBroadcastingEventsToClient(clientId: string): void
-  stopBroadcastingEventsToClients(): void
+  removeClientSubscription(clientId: string): void
+  removeAllClientsSubscriptions(): void
 }
 
-class SSEBroadcasterImpl {
-  private readonly clients: Map<string, SSEClient> = new Map();
+export class SSEBroadcasterImpl implements SSEBroadcaster{
+  public readonly clients: Map<string, SSEClient> = new Map();
 
   public getSubscribedClients(): string[] {
     return this.clients.keys().toArray()
   }
 
-  public startBroadcastingEventToClient(clientId: string, controller: ReadableStreamDefaultController): void {
+  public addClientSubscription(clientId: string, controller: ReadableStreamDefaultController): void {
     if (this.clients.has(clientId)) {
-      this.stopBroadcastingEventsToClient(clientId)
+      this.removeClientSubscription(clientId)
     }
-    console.log(`Starting event broadcast to SSE client ${clientId}.`)
+    console.debug(`Starting event broadcast to SSE client ${clientId}.`)
     const sseClient: SSEClient = { controller }
     this.clients.set(clientId, sseClient);
-    console.log(`SSE client ${clientId} connected. Total clients: ${this.clients.size}`);
+    console.debug("Subscribed clients:", this.clients.keys().toArray())
+    console.info(`SSE client ${clientId} connected. Total clients: ${this.clients.size}`);
   }
 
-  public stopBroadcastingEventsToClient(clientId: string): void {
+  public removeClientSubscription(clientId: string): void {
     const client: SSEClient | undefined = this.clients.get(clientId);
     if (!client) {
       return;
     }
-    console.log(`Closing SSE client ${clientId}.`)
+    console.debug(`Closing SSE client ${clientId}.`)
     try {
       this.clients.delete(clientId);
       client.controller.close();
-      console.log(`SSE client ${clientId} disconnected. Total clients: ${this.clients.size}`);
+      console.info(`SSE client ${clientId} disconnected. Total clients: ${this.clients.size}`);
 
     } catch (error) {
       console.warn(`Error closing SSE client ${clientId}:`, error);
@@ -46,36 +47,28 @@ class SSEBroadcasterImpl {
 
   public broadcastEventToClients(event: string, clientIds?: string[]): void {
     const clients: string[] = clientIds ?? this.clients.keys().toArray()
-    console.log(`Broadcasting event to ${clients.length} SSE clients:`, event);
+    console.debug(`Broadcasting event to ${clients.length} SSE clients:`, event);
     clients.forEach(clientId => this.broadcastEventToClient(event, clientId));
   }
 
   public broadcastEventToClient(event: string, clientId: string): void {
-    console.log(`Broadcasting event to SSE client ${clientId}.`)
-    const client: SSEClient | undefined = this.clients.get(clientId)
-    if (!client) {
-      throw Error(`Client with id ${clientId} was not found.`)
+    console.debug(`Broadcasting event to SSE client ${clientId}.`)
+    console.log("Subscribed clients:", this.clients.keys().toArray())
+    if(!this.clients.has(clientId)) {
+      console.warn(`Client with id ${clientId} was not found`)
+      return;
     }
     try {
-      client.controller.enqueue(event);
-      console.log(`Event broadcasted to SSE client ${clientId}.`)
+      this.clients.get(clientId)?.controller.enqueue(event);
+      console.debug(`Event broadcasted to SSE client ${clientId}.`)
 
     } catch (error) {
-      console.error(`Error sending SSE message to client ${clientId}:`, error);
-      this.stopBroadcastingEventsToClient(clientId);
+      console.warn(`Error sending SSE message to client ${clientId}:`, error);
     }
   }
 
-  public stopBroadcastingEventsToClients(): void {
-    console.log(`Stopping event broadcast to ${this.clients.size} SSE clients.`)
-    this.clients.keys().forEach(this.stopBroadcastingEventsToClient)
+  public removeAllClientsSubscriptions(): void {
+    console.debug(`Stopping event broadcast to ${this.clients.size} SSE clients.`)
+    this.clients.keys().forEach(clientId => this.removeClientSubscription(clientId))
   }
-}
-
-let sseBroadcaster: SSEBroadcaster;
-export function getSSEBroadcasterInstance(): SSEBroadcaster {
-  if (sseBroadcaster) {
-    return sseBroadcaster
-  }
-  return sseBroadcaster = new SSEBroadcasterImpl();
 }
