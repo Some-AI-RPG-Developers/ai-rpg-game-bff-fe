@@ -73,12 +73,10 @@ export class GameMongodbChangeStream implements GameChangeStream{
       };
       this.changeStream = gamesCollection.watch(pipeline, options);
       // Handle errors
-      this.changeStream.on('error', (error: Error) => {
-        console.error('Change stream error:', error);
-        this.handleError(error);
-      });
+      this.changeStream.on('error', this.handleError);
       // Handle stream close
       this.changeStream.on('close', () => {
+        // TODO: potrebbe essere opportuno riavviare il change stream se si chiude per errori non fatali
         console.log('Change stream closed');
         this.watching = false;
       });
@@ -120,14 +118,15 @@ export class GameMongodbChangeStream implements GameChangeStream{
   }
 
   private async restartChangeStream(): Promise<void> {
-    if (this.changeStream) {
-      try {
-        const resumeToken: ResumeToken = this.changeStream.resumeToken;
-        await this.closeChangeStream();
-        await this.initChangeStream({ resumeAfter: resumeToken });
-      } catch (error) {
-        console.error('Failed to restart change stream:', error);
-      }
+    if (!this.changeStream) {
+      return
+    }
+    try {
+      const resumeToken: ResumeToken = this.changeStream.resumeToken;
+      await this.closeChangeStream();
+      await this.initChangeStream({ resumeAfter: resumeToken });
+    } catch (error) {
+      console.error('Failed to restart change stream:', error);
     }
   }
 

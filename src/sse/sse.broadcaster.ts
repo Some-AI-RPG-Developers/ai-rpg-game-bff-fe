@@ -25,7 +25,6 @@ export class SSEBroadcasterImpl implements SSEBroadcaster{
     console.debug(`Starting event broadcast to SSE client ${clientId}.`)
     const sseClient: SSEClient = { controller }
     this.clients.set(clientId, sseClient);
-    console.debug("Subscribed clients:", this.clients.keys().toArray())
     console.info(`SSE client ${clientId} connected. Total clients: ${this.clients.size}`);
   }
 
@@ -52,8 +51,7 @@ export class SSEBroadcasterImpl implements SSEBroadcaster{
   }
 
   public broadcastEventToClient(event: string, clientId: string): void {
-    console.debug(`Broadcasting event to SSE client ${clientId}.`)
-    console.log("Subscribed clients:", this.clients.keys().toArray())
+    console.debug(`Broadcasting event to SSE client ${clientId}, event: [${event}].`)
     if(!this.clients.has(clientId)) {
       console.warn(`Client with id ${clientId} was not found`)
       return;
@@ -69,6 +67,6 @@ export class SSEBroadcasterImpl implements SSEBroadcaster{
 
   public removeAllClientsSubscriptions(): void {
     console.debug(`Stopping event broadcast to ${this.clients.size} SSE clients.`)
-    this.clients.keys().forEach(clientId => this.removeClientSubscription(clientId))
+    this.clients.keys().forEach(this.removeClientSubscription)
   }
 }
