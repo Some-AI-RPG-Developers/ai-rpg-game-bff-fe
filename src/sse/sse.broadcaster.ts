@@ -12,7 +12,8 @@ export interface SSEBroadcaster {
 }
 
 export class SSEBroadcasterImpl implements SSEBroadcaster{
-  public readonly clients: Map<string, SSEClient> = new Map();
+  private readonly clients: Map<string, SSEClient> = new Map();
+  private readonly textEncoder = new TextEncoder();
 
   public getSubscribedClients(): string[] {
     return this.clients.keys().toArray()
@@ -57,16 +58,23 @@ export class SSEBroadcasterImpl implements SSEBroadcaster{
       return;
     }
     try {
-      this.clients.get(clientId)?.controller.enqueue(event);
+      const sseClient: SSEClient = this.clients.get(clientId) as SSEClient;
+      this.sendFormattedMessage(sseClient, event);
       console.debug(`Event broadcasted to SSE client ${clientId}.`)
-
     } catch (error) {
       console.warn(`Error sending SSE message to client ${clientId}:`, error);
+      this.removeClientSubscription(clientId);
     }
   }
 
   public removeAllClientsSubscriptions(): void {
     console.debug(`Stopping event broadcast to ${this.clients.size} SSE clients.`)
     this.clients.keys().forEach(this.removeClientSubscription)
+  }
+
+  private sendFormattedMessage(sseClient: SSEClient, data: string): void {
+    // Format as proper SSE message with event type and data
+    const encodedMessage = this.textEncoder.encode(`${data}\n`);
+    sseClient.controller.enqueue(encodedMessage);
   }
 }
