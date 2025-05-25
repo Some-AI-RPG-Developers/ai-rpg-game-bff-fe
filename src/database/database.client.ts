@@ -7,12 +7,8 @@ export interface DatabaseClient {
     close(): Promise<void>;
 }
 
-export enum DatabaseType {
-    MONGODB
-}
-
-let mongoDbClient: MongodbClient | null = null;
-export const getMongoDbClient = (): MongodbClient => {
+let mongoDbClient: MongodbClient;
+export const getMongoDbClientInstance = (): MongodbClient => {
     if (mongoDbClient) {
         return mongoDbClient;
     }

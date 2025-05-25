@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { gameService } from '@/services/api.service';
-import { NewGame } from '@/types/api-alias';
+import {GameId, NewGame} from '@/types/api-alias';
+import {GameService, getGameServiceInstance} from "@/services/game.service";
 
 // POST /api/v1/games - Create a new game
 export async function POST(request: NextRequest) {
@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Create a new game
-    const result = await gameService.createGame(body);
+    const gameService: GameService = getGameServiceInstance()
+    const result: GameId = await gameService.createGame(body);
     
     return NextResponse.json(result, { status: 202 });
   } catch (error) {

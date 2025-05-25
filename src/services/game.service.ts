@@ -1,28 +1,30 @@
-import {v4 as uuidv4} from 'uuid';
+import {v4 as uuid} from 'uuid';
 import {CharacterAction, Game, GameId, NewGame, NewTurn} from '@/types/api-alias';
-import {GameRepository, getGameRepository} from "@/database/repository/game.repository";
-import {DatabaseType} from "@/database/database.client";
+import {GameRepository, getMongodbGameRepository} from "@/database/repository/game.repository";
+import {GameChangeStream, getMongodbGameChangeStreamInstance} from "@/database/stream/game.stream";
+import {getSSEBroadcasterInstance, SSEBroadcaster} from "@/sse/sse.broadcaster";
 
-export interface IGameService {
-  createGame(newGame: NewGame): Promise<GameId>;
-  getGame(gameId: string): Promise<Game | null>;
-  startGame(gameId: string): Promise<boolean>;
-  submitTurn(gameId: string, newTurn: NewTurn): Promise<boolean>;
-}
 
 const gamesStore: Record<string, Game> = {};
 
 const DEFAULT_MAX_SCENES = 5;
 
-export class GameService implements IGameService {
-  private gameRepository: GameRepository
+export class GameService {
+  private readonly gameRepository: GameRepository
+  private readonly gameChangeStream: GameChangeStream
+  private readonly sseBroadcaster: SSEBroadcaster
 
-  constructor(gameRepository: GameRepository) {
+  constructor(
+      gameRepository: GameRepository,
+      gameChangeStream: GameChangeStream,
+      sseBroadcaster: SSEBroadcaster) {
     this.gameRepository = gameRepository;
+    this.gameChangeStream = gameChangeStream;
+    this.sseBroadcaster = sseBroadcaster;
   }
 
   async createGame(newGame: NewGame): Promise<GameId> {
-    const gameId = uuidv4();
+    const gameId = uuid();
 
     gamesStore[gameId] = {
       gameId,
@@ -66,11 +68,11 @@ export class GameService implements IGameService {
     
     // Add a first scene when starting the game
     game.scenes.push({
-      sceneId: uuidv4(),
+      sceneId: uuid(),
       description: "The adventure begins...",
       turns: [
         {
-          turnId: uuidv4(),
+          turnId: uuid(),
           description: "The heroes must decide their first move",
           options: game.characters.map(character => ({
             name: character.name,
@@ -110,10 +112,10 @@ export class GameService implements IGameService {
     currentTurn.consequences = "The heroes' actions have consequences...";
     
     // Add a new turn if we're not at the end of the game
-    const maxScenes = game.maxScenesNumber || DEFAULT_MAX_SCENES;
+    const maxScenes = game.maxScenesNumber ?? DEFAULT_MAX_SCENES;
     if (game.scenes.length < maxScenes) {
       currentScene.turns.push({
-        turnId: uuidv4(),
+        turnId: uuid(),
         description: "The adventure continues...",
         options: game.characters.map(character => ({
           name: character.name,
@@ -132,8 +134,32 @@ export class GameService implements IGameService {
     }
     return true;
   }
+
+  async getGamesUpdates(): Promise<void>{
+    // Configure change stream with custom pipeline for better filtering
+    for await (const gameUpdate of this.gameChangeStream.getGamesChangeEvents()) {
+      const game: Game = gameUpdate.fullDocument
+      this.sseBroadcaster.broadcastEventToClient(JSON.stringify(game), game.gameId);
+    }
+  }
+
+  async initGamesUpdates(): Promise<void> {
+    await this.gameChangeStream.initChangeStream();
+  }
+
+  async stopGamesUpdates(): Promise<void> {
+    await this.gameChangeStream.closeChangeStream();
+    this.sseBroadcaster.stopBroadcastingEventsToClients()
+  }
 }
 
-// Export singleton instance of the service
-const gameRepository = getGameRepository(DatabaseType.MONGODB);
-export const gameService = new GameService(gameRepository);
+let gameService: GameService;
+export function getGameServiceInstance(): GameService {
+  if (gameService) {
+    return gameService
+  }
+  const gameRepository = getMongodbGameRepository();
+  const gameChangeStream = getMongodbGameChangeStreamInstance()
+  const sseBroadcaster = getSSEBroadcasterInstance()
+  return gameService = new GameService(gameRepository, gameChangeStream, sseBroadcaster);
+}

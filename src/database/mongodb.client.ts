@@ -1,5 +1,22 @@
-import { MongoClient, ServerApiVersion, Db } from 'mongodb';
+import {Collection, Db, MongoClient, ServerApiVersion} from 'mongodb';
 import {DatabaseClient} from "@/database/database.client";
+import {Game} from "@/types/api-alias";
+
+export type GameDocument = Game & Document
+
+export interface ChangeStreamConfig {
+  pipeline?: Document[];
+  fullDocument?: 'default' | 'updateLookup' | 'whenAvailable' | 'required';
+  resumeAfter?: string;
+  startAfter?: string;
+}
+
+export interface ChangeStreamDocument<T> {
+  resumeToken: string
+  operationType: string
+  fullDocument: T
+  fullDocumentBeforeChange?: T
+}
 
 export class MongodbClient implements DatabaseClient {
   private client: MongoClient | null = null;
@@ -39,11 +56,24 @@ export class MongodbClient implements DatabaseClient {
     return this.connected;
   }
 
-  getDatabase(): Db {
+  async getDatabase(): Promise<Db | null> {
     if (!this.db) {
-      throw new Error('Database not initialized. Call connect() first.');
+      await this.connect();
     }
     return this.db;
+  }
+
+  async getCollection<T extends Document>(collectionName: string): Promise<Collection<T>> {
+    if (!this.client || !this.connected) {
+      await this.connect();
+    }
+    const database: Db | null = await this.getDatabase();
+    if (!database) {
+      throw Error("Database is not connected!")
+    }
+    const collection: Collection<T> = database.collection<T>(collectionName);
+    console.log(`Game collection '${collectionName}' initialized.`);
+    return collection;
   }
 
   async close(): Promise<void> {

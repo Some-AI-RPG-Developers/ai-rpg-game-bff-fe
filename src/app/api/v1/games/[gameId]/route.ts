@@ -1,15 +1,17 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { gameService } from '@/services/api.service';
+import {NextRequest, NextResponse} from 'next/server';
+import {GameService, getGameServiceInstance} from "@/services/game.service";
+import {Game} from "@/types/api-alias";
 
 // GET /api/v1/games/{gameId} - Get game by ID
 export async function GET(
-  request: NextRequest,
+  _: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
     const { gameId } = await params;
-    
-    const game = await gameService.getGame(gameId);
+
+    const gameService: GameService = getGameServiceInstance()
+    const game: Game | null = await gameService.getGame(gameId);
     
     if (!game) {
       return NextResponse.json(
@@ -30,12 +32,13 @@ export async function GET(
 
 // POST /api/v1/games/{gameId} - Start a game by ID
 export async function POST(
-  request: NextRequest,
+  _: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
 ) {
   try {
     const { gameId } = await params;
-    
+
+    const gameService: GameService = getGameServiceInstance()
     const game = await gameService.getGame(gameId);
     
     if (!game) {
@@ -53,7 +56,7 @@ export async function POST(
       );
     }
     
-    const success = await gameService.startGame(gameId);
+    const success: boolean = await gameService.startGame(gameId);
     
     if (!success) {
       return NextResponse.json(

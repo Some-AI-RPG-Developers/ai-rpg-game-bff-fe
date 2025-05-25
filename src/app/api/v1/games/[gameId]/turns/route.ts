@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { gameService } from '@/services/api.service';
 import { NewTurn } from '@/types/api-alias';
+import {GameService, getGameServiceInstance} from "@/services/game.service";
 
 // POST /api/v1/games/{gameId}/turns - Submit a new turn for the game
 export async function POST(
@@ -20,6 +20,7 @@ export async function POST(
     }
     
     // Check if the game exists
+    const gameService: GameService = getGameServiceInstance()
     const game = await gameService.getGame(gameId);
     
     if (!game) {
