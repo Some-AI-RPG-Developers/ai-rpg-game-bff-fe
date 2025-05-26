@@ -68,7 +68,9 @@ export class GameMongodbChangeStream implements GameChangeStream{
       const options = {
         fullDocument: config.fullDocument ?? 'updateLookup' as const,
         fullDocumentBeforeChange: config.fullDocumentBeforeChange ?? 'off' as const,
+        // @ts-ignore
         ...(config.resumeAfter && { resumeAfter: config.resumeAfter }),
+        // @ts-ignore
         ...(config.startAfter && { startAfter: config.startAfter })
       };
       this.changeStream = gamesCollection.watch(pipeline, options);

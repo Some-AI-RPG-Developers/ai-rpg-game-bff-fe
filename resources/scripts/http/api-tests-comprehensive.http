@@ -315,25 +315,25 @@ Content-Type: {{contentType}}
 ### They should be tested with appropriate SSE clients
 ### ========================================
 
-### 26. Subscribe to Game 1 updates (SSE)
-# @name subscribeGame1Updates
-# Note: This will open an SSE connection - use appropriate client
-GET {{baseUrl}}/api/v1/games/{{gameId1}}/updates
-Accept: text/event-stream
-Cache-Control: no-cache
-
-### 27. Subscribe to Game 2 updates (SSE)
-# @name subscribeGame2Updates
-# Note: This will open an SSE connection - use appropriate client
-GET {{baseUrl}}/api/v1/games/{{gameId2}}/updates
-Accept: text/event-stream
-Cache-Control: no-cache
-
-### 28. Test SSE with non-existent game
-# @name subscribeNonExistentGameUpdates
-GET {{baseUrl}}/api/v1/games/00000000-0000-0000-0000-000000000000/updates
-Accept: text/event-stream
-Cache-Control: no-cache
+#### 26. Subscribe to Game 1 updates (SSE)
+## @name subscribeGame1Updates
+## Note: This will open an SSE connection - use appropriate client
+#GET {{baseUrl}}/api/v1/games/{{gameId1}}/updates
+#Accept: text/event-stream
+#Cache-Control: no-cache
+#
+#### 27. Subscribe to Game 2 updates (SSE)
+## @name subscribeGame2Updates
+## Note: This will open an SSE connection - use appropriate client
+#GET {{baseUrl}}/api/v1/games/{{gameId2}}/updates
+#Accept: text/event-stream
+#Cache-Control: no-cache
+#
+#### 28. Test SSE with non-existent game
+## @name subscribeNonExistentGameUpdates
+#GET {{baseUrl}}/api/v1/games/00000000-0000-0000-0000-000000000000/updates
+#Accept: text/event-stream
+#Cache-Control: no-cache
 
 ### ========================================
 ### PERFORMANCE AND LOAD TESTS

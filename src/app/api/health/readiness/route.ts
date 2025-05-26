@@ -136,6 +136,7 @@ function checkDatabase() {
       connected: true,
       changeStream: {
         active: true,
+        // @ts-ignore
         ...(changeStream.getResumeToken() && {resumeToken: changeStream.getResumeToken()})
       },
     }

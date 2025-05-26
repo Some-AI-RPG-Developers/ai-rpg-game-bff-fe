@@ -23,6 +23,7 @@ export function GET() {
           connected: mongoClient.isConnected(),
           changeStream: {
             active: changeStream.isWatching(),
+            // @ts-ignore
             ...(changeStream.getResumeToken() && {resumeToken: changeStream.getResumeToken()})
         }
       },
