@@ -1,4 +1,4 @@
-import {Game, GameId} from "@/types/api.alias.types";
+import {Game, GameId} from "@/types/rest/api.alias.types";
 
 export interface GameRepository {
     getGame(gameId: string): Promise<Game | null>;

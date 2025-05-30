@@ -40,3 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /src/types/api.types.ts
+/src/types/proto/
+/src/types/rest/api.types.ts

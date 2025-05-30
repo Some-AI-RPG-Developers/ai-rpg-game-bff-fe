@@ -21,7 +21,7 @@ export async function GET() {
       status: isHealthy ? 'ok' : 'error',
       timestamp: new Date().toISOString(),
       service: 'ai-rpg-game-bff-fe',
-      version: process.env.NEXT_PUBLIC_APP_VERSION ?? '0.1.0',
+      version: '0.1.0',
       liveness,
       readiness
     },

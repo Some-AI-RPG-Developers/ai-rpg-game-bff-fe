@@ -1,6 +1,6 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {GameService} from "@/services/game.service";
-import {Game} from "@/types/api.alias.types";
+import {Game} from "@/types/rest/api.alias.types";
 import {getGameServiceInstance} from "@/global";
 
 // GET /api/v1/games/{gameId} - Get game by ID
@@ -57,14 +57,7 @@ export async function POST(
       );
     }
     
-    const success: boolean = await gameService.startGame(gameId);
-    
-    if (!success) {
-      return NextResponse.json(
-        { status: 500, message: 'Failed to start the game' },
-        { status: 500 }
-      );
-    }
+    await gameService.startGame(gameId);
     
     return NextResponse.json({ message: 'Game started successfully' }, { status: 200 });
   } catch (error) {

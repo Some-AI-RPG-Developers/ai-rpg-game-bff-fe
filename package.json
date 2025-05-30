@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "npm run generate-types && next build",
+    "build": "npm run generate-types && npm run generate-proto && next build",
     "start": "next start",
     "lint": "next lint",
-    "generate-types": "npx ts-node --esm resources/scripts/openapi/generate-api-types.ts"
+    "generate-types": "npx ts-node --esm resources/scripts/openapi/generate-api-types.ts",
+    "generate-proto": "npx ts-node --esm resources/scripts/proto/generate-proto-types.ts"
   },
   "dependencies": {
+    "@grpc/grpc-js": "^1.13.4",
+    "@grpc/proto-loader": "^0.7.15",
     "mongodb": "^6.16.0",
     "next": "15.3.2",
     "react": "^19.0.0",
@@ -30,6 +33,7 @@
     "openapi-typescript": "^7.8.0",
     "tailwindcss": "^4",
     "ts-node": "^10.9.2",
+    "ts-proto": "^2.7.0",
     "typescript": "^5"
   }
 }

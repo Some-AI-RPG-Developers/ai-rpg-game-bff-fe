@@ -5,13 +5,15 @@ import {GameService} from "@/services/game.service";
 import {GameMongodbChangeStream} from "@/database/stream/game.mongodb.stream";
 import {MongodbClient} from "@/database/mongodb.client";
 import {GameMongoDbRepository} from "@/database/repository/game.mongodb.repository";
+import {GRPCGameClient, GRPCClientConfig, GRPCGameClientImpl} from "@/grpc/game.grpc.client";
 
 declare global {
-    let sseBroadcaster: SSEBroadcaster;
-    let mongoDbClient: MongodbClient;
-    let gameRepositoryInstance: GameRepository;
-    let gameChangeStreamInstance: GameChangeStream;
-    let gameService: GameService;
+    const sseBroadcaster: SSEBroadcaster;
+    const mongoDbClient: MongodbClient;
+    const gameRepositoryInstance: GameRepository;
+    const gameChangeStreamInstance: GameChangeStream;
+    const grpcGameClient: GRPCGameClient;
+    const gameService: GameService;
 }
 
 export function getSSEBroadcasterInstance(): SSEBroadcaster {
@@ -44,6 +46,19 @@ export function getMongodbGameChangeStreamInstance(): GameChangeStream {
     return globalThis.gameChangeStreamInstance = new GameMongodbChangeStream(mongoDbClient, process.env.GAMES_COLLECTION);
 }
 
+export function getGrpcGameClientInstance(): GRPCGameClient {
+    if (globalThis.grpcGameClient) {
+        return globalThis.grpcGameClient;
+    }
+    const config: GRPCClientConfig = {
+        serverAddress: process.env.GRPC_GAME_MANAGER_HOST ?? 'localhost',
+        serverPort: parseInt(process.env.GRPC_GAME_MANAGER_PORT ?? '50051'),
+        useSSL: process.env.GRPC_USE_SSL === 'true',
+        timeout: parseInt(process.env.GRPC_TIMEOUT ?? '30000'),
+    };
+    return globalThis.grpcGameClient = new GRPCGameClientImpl(config);
+}
+
 export function getGameServiceInstance(): GameService {
     if (globalThis.gameService) {
         return globalThis.gameService
@@ -51,5 +66,6 @@ export function getGameServiceInstance(): GameService {
     const gameRepository = getMongodbGameRepositoryInstance();
     const gameChangeStream = getMongodbGameChangeStreamInstance()
     const sseBroadcaster = getSSEBroadcasterInstance()
-    return globalThis.gameService = new GameService(gameRepository, gameChangeStream, sseBroadcaster);
+    const grpcClient = getGrpcGameClientInstance()
+    return globalThis.gameService = new GameService(gameRepository, gameChangeStream, sseBroadcaster, grpcClient);
 }

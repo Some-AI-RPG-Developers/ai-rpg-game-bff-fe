@@ -1,6 +1,6 @@
 import {Collection, Db, MongoClient, ResumeToken, ServerApiVersion} from 'mongodb';
 import {DatabaseClient} from "@/database/database.client";
-import {Game} from "@/types/api.alias.types";
+import {Game} from "@/types/rest/api.alias.types";
 
 export type GameDocument = Game & Document
 
