@@ -1,5 +1,5 @@
 import {v4 as uuid} from 'uuid';
-import {Game, GameId, NewGame, NewTurn} from '@/types/api.alias.types';
+import {Game, GameId, NewGame, NewTurn} from '@/types/rest/api.alias.types';
 import {GameRepository} from "@/database/repository/game.repository";
 import {GameChangeStream} from "@/database/stream/game.stream";
 import {SSEBroadcaster} from "@/sse/sse.broadcaster";
