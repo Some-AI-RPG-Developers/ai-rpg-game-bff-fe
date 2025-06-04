@@ -1,5 +1,5 @@
 import {Collection} from 'mongodb';
-import {Game, GameId} from '@/types/api.alias.types';
+import {Game, GameId} from '@/types/rest/api.alias.types';
 import {GameDocument, MongodbClient} from "@/database/mongodb.client";
 import {GameRepository} from "@/database/repository/game.repository";
 

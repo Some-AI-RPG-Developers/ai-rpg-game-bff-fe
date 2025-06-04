@@ -306,15 +306,15 @@ components:
         options:
           type: array
           items:
-            $ref: '#/components/schemas/CharacterOptions'
+            $ref: '#/components/schemas/CharacterOption'
         actions:
           type: array
           items:
-            $ref: '#/components/schemas/GameCharacterAction'
+            $ref: '#/components/schemas/CharacterAction'
         consequences:
           type: string
           example: "The stealthy approach allowed the heroes to gain a surprise advantage"
-    GameCharacterAction:
+    CharacterAction:
       type: object
       required:
         - name
@@ -326,7 +326,7 @@ components:
         message:
           type: string
           example: "I will distract the dragon while you flank from behind"
-    CharacterOptions:
+    CharacterOption:
       type: object
       required:
         - name
@@ -407,8 +407,8 @@ components:
         characterActions:
           type: array
           items:
-            $ref: '#/components/schemas/CharacterAction'
-    CharacterAction:
+            $ref: '#/components/schemas/ChosenCharacterAction'
+    ChosenCharacterAction:
       type: object
       required:
         - characterName

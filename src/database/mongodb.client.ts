@@ -56,12 +56,13 @@ export class MongodbClient implements DatabaseClient {
       console.log('Successfully connected to MongoDB');
     } catch (error) {
       console.error('Failed to connect to MongoDB', error);
+      await this.close()
       throw error;
     }
   }
 
   isConnected(): boolean {
-    return this.connected;
+    return this.connected && this.client !== undefined;
   }
 
   async getDatabase(): Promise<Db | null> {
