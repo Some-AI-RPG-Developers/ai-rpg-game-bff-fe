@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
  * Combines both liveness and readiness information
  * Returns detailed information about the application health
  */
-export async function GET() {
+export async function GET(): Promise<Response>  {
   const [livenessResponse, readinessResponse] = await Promise.all([
     fetch(new URL('/api/health/liveness', process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000')),
     fetch(new URL('/api/health/readiness', process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'))

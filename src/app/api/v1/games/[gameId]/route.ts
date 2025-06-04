@@ -7,9 +7,14 @@ import {getGameServiceInstance} from "@/global";
 export async function GET(
   _: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
-) {
+): Promise<Response> {
   try {
     const { gameId } = await params;
+    if (!gameId) {
+      return Response.json(
+          {error: `Missing param gamedId: ${gameId}`},
+          {status: 400})
+    }
 
     const gameService: GameService = getGameServiceInstance()
     const game: Game | null = await gameService.getGame(gameId);

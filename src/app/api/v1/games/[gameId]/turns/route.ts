@@ -7,12 +7,16 @@ import {getGameServiceInstance} from "@/global";
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
-) {
+): Promise<Response>  {
   try {
     const { gameId } = await params;
+    if (!gameId) {
+      return Response.json(
+          {error: `Missing param gamedId: ${gameId}`},
+          {status: 400})
+    }
+
     const body: NewTurn = await request.json();
-    
-    // Validate required fields
     if (!body.characterActions || body.characterActions.length === 0) {
       return NextResponse.json(
         { status: 400, message: 'Missing required field: characterActions' },

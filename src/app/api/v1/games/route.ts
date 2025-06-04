@@ -4,7 +4,7 @@ import {GameService} from "@/services/game.service";
 import {getGameServiceInstance} from "@/global";
 
 // POST /api/v1/games - Create a new game
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<Response> {
   try {
     const body: NewGame = await request.json();
     

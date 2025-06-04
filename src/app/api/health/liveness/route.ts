@@ -8,7 +8,7 @@ import {getMongoDbClientInstance, getMongodbGameChangeStreamInstance, getSSEBroa
  * Used to check if the application is running
  * Returns a 200 OK response with a JSON payload
  */
-export function GET() {
+export function GET(): NextResponse {
   const mongoClient = getMongoDbClientInstance();
   const changeStream: GameChangeStream = getMongodbGameChangeStreamInstance();
   const sseBroadcaster = getSSEBroadcasterInstance();
