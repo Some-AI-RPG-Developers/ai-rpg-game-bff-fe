@@ -1,5 +1,5 @@
 import {ChangeStream, ChangeStreamDocument as MongoChangeStreamDocument, Collection, ResumeToken} from 'mongodb';
-import {Game} from '@/types/api.alias.types';
+import {Game} from '@/types/rest/api.alias.types';
 import {ChangeStreamConfig, ChangeStreamDocument, GameDocument, MongodbClient} from '@/database/mongodb.client';
 import {GameChangeStream} from "@/database/stream/game.stream";
 

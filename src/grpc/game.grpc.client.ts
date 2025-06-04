@@ -44,7 +44,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
     };
     this.client.createGame(
         request,
-        (error, _): void => {
+        (error): void => {
           if (error) {
             throw new Error(`Failed to create game via gRPC: ${error}`);
           }
@@ -57,7 +57,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
     };
     this.client.startGame(
         request,
-        (error, _):void => {
+        (error):void => {
           if (error) {
             throw new Error(`Failed to start game via gRPC: ${error}`);
           }
@@ -74,7 +74,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
     };
     this.client.submitTurn(
         request,
-        (error, _): void => {
+        (error): void => {
           if (error) {
             throw new Error(`Failed to submit turn via gRPC: ${error}`);
           }
@@ -83,7 +83,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
 
   close(): void {
     if (this.client) {
-      grpc.closeClient(this.client as any);
+      grpc.closeClient(this.client);
     }
   }
 } 

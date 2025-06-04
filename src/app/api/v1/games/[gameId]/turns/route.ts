@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NewTurn } from '@/types/api.alias.types';
+import { NewTurn } from '@/types/rest/api.alias.types';
 import {GameService} from "@/services/game.service";
 import {getGameServiceInstance} from "@/global";
 
@@ -32,16 +32,9 @@ export async function POST(
     }
     
     // Submit the turn
-    const success = await gameService.submitTurn(gameId, body);
-    
-    if (!success) {
-      return NextResponse.json(
-        { status: 500, message: 'Failed to submit turn' },
-        { status: 500 }
-      );
-    }
-    
+    await gameService.submitTurn(gameId, body);
     return NextResponse.json({ message: 'Turn submission accepted' }, { status: 202 });
+
   } catch (error) {
     console.error('Error submitting turn:', error);
     return NextResponse.json(
