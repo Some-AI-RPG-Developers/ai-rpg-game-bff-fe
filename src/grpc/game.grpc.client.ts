@@ -37,6 +37,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
     const request = {
       gameId: gameId,
       gamePrompt: newGame.gamePrompt,
+      maxScenesNumber: newGame.maxScenesNumber,
       characters: newGame.characters.map(character => ({
         name: character.name,
         characterPrompt: character.characterPrompt,

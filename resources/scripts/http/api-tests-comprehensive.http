@@ -35,6 +35,7 @@ Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
+  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "Sir Roland",
@@ -60,6 +61,7 @@ Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Create a space exploration adventure where a crew discovers an ancient alien artifact",
+  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "Captain Nova",
@@ -346,6 +348,7 @@ Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Performance test game 1",
+  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "TestChar1",
@@ -361,6 +364,7 @@ Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Performance test game 2",
+  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "TestChar2",

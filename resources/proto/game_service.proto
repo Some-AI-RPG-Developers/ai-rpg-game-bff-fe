@@ -15,7 +15,8 @@ service GameService {
 message CreateGameRequest {
   string game_id = 1;
   string game_prompt = 2;
-  repeated NewCharacter characters = 3;
+  int32 max_scenes_number = 3;
+  repeated NewCharacter characters = 4;
   
   message NewCharacter {
     string name = 1;

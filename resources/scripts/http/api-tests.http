@@ -16,6 +16,7 @@ Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
+  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "Sir Roland",

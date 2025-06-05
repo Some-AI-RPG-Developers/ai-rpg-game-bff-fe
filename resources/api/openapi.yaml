@@ -81,6 +81,7 @@ components:
             $ref: '#/components/schemas/NewGame'
           example:
             gamePrompt: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+            maxScenesNumber: 5
             characters:
               - name: "Sir Roland"
                 characterPrompt: "A noble knight who values honor and courage above all else"
@@ -378,11 +379,15 @@ components:
       type: object
       required:
         - gamePrompt
+        - maxScenesNumber
         - characters
       properties:
         gamePrompt:
           type: string
           example: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+        maxScenesNumber:
+          type: integer
+          example: 5
         characters:
           type: array
           items:
