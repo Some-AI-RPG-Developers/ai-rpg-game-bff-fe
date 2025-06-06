@@ -22,9 +22,9 @@ export class GameService {
     this.grpcClient = grpcClient;
   }
 
-  async createGame(newGame: NewGame): Promise<GameId> {
+  async createGame(newGame: NewGame, existingGameId: string | null): Promise<GameId> {
     try {
-      const gameId = uuid();
+      const gameId: string = existingGameId ?? uuid();
       await this.grpcClient.createGame(gameId, newGame);
       return {
         gameId: gameId

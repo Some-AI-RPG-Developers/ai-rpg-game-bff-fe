@@ -6,6 +6,7 @@ import {getGameServiceInstance} from "@/global";
 // POST /api/v1/games - Create a new game
 export async function POST(request: NextRequest): Promise<Response> {
   try {
+    const gameId: string | null = request.nextUrl.searchParams.get('gameId');
     const body: NewGame = await request.json();
     
     // Validate required fields
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest): Promise<Response> {
 
     // Create a new game
     const gameService: GameService = getGameServiceInstance()
-    const result: GameId = await gameService.createGame(body);
+    const result: GameId = await gameService.createGame(body, gameId);
     
     return NextResponse.json(result, { status: 202 });
   } catch (error) {

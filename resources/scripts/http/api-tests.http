@@ -10,8 +10,8 @@
 ### ========================================
 
 ### 1. Create Game - POST /api/v1/games
-# @name createGame
-POST {{baseUrl}}/api/v1/games
+# @name createGame (with gameId in query params resumes the creation process)
+POST {{baseUrl}}/api/v1/games?gameId=152dd802-3d03-42bc-9d68-82db55f85a26
 Content-Type: {{contentType}}
 
 {
