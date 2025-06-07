@@ -37,7 +37,7 @@ export async function POST(
     
     // Submit the turn
     await gameService.submitTurn(gameId, body);
-    return NextResponse.json({ message: 'Turn submission accepted' }, { status: 202 });
+    return NextResponse.json("", { status: 202 });
 
   } catch (error) {
     console.error('Error submitting turn:', error);

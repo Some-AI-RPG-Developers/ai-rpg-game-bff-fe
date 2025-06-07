@@ -64,7 +64,7 @@ export async function POST(
     
     await gameService.startGame(gameId);
     
-    return NextResponse.json({ message: 'Game started successfully' }, { status: 200 });
+    return NextResponse.json("", { status: 202 });
   } catch (error) {
     console.error('Error starting game:', error);
     return NextResponse.json(
