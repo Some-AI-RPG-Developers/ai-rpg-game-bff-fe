@@ -8,5 +8,6 @@ export type Game = components['schemas']['Game'];
 export type Scene = components['schemas']['Scene'];
 export type Turn = components['schemas']['Turn'];
 export type CharacterAction = components['schemas']['CharacterAction'];
+export type ChosenCharacterAction = components['schemas']['ChosenCharacterAction'];
 export type CharacterOptions = components['schemas']['CharacterOption'];
 export type Objective = components['schemas']['Objective'];
