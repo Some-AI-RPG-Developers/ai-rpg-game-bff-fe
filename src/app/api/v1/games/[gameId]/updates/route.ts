@@ -1,8 +1,8 @@
 import {NextRequest} from 'next/server';
-import {SSEBroadcaster} from '@/sse/sse.broadcaster';
+import {SSEBroadcaster} from '@/server/sse/sse.broadcaster';
 import {getSSEBroadcasterInstance, getGameServiceInstance} from "@/global"; // Import getGameServiceInstance
-import {GameService} from "@/services/game.service"; // Import GameService type
-import {Game} from "@/types/rest/api.alias.types"; // Import Game type
+import {GameService} from "@/server/services/game.service"; // Import GameService type
+import {Game} from "@/server/types/rest/api.alias.types"; // Import Game type
 
 export async function GET(
     request: NextRequest,

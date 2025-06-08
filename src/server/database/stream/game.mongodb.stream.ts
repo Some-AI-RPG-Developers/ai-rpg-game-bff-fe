@@ -1,7 +1,7 @@
 import {ChangeStream, ChangeStreamDocument as MongoChangeStreamDocument, Collection, ResumeToken} from 'mongodb';
-import {Game} from '@/types/rest/api.alias.types';
-import {ChangeStreamConfig, ChangeStreamDocument, GameDocument, MongodbClient} from '@/database/mongodb.client';
-import {GameChangeStream} from "@/database/stream/game.stream";
+import {Game} from '@/server/types/rest/api.alias.types';
+import {ChangeStreamConfig, ChangeStreamDocument, GameDocument, MongodbClient} from '@/server/database/mongodb.client';
+import {GameChangeStream} from "@/server/database/stream/game.stream";
 
 export class GameMongodbChangeStream implements GameChangeStream{
   private readonly dbClient: MongodbClient;

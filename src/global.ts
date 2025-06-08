@@ -1,11 +1,11 @@
-import {SSEBroadcaster, SSEBroadcasterImpl} from "@/sse/sse.broadcaster";
-import {GameRepository} from "@/database/repository/game.repository";
-import {GameChangeStream} from "@/database/stream/game.stream";
-import {GameService} from "@/services/game.service";
-import {GameMongodbChangeStream} from "@/database/stream/game.mongodb.stream";
-import {MongodbClient} from "@/database/mongodb.client";
-import {GameMongoDbRepository} from "@/database/repository/game.mongodb.repository";
-import {GRPCGameClient, GRPCClientConfig, GRPCGameClientImpl} from "@/grpc/game.grpc.client";
+import {SSEBroadcaster, SSEBroadcasterImpl} from "@/server/sse/sse.broadcaster";
+import {GameRepository} from "@/server/database/repository/game.repository";
+import {GameChangeStream} from "@/server/database/stream/game.stream";
+import {GameService} from "@/server/services/game.service";
+import {GameMongodbChangeStream} from "@/server/database/stream/game.mongodb.stream";
+import {MongodbClient} from "@/server/database/mongodb.client";
+import {GameMongoDbRepository} from "@/server/database/repository/game.mongodb.repository";
+import {GRPCGameClient, GRPCClientConfig, GRPCGameClientImpl} from "@/server/grpc/game.grpc.client";
 
 const SERVICE_REGISTRY_SYMBOL = Symbol.for('app.service.registry');
 

@@ -1,7 +1,7 @@
-import { execSync, spawn } from 'child_process';
-import { existsSync, mkdirSync } from 'fs';
+import {spawn} from 'child_process';
+import {existsSync, mkdirSync} from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import {fileURLToPath} from 'url';
 
 // Get dirname for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -9,7 +9,7 @@ const __dirname = path.dirname(__filename);
 
 // Use the local proto file
 const PROTO_PATH = path.resolve(__dirname, '../../proto/game_service.proto');
-const TYPES_OUTPUT_DIR = path.resolve(__dirname, '../../../src/types/proto');
+const TYPES_OUTPUT_DIR = path.resolve(__dirname, '../../../src/server/types/proto');
 
 // Make sure the proto types directory exists
 if (!existsSync(TYPES_OUTPUT_DIR)) {

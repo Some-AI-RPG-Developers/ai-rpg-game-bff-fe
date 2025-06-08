@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { GameContextProvider } from '@/client/context/GameContext';
+import React from "react";
 // If you have a global CSS file, import it here.
 // import './globals.css';
 
@@ -12,13 +14,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        {children}
+        <GameContextProvider>
+          {children}
+        </GameContextProvider>
       </body>
     </html>
   );

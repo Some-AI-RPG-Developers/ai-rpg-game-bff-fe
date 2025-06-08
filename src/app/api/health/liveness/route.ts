@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
-import {GameChangeStream} from "@/database/stream/game.stream";
-import {DatabaseType} from "@/database/database.type";
+import {GameChangeStream} from "@/server/database/stream/game.stream";
+import {DatabaseType} from "@/server/database/database.type";
 import {getMongoDbClientInstance, getMongodbGameChangeStreamInstance, getSSEBroadcasterInstance} from "@/global";
 
 /**

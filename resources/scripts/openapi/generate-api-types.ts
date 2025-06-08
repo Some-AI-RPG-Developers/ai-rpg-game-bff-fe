@@ -9,10 +9,10 @@ const __dirname = path.dirname(__filename);
 
 // Use the local OpenAPI file
 const OPENAPI_PATH = path.resolve(__dirname, '../../api/openapi.yaml');
-const TYPES_OUTPUT_PATH = path.resolve(__dirname, '../../../src/types/rest/api.types.ts');
+const TYPES_OUTPUT_PATH = path.resolve(__dirname, '../../../src/server/types/rest/api.types.ts');
 
 // Make sure the types directory exists
-const typesDir = path.resolve(__dirname, '../../../src/types');
+const typesDir = path.resolve(__dirname, '../../../src/server/types');
 if (!existsSync(typesDir)) {
   mkdirSync(typesDir, { recursive: true });
 }

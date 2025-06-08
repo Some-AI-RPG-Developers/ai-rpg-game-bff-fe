@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {GameId, NewGame} from '@/types/rest/api.alias.types';
-import {GameService} from "@/services/game.service";
+import {GameId, NewGame} from '@/server/types/rest/api.alias.types';
+import {GameService} from "@/server/services/game.service";
 import {getGameServiceInstance} from "@/global";
 
 // POST /api/v1/games - Create a new game

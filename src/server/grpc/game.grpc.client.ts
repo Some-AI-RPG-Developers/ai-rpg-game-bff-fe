@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js';
-import {NewGame, NewTurn} from '@/types/rest/api.alias.types';
-import {GameServiceClient} from '@/types/proto/game_service';
+import {NewGame, NewTurn} from '@/server/types/rest/api.alias.types';
+import {GameServiceClient} from '@/server/types/proto/game_service';
 
 export interface GRPCClientConfig {
   serverAddress: string;

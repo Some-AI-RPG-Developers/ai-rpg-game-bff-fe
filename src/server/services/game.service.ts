@@ -1,9 +1,9 @@
 import {v4 as uuid} from 'uuid';
-import {Game, GameId, NewGame, NewTurn} from '@/types/rest/api.alias.types';
-import {GameRepository} from "@/database/repository/game.repository";
-import {GameChangeStream} from "@/database/stream/game.stream";
-import {SSEBroadcaster} from "@/sse/sse.broadcaster";
-import {GRPCGameClient} from "@/grpc/game.grpc.client";
+import {Game, GameId, NewGame, NewTurn} from '@/server/types/rest/api.alias.types';
+import {GameRepository} from "@/server/database/repository/game.repository";
+import {GameChangeStream} from "@/server/database/stream/game.stream";
+import {SSEBroadcaster} from "@/server/sse/sse.broadcaster";
+import {GRPCGameClient} from "@/server/grpc/game.grpc.client";
 
 export class GameService {
   private readonly gameRepository: GameRepository

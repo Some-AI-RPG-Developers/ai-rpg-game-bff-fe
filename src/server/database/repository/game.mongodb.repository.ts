@@ -1,7 +1,7 @@
 import {Collection} from 'mongodb';
-import {Game, GameId} from '@/types/rest/api.alias.types';
-import {GameDocument, MongodbClient} from "@/database/mongodb.client";
-import {GameRepository} from "@/database/repository/game.repository";
+import {Game, GameId} from '@/server/types/rest/api.alias.types';
+import {GameDocument, MongodbClient} from "@/server/database/mongodb.client";
+import {GameRepository} from "@/server/database/repository/game.repository";
 
 export class GameMongoDbRepository implements GameRepository {
   private readonly dbClient: MongodbClient;

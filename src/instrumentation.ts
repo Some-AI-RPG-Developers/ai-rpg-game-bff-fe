@@ -1,4 +1,4 @@
-import {GameService} from "@/services/game.service";
+import {GameService} from "@/server/services/game.service";
 import {getGameServiceInstance, getMongoDbClientInstance, getSSEBroadcasterInstance} from "@/global";
 
 export async function register() {
