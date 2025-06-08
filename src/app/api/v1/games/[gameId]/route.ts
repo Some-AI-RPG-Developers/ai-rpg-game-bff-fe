@@ -46,6 +46,7 @@ export async function POST(
 
     const gameService: GameService = getGameServiceInstance()
     const game = await gameService.getGame(gameId);
+    console.debug(`POST /api/v1/games/${gameId} - Start a game by ID`)
     
     if (!game) {
       return NextResponse.json(

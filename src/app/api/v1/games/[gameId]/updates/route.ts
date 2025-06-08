@@ -30,7 +30,7 @@ export async function GET(
         sseBroadcaster.addClientSubscription(gameId, controller);
 
         const currentGame: Game | null = await gameService.getGame(gameId);
-        const gameJson: string = currentGame ? JSON.stringify(currentGame) : JSON.stringify({"gameId": gameId});
+        const gameJson: string = currentGame ? JSON.stringify(currentGame) : JSON.stringify({"_id": gameId});
         sseBroadcaster.broadcastEventToClient(gameJson, gameId);
         console.info(`SSE route: Sent initial game state to ${gameId}`);
       },

@@ -10,6 +10,8 @@ export async function POST(
 ): Promise<Response>  {
   try {
     const { gameId } = await params;
+    console.debug(`POST /api/v1/games/${gameId}/turns - Submit a new turn for the game`)
+
     if (!gameId) {
       return Response.json(
           {error: `Missing param gamedId: ${gameId}`},

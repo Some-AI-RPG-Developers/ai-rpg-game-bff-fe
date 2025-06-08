@@ -8,7 +8,8 @@ export async function POST(request: NextRequest): Promise<Response> {
   try {
     const gameId: string | null = request.nextUrl.searchParams.get('gameId');
     const body: NewGame = await request.json();
-    
+    console.debug(`POST /api/v1/games%s - Create a new game`, gameId ? `?gameId=${gameId}` : '')
+
     // Validate required fields
     if (!body.gamePrompt || !body.characters || body.characters.length === 0) {
       return NextResponse.json(
