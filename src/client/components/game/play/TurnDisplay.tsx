@@ -1,5 +1,6 @@
 import React from 'react';
 import { PlayPageTurn, GameStatus } from '@/client/types/game.types';
+import { TTSWrapper } from '@/client/components/tts';
 
 interface TurnDisplayProps {
   /** Current turn object */
@@ -24,7 +25,13 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
 }) => {
   return (
     <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px dashed #ccc' }}>
-      <h5>Current Turn: {currentTurn.turnId} (Turn {currentTurn.turnNumber})</h5>
+      <TTSWrapper
+        text={currentTurn.description ? `Current Turn: ${currentTurn.turnId}, Turn ${currentTurn.turnNumber}. ${currentTurn.description}` : undefined}
+        buttonPosition="inline-end"
+        title="Read turn description aloud"
+      >
+        <h5>Current Turn: {currentTurn.turnId} (Turn {currentTurn.turnNumber})</h5>
+      </TTSWrapper>
       
       {currentTurn.description && (
         <div style={{ marginBottom: '10px' }}>
@@ -33,9 +40,15 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
       )}
       
       {currentTurn.consequences && (
-        <div style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#e6ffed', border: '1px solid #b2fab4', borderRadius: '3px' }}>
-          <strong>Resolution:</strong> {currentTurn.consequences}
-        </div>
+        <TTSWrapper
+          text={`Resolution: ${currentTurn.consequences}`}
+          buttonPosition="top-right"
+          title="Read turn resolution aloud"
+        >
+          <div style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#e6ffed', border: '1px solid #b2fab4', borderRadius: '3px' }}>
+            <strong>Resolution:</strong> {currentTurn.consequences}
+          </div>
+        </TTSWrapper>
       )}
 
       {/* Character Options/Input: Show if options exist, no consequences yet, game not over, and status is idle */}

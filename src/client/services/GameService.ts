@@ -36,9 +36,9 @@ export interface GameServiceCallbacks {
  * Main game service class that coordinates all game operations
  */
 export class GameService {
-  private apiService: GameApiService;
-  private sseService: GameSSEService;
-  private config: GameServiceConfig;
+  private readonly apiService: GameApiService;
+  private readonly sseService: GameSSEService;
+  private readonly config: GameServiceConfig;
   private callbacks: GameServiceCallbacks | null = null;
   private currentGameId: string | null = null;
   private currentStatus: GameStatus = 'idle';

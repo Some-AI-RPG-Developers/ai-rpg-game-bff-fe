@@ -46,8 +46,8 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
   isProcessing,
   isWaitingForSSEResponse
 }) => {
-  const currentScene: PlayPageScene | null = game && game.scenes && game.scenes.length > 0 ? game.scenes[game.scenes.length - 1] : null;
-  const currentTurn: PlayPageTurn | null = currentScene && currentScene.turns && currentScene.turns.length > 0 ? currentScene.turns[currentScene.turns.length - 1] : null;
+  const currentScene: PlayPageScene | null = game && game.scenes?.length > 0 ? game.scenes[game.scenes.length - 1] : null;
+  const currentTurn: PlayPageTurn | null = currentScene && currentScene.turns?.length > 0 ? currentScene.turns[currentScene.turns.length - 1] : null;
 
   return (
     <div style={{ marginTop: '20px' }}>
