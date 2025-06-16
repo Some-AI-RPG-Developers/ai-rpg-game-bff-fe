@@ -30,9 +30,9 @@ export interface TTSEventHandlers {
  * Text-to-Speech service class
  */
 export class TTSService {
-  private synthesis: SpeechSynthesis | null;
+  private readonly synthesis: SpeechSynthesis | null;
+  private readonly isSupported: boolean;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
-  private isSupported: boolean;
   private voices: SpeechSynthesisVoice[] = [];
   private selectedVoice: SpeechSynthesisVoice | null = null;
   private defaultOptions: TTSOptions = {
@@ -175,7 +175,7 @@ export class TTSService {
    * Pauses the current speech
    */
   pause(): void {
-    if (this.isSupported && this.synthesis && this.synthesis.speaking) {
+    if (this.isSupported && this.synthesis?.speaking) {
       this.synthesis.pause();
     }
   }
@@ -184,7 +184,7 @@ export class TTSService {
    * Resumes the paused speech
    */
   resume(): void {
-    if (this.isSupported && this.synthesis && this.synthesis.paused) {
+    if (this.isSupported && this.synthesis?.paused) {
       this.synthesis.resume();
     }
   }
@@ -281,10 +281,6 @@ export function getTextToSpeechService(): TTSService | null {
   if (typeof window === 'undefined') {
     return null;
   }
-  
-  if (!textToSpeechServiceInstance) {
-    textToSpeechServiceInstance = new TTSService();
-  }
-  
+  textToSpeechServiceInstance ??= new TTSService();
   return textToSpeechServiceInstance;
 }

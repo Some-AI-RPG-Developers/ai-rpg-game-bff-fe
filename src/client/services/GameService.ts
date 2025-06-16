@@ -80,6 +80,7 @@ export class GameService {
     if (result.success && result.data) {
       this.currentGameId = result.data.gameId;
       this.updateStatus('creatingGame_WaitingForData');
+      console.log(`GameService: Connecting to SSE for new game. gameId from API: "${result.data.gameId}"`);
       this.connectToGameSSE(result.data.gameId);
     } else {
       this.updateStatus('error_GameSetupFailed');
@@ -103,6 +104,7 @@ export class GameService {
 
     this.currentGameId = gameId;
     this.updateStatus('loadingGame_WaitingForData');
+    console.log(`GameService: Connecting to SSE for existing game. gameId from input: "${gameId}"`);
     this.connectToGameSSE(gameId);
   }
 
@@ -324,29 +326,37 @@ export class GameService {
    * Connects to SSE for the specified game
    */
   private connectToGameSSE(gameId: string): void {
-    if (!this.callbacks) return;
+    if (!this.callbacks) {
+      console.log("GameService: callbacks are empty.")
+      return;
+    }
 
+    console.log("GameService: connectToGameSSE called.")
     const sseHandlers: SSEEventHandlers = {
       onGameUpdate: (gameData: PlayPageGame) => {
+        console.log("GameService: onGameUpdate called.")
         this.callbacks!.onGameUpdate(gameData);
       },
       onStatusChange: (newStatus: GameStatus) => {
+        console.log("GameService: onStatusChange called.")
         this.updateStatus(newStatus);
       },
       onError: (error: string) => {
+        console.log("GameService: onError called.")
         this.callbacks!.onError(error);
       },
       onConnectionOpen: () => {
+        console.log("GameService: onConnectionOpen called.")
         // Connection opened successfully
       },
       onConnectionClose: () => {
-        // Handle connection close if in active waiting state
+        console.log("GameService: onConnectionClose called.")
         if (GameSSEService.shouldTriggerErrorOnClose(this.currentStatus)) {
+          console.error("GameService: Game setup failed. Triggering error.")
           this.updateStatus('error_GameSetupFailed');
         }
       }
     };
-
     this.sseService.connect({
       gameId,
       reconnectAttempts: this.config.sseReconnectAttempts,

@@ -88,6 +88,7 @@ export function useGameForm(): GameFormState & GameFormActions {
    * Sets the resume game ID input
    */
   const setResumeGameIdInput = useCallback((value: string) => {
+    console.log('useGameForm: setResumeGameIdInput called with value:', JSON.stringify(value));
     setResumeGameIdInputInternal(value);
   }, []);
 

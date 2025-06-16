@@ -58,8 +58,8 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         {/* Specific messages for content generation are handled by the centralized status messages now */}
       </div>
 
-      {/* Start Game Button: if synopsis exists, no current turn, not concluded, and status is idle */}
-      {game.synopsis && !currentTurn && !game.conclusion && gameStatus === 'idle' && (
+      {/* Start Game Button: if synopsis exists, no current turn, not concluded, and status is 'game_ReadyToStart' */}
+      {game.synopsis && !currentTurn && !game.conclusion && gameStatus === 'game_ReadyToStart' && (
         <div style={{ marginBottom: '20px', textAlign: 'center' }}>
           <button
             onClick={onStartGame}

@@ -46,11 +46,8 @@ export function useGameStatus(config: GameStatusConfig) {
       onStatusChange,
       onError
     });
-
-    return () => {
-      gameService.disconnect();
-    };
-  }, [gameService, onGameUpdate, onStatusChange, onError]);
+    return () => {};
+  }, [onGameUpdate, onStatusChange, onError]);
 
   /**
    * Determines the next game status based on game data and current status

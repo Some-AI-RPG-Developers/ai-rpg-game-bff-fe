@@ -32,6 +32,7 @@ export type GameStatus =
   | 'contentGen_Characters_WaitingForData' // Game loaded, but characters missing, waiting for SSE
   | 'contentGen_Settings_WaitingForData' // Game loaded, characters present, but synopsis missing, waiting for SSE
   | 'error_GameSetupFailed' // An error occurred that prevents game from starting/continuing
+  | 'game_ReadyToStart' // New status: Game created/loaded, synopsis present, ready for "Start Game" action
   | 'game_Over'; // Game has concluded
 
 /**

@@ -5,7 +5,7 @@
 
 'use client';
 
-import React, {createContext, useCallback, useContext} from 'react';
+import React, {createContext, useCallback, useContext, useMemo} from 'react';
 import {GameService} from '@/client/services/GameService';
 import {getCurrentSceneAndTurn, getProcessingState, useGameState} from '@/client/hooks/useGameState';
 import {useGameForm} from '@/client/hooks/useGameForm';
@@ -98,12 +98,12 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     gameState.updateGameFromSSE(gameData, gameState.game);
   }, [gameState]);
 
-  const gameStatusConfig = {
+  const gameStatusConfig = useMemo(() => ({
     gameService,
     onGameUpdate: handleGameUpdate,
     onStatusChange: gameState.setGameStatus,
     onError: gameState.setError
-  };
+  }), [gameService, handleGameUpdate, gameState.setGameStatus, gameState.setError]);
   
   useGameStatus(gameStatusConfig);
   

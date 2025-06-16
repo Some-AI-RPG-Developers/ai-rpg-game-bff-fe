@@ -34,6 +34,7 @@ export class GameSSEService {
   private config: SSEConfig | null = null;
   private handlers: SSEEventHandlers | null = null;
   private isConnected = false;
+  private isConnecting = false; // Flag to indicate a connection attempt is in progress
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 3;
   private reconnectDelay = 1000;
@@ -44,7 +45,14 @@ export class GameSSEService {
    * @param handlers - Event handlers for SSE events
    */
   connect(config: SSEConfig, handlers: SSEEventHandlers): void {
-    this.disconnect(); // Ensure clean state
+    console.log('GameSSEService: connect called with config:', JSON.stringify(config, null, 2));
+    // If trying to connect to the same gameId and already connecting or connected, update handlers and return.
+    if (this.config?.gameId === config.gameId && (this.isConnecting || this.isConnected)) {
+        console.log(`GameSSEService: Already connecting/connected to ${config.gameId}. Updating handlers if necessary.`);
+        this.handlers = handlers; // Ensure handlers are up-to-date
+        return;
+    }
+    this.disconnect(); // Ensure clean state from previous different game or failed attempt
     
     this.config = config;
     this.handlers = handlers;
@@ -58,15 +66,25 @@ export class GameSSEService {
    * Disconnects from the SSE endpoint
    */
   disconnect(): void {
+    console.log(`GameSSEService: disconnect() called. Current gameId: ${this.config?.gameId}`);
+    console.trace("GameSSEService: disconnect() call stack");
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = null;
     }
     
     this.isConnected = false;
+    this.isConnecting = false; // Reset flag on disconnect
     this.reconnectAttempts = 0;
     this.config = null;
     this.handlers = null;
+  }
+
+  /**
+   * Public getter to check if the service is in the process of connecting.
+   */
+  public getIsConnecting(): boolean {
+    return this.isConnecting;
   }
 
   /**
@@ -88,41 +106,66 @@ export class GameSSEService {
    */
   private createConnection(): void {
     if (!this.config || !this.handlers) {
+      console.error('GameSSEService: createConnection called without config or handlers.');
+      this.isConnecting = false; // Ensure flag is reset if we can't proceed
       throw new Error('SSE service not properly configured');
     }
+    this.isConnecting = true; // Set flag: connection attempt is starting
 
     const eventSourceUrl = this.getEndpointUrl(this.config);
+    console.log('GameSSEService: In createConnection. Attempting to connect to SSE URL:', eventSourceUrl);
     
     try {
+      console.log('GameSSEService: PRE new EventSource() instantiation.');
       this.eventSource = new EventSource(eventSourceUrl);
+      console.log('GameSSEService: POST new EventSource() instantiation. EventSource object:', this.eventSource);
+      if (this.eventSource) {
+        console.log(`GameSSEService: EventSource readyState after instantiation: ${this.eventSource.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSED)`);
+      }
       this.setupEventListeners();
     } catch (error) {
+      console.error('GameSSEService: catch block - Error during EventSource instantiation or setupEventListeners:', error);
+      this.isConnecting = false; // Reset flag on error
       const errorMessage = `Failed to initialize SSE connection to ${eventSourceUrl}: ${
         error instanceof Error ? error.message : String(error)
       }`;
       console.error('GameSSEService: Error creating EventSource:', error);
-      this.handlers.onError(errorMessage);
+      if (this.handlers) { // Check if handlers is still there
+        this.handlers.onError(errorMessage);
+      } else {
+        console.error("GameSSEService: Handlers became null before error could be reported in createConnection's catch block.");
+      }
     }
+
   }
 
   /**
    * Sets up event listeners for the SSE connection
    */
   private setupEventListeners(): void {
-    if (!this.eventSource || !this.handlers) return;
+    if (!this.eventSource || !this.handlers)  {
+      console.warn("GameSSEService: Either eventSource or handlers is not defined.")
+      return;
+    }
 
+    console.log("GameSSEService: Setting up event listeners...")
     this.eventSource.onopen = () => {
-      console.debug(`GameSSEService: SSE connection opened for gameId: ${this.config?.gameId}`);
+      console.log(`GameSSEService: eventSource.onopen triggered for gameId: ${this.config?.gameId}`);
       this.isConnected = true;
       this.reconnectAttempts = 0;
       this.handlers!.onConnectionOpen();
     };
 
     this.eventSource.onmessage = (event) => {
+      console.log(`GameSSEService: eventSource.onmessage triggered for gameId: ${this.config?.gameId}, data:`, event.data);
       this.handleGameUpdate(event);
     };
 
     this.eventSource.onerror = (errorEvent) => {
+      console.error(`GameSSEService: eventSource.onerror triggered for gameId: ${this.config?.gameId}. Event:`, errorEvent);
+      if (this.eventSource) {
+        console.error(`GameSSEService: EventSource readyState in onerror: ${this.eventSource.readyState}`);
+      }
       this.handleConnectionError(errorEvent);
     };
   }
@@ -155,9 +198,7 @@ export class GameSSEService {
     if (!this.eventSource || !this.handlers || !this.config) return;
 
     console.error(`GameSSEService: Error occurred with SSE connection for gameId: ${this.config.gameId}`, errorEvent);
-    
     let errorMessage = 'Connection to game updates failed.';
-    
     if (this.eventSource.readyState === EventSource.CLOSED) {
       errorMessage += ' The connection was closed.';
       this.isConnected = false;
@@ -172,7 +213,6 @@ export class GameSSEService {
     } else if (this.eventSource.readyState === EventSource.CONNECTING) {
       errorMessage += ' Attempting to reconnect...';
     }
-    
     this.handlers.onError(errorMessage + ' Please try refreshing if the issue persists.');
   }
 
