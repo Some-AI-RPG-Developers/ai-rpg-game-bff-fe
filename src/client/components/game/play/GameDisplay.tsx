@@ -2,7 +2,7 @@ import React from 'react';
 import { PlayPageGame, PlayPageScene, PlayPageTurn, GameStatus } from '@/client/types/game.types';
 import { SceneDisplay } from './SceneDisplay';
 import { TurnDisplay } from './TurnDisplay';
-import { CharacterActionForm } from './CharacterActionForm';
+import { TTSWrapper } from '@/client/components/tts';
 
 interface GameDisplayProps {
   /** Current game object */
@@ -46,6 +46,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
   isProcessing,
   isWaitingForSSEResponse
 }) => {
+  // Get current turn for the "Start Game" button logic
   const currentScene: PlayPageScene | null = game && game.scenes?.length > 0 ? game.scenes[game.scenes.length - 1] : null;
   const currentTurn: PlayPageTurn | null = currentScene && currentScene.turns?.length > 0 ? currentScene.turns[currentScene.turns.length - 1] : null;
 
@@ -54,7 +55,18 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
       <div style={{ marginBottom: '20px', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
         <h4>Game Details:</h4>
         <p><strong>ID:</strong> {game.gameId}</p>
-        {game.synopsis && <p><strong>Synopsis:</strong> {game.synopsis}</p>}
+        {game.synopsis && (
+          <div style={{ marginTop: '10px' }}>
+            <TTSWrapper
+              text={`Synopsis: ${game.synopsis}`}
+              buttonPosition="inline-end"
+              title="Read synopsis aloud"
+            >
+              <strong>Synopsis:</strong>
+            </TTSWrapper>
+            <p style={{ margin: '5px 0 0 0', maxWidth: '90ch' }}>{game.synopsis}</p>
+          </div>
+        )}
         {/* Specific messages for content generation are handled by the centralized status messages now */}
       </div>
 
@@ -79,29 +91,34 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         </div>
       )}
 
-      {/* Current Scene and Turn Display */}
-      {currentScene && gameStatus !== 'game_Over' && (
-        <SceneDisplay currentScene={currentScene} game={game}>
-          {currentTurn && (
-            <TurnDisplay 
-              currentTurn={currentTurn} 
-              gameStatus={gameStatus}
-              isGameConcluded={!!game.conclusion}
-            >
-              <CharacterActionForm
-                currentTurn={currentTurn}
-                selectedOptions={selectedOptions}
-                freeTextInputs={freeTextInputs}
-                onOptionChange={onOptionChange}
-                onFreeTextChange={onFreeTextChange}
-                onSubmitTurn={onSubmitTurn}
-                allCharactersMadeChoice={allCharactersMadeChoice}
-                isProcessing={isProcessing}
-                isWaitingForSSEResponse={isWaitingForSSEResponse}
-              />
-            </TurnDisplay>
-          )}
-        </SceneDisplay>
+      {/* All Scenes and Turns Display */}
+      {game.scenes && game.scenes.length > 0 && (
+        <div>
+          {game.scenes.map((scene, sceneIndex) => (
+            <SceneDisplay key={scene.sceneId || sceneIndex} currentScene={scene}>
+              {scene.turns && scene.turns.length > 0 && (
+                <div>
+                  {scene.turns.map((turn, turnIndex) => (
+                    <TurnDisplay
+                      key={turn.turnId || turnIndex}
+                      currentTurn={turn}
+                      gameStatus={gameStatus}
+                      isGameConcluded={!!game.conclusion}
+                      selectedOptions={selectedOptions}
+                      freeTextInputs={freeTextInputs}
+                      onOptionChange={onOptionChange}
+                      onFreeTextChange={onFreeTextChange}
+                      onSubmitTurn={onSubmitTurn}
+                      allCharactersMadeChoice={allCharactersMadeChoice}
+                      isProcessing={isProcessing}
+                      isWaitingForSSEResponse={isWaitingForSSEResponse}
+                    />
+                  ))}
+                </div>
+              )}
+            </SceneDisplay>
+          ))}
+        </div>
       )}
     </div>
   );
