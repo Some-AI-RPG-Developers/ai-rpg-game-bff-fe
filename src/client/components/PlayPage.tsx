@@ -8,7 +8,6 @@ import {GameStatusIndicator} from "@/client/components/game/GameStatusIndicator"
 import {GameHeader} from "@/client/components/game/GameHeader";
 import {ViewMode} from "@/client/types/ui.types";
 import {useGameContext} from "@/client/context/GameContext";
-import {TTSSettings} from "@/client/components/tts";
 
 /**
  * Main Play Page Component
@@ -94,10 +93,6 @@ export default function PlayPage() {
                 error={error}
             />
 
-            {/* TTS Settings Panel - Always visible when supported */}
-            <div style={{ marginBottom: '20px' }}>
-                <TTSSettings />
-            </div>
 
             {/* Initial choice: Create or Resume (only if no gameId and not processing/waiting) */}
             {viewMode === 'choice' && !gameId && !isProcessing && !isWaitingForSSEResponse && gameStatus === 'idle' && (

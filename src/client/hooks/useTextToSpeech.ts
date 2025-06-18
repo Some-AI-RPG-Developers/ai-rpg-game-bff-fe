@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { TTSService, Voice, TTSOptions } from '@/client/services/tts/TTSService';
+import { TTSService, Voice, TTSOptions, getTextToSpeechService } from '@/client/services/tts/TTSService';
 
 export interface TTSState {
   isSupported: boolean;
@@ -34,9 +34,9 @@ export interface TTSControls {
 export function useTextToSpeech(ttsService?: TTSService): TTSState & TTSControls {
   const serviceRef = useRef<TTSService | null>(null);
   
-  // Initialize service only on client side
+  // Initialize service only on client side - use singleton to ensure all hooks share the same instance
   if (typeof window !== 'undefined' && !serviceRef.current) {
-    serviceRef.current = ttsService || new TTSService();
+    serviceRef.current = ttsService || getTextToSpeechService();
   }
   
   const service = serviceRef.current;

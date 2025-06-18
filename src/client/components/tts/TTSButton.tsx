@@ -39,15 +39,8 @@ export function TTSButton({
   const tts = useTextToSpeech();
   const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
 
-  const handleClick = async () => {
+  const handlePlayClick = async () => {
     if (!text.trim()) return;
-
-    if (isCurrentlyPlaying) {
-      tts.stop();
-      setIsCurrentlyPlaying(false);
-      onSpeakEnd?.();
-      return;
-    }
 
     try {
       setIsCurrentlyPlaying(true);
@@ -62,6 +55,20 @@ export function TTSButton({
       const errorMessage = error instanceof Error ? error.message : 'Speech synthesis failed';
       onError?.(errorMessage);
     }
+  };
+
+  const handlePauseClick = () => {
+    if (tts.isPaused) {
+      tts.resume();
+    } else {
+      tts.pause();
+    }
+  };
+
+  const handleStopClick = () => {
+    tts.stop();
+    setIsCurrentlyPlaying(false);
+    onSpeakEnd?.();
   };
 
   const getSizeClasses = () => {
@@ -88,8 +95,6 @@ export function TTSButton({
 
   const isDisabled = disabled || !tts.isSupported || !text.trim();
 
-  const buttonTitle = title || (isCurrentlyPlaying ? 'Stop reading' : 'Read aloud');
-
   const buttonClasses = `
     inline-flex items-center justify-center gap-2 
     rounded-md border border-gray-300 
@@ -102,80 +107,92 @@ export function TTSButton({
     ${className}
   `.trim();
 
-  const renderIcon = () => {
-    if (isCurrentlyPlaying) {
-      return (
-        <svg
-          className={getIconSize()}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 10h6v4H9z"
-          />
-        </svg>
-      );
-    }
+  const renderPlayIcon = () => (
+    <svg
+      className={getIconSize()}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M8 5v14l11-7z"/>
+    </svg>
+  );
 
-    return (
-      <svg
-        className={getIconSize()}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg"
+  const renderPauseIcon = () => (
+    <svg
+      className={getIconSize()}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+    </svg>
+  );
+
+  const renderStopIcon = () => (
+    <svg
+      className={getIconSize()}
+      fill="currentColor"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path d="M6 6h12v12H6z"/>
+    </svg>
+  );
+
+  const renderPlayButton = () => (
+    <button
+      type="button"
+      onClick={handlePlayClick}
+      disabled={isDisabled}
+      title={title || 'Play audio'}
+      className={buttonClasses}
+      aria-label={title || 'Play audio'}
+    >
+      {variant === 'text' ? (children || 'Play') :
+       variant === 'both' ? (
+         <>
+           {renderPlayIcon()}
+           {children || 'Play'}
+         </>
+       ) : renderPlayIcon()}
+    </button>
+  );
+
+  const renderControlButtons = () => (
+    <div className="inline-flex gap-1">
+      <button
+        type="button"
+        onClick={handlePauseClick}
+        disabled={isDisabled}
+        title={tts.isPaused ? 'Resume audio' : 'Pause audio'}
+        className={buttonClasses}
+        aria-label={tts.isPaused ? 'Resume audio' : 'Pause audio'}
       >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M9 9a1 1 0 011-1h1.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-.293.707l-3.414 3.414a1 1 0 01-.707.293H10a1 1 0 01-1-1v-6z"
-        />
-      </svg>
-    );
-  };
-
-  const renderContent = () => {
-    switch (variant) {
-      case 'text':
-        return children || (isCurrentlyPlaying ? 'Stop' : 'Read aloud');
-      case 'both':
-        return (
-          <>
-            {renderIcon()}
-            {children || (isCurrentlyPlaying ? 'Stop' : 'Read aloud')}
-          </>
-        );
-      default:
-        return renderIcon();
-    }
-  };
+        {tts.isPaused ? renderPlayIcon() : renderPauseIcon()}
+      </button>
+      <button
+        type="button"
+        onClick={handleStopClick}
+        disabled={isDisabled}
+        title="Stop audio"
+        className={buttonClasses}
+        aria-label="Stop audio"
+      >
+        {renderStopIcon()}
+      </button>
+    </div>
+  );
 
   if (!tts.isSupported) {
     return null; // Don't render if TTS is not supported
   }
 
-  return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={isDisabled}
-      title={buttonTitle}
-      className={buttonClasses}
-      aria-label={buttonTitle}
-    >
-      {renderContent()}
-    </button>
-  );
+  // If currently playing or speaking, show pause/stop controls
+  if (isCurrentlyPlaying || tts.isSpeaking) {
+    return renderControlButtons();
+  }
+
+  // Otherwise, show play button
+  return renderPlayButton();
 }

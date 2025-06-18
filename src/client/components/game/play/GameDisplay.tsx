@@ -95,7 +95,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
       {game.scenes && game.scenes.length > 0 && (
         <div>
           {game.scenes.map((scene, sceneIndex) => (
-            <SceneDisplay key={scene.sceneId || sceneIndex} currentScene={scene}>
+            <SceneDisplay
+              key={scene.sceneId || sceneIndex}
+              currentScene={scene}
+              sceneNumber={sceneIndex + 1}
+            >
               {scene.turns && scene.turns.length > 0 && (
                 <div>
                   {scene.turns.map((turn, turnIndex) => (
@@ -104,6 +108,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                       currentTurn={turn}
                       gameStatus={gameStatus}
                       isGameConcluded={!!game.conclusion}
+                      turnNumber={turnIndex + 1}
                       selectedOptions={selectedOptions}
                       freeTextInputs={freeTextInputs}
                       onOptionChange={onOptionChange}

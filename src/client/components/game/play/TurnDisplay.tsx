@@ -10,6 +10,8 @@ interface TurnDisplayProps {
   gameStatus: GameStatus;
   /** Whether the game has concluded */
   isGameConcluded: boolean;
+  /** Turn number (1-based) */
+  turnNumber?: number;
   /** Currently selected options for each character */
   selectedOptions: Record<string, string>;
   /** Current free text inputs for each character */
@@ -36,6 +38,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
   currentTurn,
   gameStatus,
   isGameConcluded,
+  turnNumber,
   selectedOptions,
   freeTextInputs,
   onOptionChange,
@@ -49,11 +52,11 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
     <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px dashed #ccc' }}>
       <div>
         <TTSWrapper
-          text={currentTurn.description ? `Turn: ${currentTurn.turnId}, Turn ${currentTurn.turnNumber}. ${currentTurn.description}` : undefined}
+          text={currentTurn.description ? `Turn: ${currentTurn.turnId}, Turn ${turnNumber || currentTurn.turnNumber || 'Unknown'}. ${currentTurn.description}` : undefined}
           buttonPosition="inline-end"
           title="Read turn description aloud"
         >
-          <strong>Turn: {currentTurn.turnId} (Turn {currentTurn.turnNumber})</strong>
+          <strong>Turn: {currentTurn.turnId} (Turn {turnNumber || currentTurn.turnNumber || 'Unknown'})</strong>
         </TTSWrapper>
         {currentTurn.description && (
           <p style={{ margin: '5px 0 10px 0', maxWidth: '90ch' }}>{currentTurn.description}</p>

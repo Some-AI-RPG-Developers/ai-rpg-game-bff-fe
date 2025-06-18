@@ -5,6 +5,8 @@ import { TTSWrapper } from '@/client/components/tts';
 interface SceneDisplayProps {
   /** Current scene object */
   currentScene: PlayPageScene;
+  /** Scene number (1-based) */
+  sceneNumber?: number;
   /** Children components (typically TurnDisplay) */
   children?: React.ReactNode;
 }
@@ -15,17 +17,18 @@ interface SceneDisplayProps {
  */
 export const SceneDisplay: React.FC<SceneDisplayProps> = ({
   currentScene,
+  sceneNumber,
   children
 }) => {
   return (
     <div style={{ marginBottom: '20px', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
       <div>
         <TTSWrapper
-          text={`Scene: ${currentScene.sceneId}, Scene ${currentScene.sceneNumber}. ${currentScene.description}`}
+          text={`Scene: ${currentScene.sceneId}, Scene ${sceneNumber || currentScene.sceneNumber || 'Unknown'}. ${currentScene.description}`}
           buttonPosition="inline-end"
           title="Read scene description aloud"
         >
-          <strong>Scene: {currentScene.sceneId} (Scene {currentScene.sceneNumber})</strong>
+          <strong>Scene: {currentScene.sceneId} (Scene {sceneNumber || currentScene.sceneNumber || 'Unknown'})</strong>
         </TTSWrapper>
         <p style={{ margin: '5px 0 10px 0', maxWidth: '90ch' }}>{currentScene.description}</p>
       </div>
