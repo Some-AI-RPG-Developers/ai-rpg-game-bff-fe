@@ -87,13 +87,6 @@ export default function PlayPage() {
         <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
             <GameHeader game={game} gameId={gameId} error={error} />
 
-            <GameStatusIndicator
-                gameStatus={gameStatus}
-                gameId={gameId}
-                error={error}
-            />
-
-
             {/* Initial choice: Create or Resume (only if no gameId and not processing/waiting) */}
             {viewMode === 'choice' && !gameId && !isProcessing && !isWaitingForSSEResponse && gameStatus === 'idle' && (
                 <WelcomeScreen
@@ -155,6 +148,12 @@ export default function PlayPage() {
                     />
 
                     <GameConclusion game={game} />
+
+                    <GameStatusIndicator
+                        gameStatus={gameStatus}
+                        gameId={gameId}
+                        error={error}
+                    />
 
                     <GameDebugViewer game={game} gameStatus={gameStatus} />
                 </>
