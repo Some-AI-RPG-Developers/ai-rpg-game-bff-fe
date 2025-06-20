@@ -11,7 +11,8 @@ import {
   PlayPageGame,
   GameStatus,
   GameServiceResponse,
-  CharacterInput
+  CharacterInput,
+  Game
 } from '@/client/types/game.types';
 
 /**
@@ -68,7 +69,7 @@ export class GameService {
     const validation = this.apiService.validateGameCreationData(gameData);
     if (!validation.isValid) {
       return {
-        success: false,
+        status: 400,
         error: validation.errors.join(' ')
       };
     }
@@ -77,7 +78,7 @@ export class GameService {
 
     const result = await this.apiService.createGame(gameData);
     
-    if (result.success && result.data) {
+    if (result.status === 200 && result.data) {
       this.currentGameId = result.data.gameId;
       this.updateStatus('creatingGame_WaitingForData');
       console.log(`GameService: Connecting to SSE for new game. gameId from API: "${result.data.gameId}"`);
@@ -90,9 +91,16 @@ export class GameService {
   }
 
   /**
+   * Checks if a game exists by ID
+   */
+  async getGame(gameId: string): Promise<GameServiceResponse<Game>> {
+    return await this.apiService.getGame(gameId);
+  }
+
+  /**
    * Loads an existing game by ID
    */
-  loadGameById(gameId: string): void {
+  async loadGameById(gameId: string): Promise<void> {
     if (!this.callbacks) {
       throw new Error('GameService not initialized');
     }
@@ -102,6 +110,16 @@ export class GameService {
       return;
     }
 
+    // First, check if the game exists with a GET request
+    const gameResult = await this.apiService.getGame(gameId);
+    
+    if (gameResult.status !== 200) {
+      // Game not found (404) or other error - show error without changing status
+      this.callbacks.onError(gameResult.error ?? 'Failed to load game');
+      return;
+    }
+
+    // Game exists, proceed with SSE connection
     this.currentGameId = gameId;
     this.updateStatus('loadingGame_WaitingForData');
     console.log(`GameService: Connecting to SSE for existing game. gameId from input: "${gameId}"`);
@@ -114,7 +132,7 @@ export class GameService {
   async startGame(): Promise<GameServiceResponse<void>> {
     if (!this.currentGameId || !this.callbacks) {
       return {
-        success: false,
+        status: 400,
         error: 'No game ID available or service not initialized'
       };
     }
@@ -123,7 +141,7 @@ export class GameService {
 
     const result = await this.apiService.startGame(this.currentGameId);
     
-    if (result.success) {
+    if (result.status === 200) {
       this.updateStatus('startingGame_WaitingForFirstTurn');
     } else {
       this.updateStatus('error_GameSetupFailed');
@@ -138,7 +156,7 @@ export class GameService {
   async submitTurn(turnData: NewTurn): Promise<GameServiceResponse<void>> {
     if (!this.currentGameId || !this.callbacks) {
       return {
-        success: false,
+        status: 400,
         error: 'No game ID available or service not initialized'
       };
     }
@@ -147,7 +165,7 @@ export class GameService {
 
     const result = await this.apiService.submitTurn(this.currentGameId, turnData);
     
-    if (!result.success) {
+    if (result.status !== 200) {
       this.updateStatus('error_GameSetupFailed');
     }
     // If successful, SSE will handle the status transition
@@ -167,7 +185,7 @@ export class GameService {
 
     const result = await this.apiService.recreateGameContent(gameId, gameData);
     
-    if (result.success) {
+    if (result.status === 200) {
       this.updateStatus('recreatingGame_WaitingForData');
     } else {
       this.updateStatus('error_GameSetupFailed');

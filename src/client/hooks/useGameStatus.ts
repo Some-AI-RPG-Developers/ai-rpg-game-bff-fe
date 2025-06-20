@@ -130,7 +130,7 @@ export function useGameRecreation(config: RecreationConfig & {
         // Use the game service to recreate content
         gameService.recreateGameContent(newGamePayload, game.gameId)
           .then(result => {
-            if (!result.success) {
+            if (result.status !== 200) {
               console.error(`Recreation error for ${game.gameId}:`, result.error);
               const currentError = result.error || 'Error re-initializing game content.';
               onError(currentError);

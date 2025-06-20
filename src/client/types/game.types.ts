@@ -9,6 +9,7 @@ import {
   Game,
   NewGame,
   NewTurn,
+  ObjectiveStep,
   Scene,
   Turn
 } from '@/server/types/rest/api.alias.types';
@@ -107,7 +108,7 @@ export interface GameSSEEvent {
  * Game service response wrapper
  */
 export interface GameServiceResponse<T = unknown> {
-  success: boolean;
+  status: number;
   data?: T;
   error?: string;
 }
@@ -159,5 +160,6 @@ export type {
   NewGame,
   NewTurn,
   ChosenCharacterAction,
-  GameCharacterOption
+  GameCharacterOption,
+  ObjectiveStep
 };

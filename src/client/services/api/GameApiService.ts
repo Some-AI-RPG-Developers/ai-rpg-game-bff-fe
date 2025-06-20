@@ -7,7 +7,8 @@ import {
   NewGame,
   NewTurn,
   GameServiceResponse,
-  GameApiError
+  GameApiError,
+  Game
 } from '@/client/types/game.types';
 
 /**
@@ -40,12 +41,12 @@ export class GameApiService {
 
       const result: { gameId: string } = await response.json();
       return {
-        success: true,
+        status: 200,
         data: result
       };
     } catch (error) {
       return {
-        success: false,
+        status: 500,
         error: error instanceof Error ? error.message : 'An unknown error occurred while creating the game.'
       };
     }
@@ -68,11 +69,11 @@ export class GameApiService {
       }
 
       return {
-        success: true
+        status: 200
       };
     } catch (error) {
       return {
-        success: false,
+        status: 500,
         error: error instanceof Error ? error.message : 'An unknown error occurred while starting the game.'
       };
     }
@@ -98,11 +99,11 @@ export class GameApiService {
       }
 
       return {
-        success: true
+        status: 200
       };
     } catch (error) {
       return {
-        success: false,
+        status: 500,
         error: error instanceof Error ? error.message : 'An unknown error occurred while submitting the turn.'
       };
     }
@@ -129,12 +130,49 @@ export class GameApiService {
       }
 
       return {
-        success: true
+        status: 200
       };
     } catch (error) {
       return {
-        success: false,
+        status: 500,
         error: error instanceof Error ? error.message : 'Error re-initializing game content.'
+      };
+    }
+  }
+
+  /**
+   * Gets a game by ID
+   * @param gameId - The ID of the game to retrieve
+   * @returns Promise resolving to the game data or null if not found
+   */
+  async getGame(gameId: string): Promise<GameServiceResponse<Game>> {
+    try {
+      const response = await fetch(`${this.baseUrl}/games/${gameId}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (response.status === 404) {
+        return {
+          status: 404,
+          error: 'Game not found. Please check the Game ID and try again.'
+        };
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message ?? `Error retrieving game: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      return {
+        status: 200,
+        data: result as Game
+      };
+    } catch (error) {
+      return {
+        status: 500,
+        error: error instanceof Error ? error.message : 'An unknown error occurred while retrieving the game.'
       };
     }
   }

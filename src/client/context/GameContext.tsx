@@ -137,7 +137,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     
     const result = await gameService.createGame(gameData);
     
-    if (result.success && result.data) {
+    if (result.status === 200 && result.data) {
       gameState.setGameId(result.data.gameId);
     } else {
       gameState.setError(result.error ?? 'Failed to create game');
@@ -147,10 +147,11 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
   /**
    * Loads a game by ID
    */
-  const loadGameById = useCallback(() => {
+  const loadGameById = useCallback(async () => {
     const validation = gameForm.validateResumeGameId();
     if (!validation.isValid) {
       gameState.setError(validation.errors.join(' '));
+      gameState.setViewMode('choice'); // Reset to choice view so user can try again
       return;
     }
 
@@ -158,7 +159,20 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     gameState.setGame(null); // Clear any existing game data
     const newGameId = gameForm.resumeGameIdInput.trim();
     gameState.setGameId(newGameId);
-    gameService.loadGameById(newGameId);
+    
+    // Check if game exists first
+    const gameResult = await gameService.getGame(newGameId);
+    
+    if (gameResult.status !== 200) {
+      // Game not found - show error and reset to choice view
+      gameState.setError(gameResult.error ?? 'Game not found');
+      gameState.setViewMode('choice');
+      gameState.setGameId(null); // Clear the game ID
+      return;
+    }
+
+    // Game exists, proceed with loading via SSE
+    await gameService.loadGameById(newGameId);
   }, [gameForm, gameState]);
 
   /**
@@ -170,7 +184,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     gameState.clearError();
     const result = await gameService.startGame();
     
-    if (!result.success) {
+    if (result.status !== 200) {
       gameState.setError(result.error ?? 'Failed to start game');
     }
   }, [gameState]);
@@ -194,7 +208,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     gameState.clearError();
     const result = await gameService.submitTurn(turnData);
     
-    if (result.success) {
+    if (result.status === 200) {
       characterActions.clearSelections();
     } else {
       gameState.setError(result.error ?? 'Failed to submit turn');

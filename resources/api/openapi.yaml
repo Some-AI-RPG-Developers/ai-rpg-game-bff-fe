@@ -157,20 +157,28 @@ components:
                 consequences: "The dragon was alerted to the heroes' presence"
             objectives:
               - description: "Reach the dragon's lair without being detected"
-                progress: "2/3 steps completed"
-                completed: false
                 requiredSteps:
-                  - "Find the secret entrance"
-                  - "Avoid the guard dragons"
-                  - "Disable the magical barriers"
+                  - stepId: "step_1"
+                    completed: false
+                    description: "Find the secret entrance"
+                  - stepId: "step_2"
+                    completed: true
+                    description: "Avoid the guard dragons"
+                  - stepId: "step_3"
+                    completed: false
+                    description: "Disable the magical barriers"
             finalObjective:
               description: "Defeat the dragon and save the kingdom"
-              progress: "Planning the final assault"
-              completed: false
               requiredSteps:
-                - "Weaken the dragon's defenses"
-                - "Coordinate team attack"
-                - "Land the final blow"
+                - stepId: "final_step_1"
+                  completed: false
+                  description: "Weaken the dragon's defenses"
+                - stepId: "final_step_2"
+                  completed: false
+                  description: "Coordinate team attack"
+                - stepId: "final_step_3"
+                  completed: false
+                  description: "Land the final blow"
     202_GameCreationAccepted:
       description: Game creation accepted
       content:
@@ -353,29 +361,44 @@ components:
             - "Charge in directly with shield raised"
             - "Try to sneak past the sleeping dragon"
             - "Attempt to negotiate with the dragon"
+    ObjectiveStep:
+      type: object
+      required:
+        - stepId
+        - completed
+        - description
+      properties:
+        stepId:
+          type: string
+          example: "step_1"
+        completed:
+          type: boolean
+          example: false
+        description:
+          type: string
+          example: "Find the secret entrance"
     Objective:
       type: object
       required:
         - description
-        - completed
       properties:
         description:
           type: string
           example: "Reach the dragon's lair without being detected"
-        progress:
-          type: string
-          example: "2/3 steps completed"
         requiredSteps:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ObjectiveStep'
           example:
-            - "Find the secret entrance"
-            - "Avoid the guard dragons"
-            - "Disable the magical barriers"
-        completed:
-          type: boolean
-          example: false
+            - stepId: "step_1"
+              completed: false
+              description: "Find the secret entrance"
+            - stepId: "step_2"
+              completed: false
+              description: "Avoid the guard dragons"
+            - stepId: "step_3"
+              completed: false
+              description: "Disable the magical barriers"
     GameId:
       type: object
       required:

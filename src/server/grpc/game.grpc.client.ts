@@ -1,13 +1,17 @@
 import * as grpc from '@grpc/grpc-js';
+import * as retry from 'retry';
 import {NewGame, NewTurn} from '@/server/types/rest/api.alias.types';
 import {GameServiceClient} from '@/server/types/proto/game_service';
+import {RetryOperation} from "retry";
 
 export interface GRPCClientConfig {
   serverAddress: string;
   serverPort: number;
   useSSL?: boolean;
   timeout?: number;
-} 
+  maxRetries?: number;
+  retryDelayMs?: number;
+}
 
 export interface GRPCGameClient {
   createGame(gameId: string, newGame: NewGame): Promise<void>;
@@ -25,14 +29,6 @@ export class GRPCGameClientImpl implements GRPCGameClient {
     this.client = this.createClient();
   }
 
-  private createClient(): GameServiceClient {
-    const serverAddress = `${this.config.serverAddress}:${this.config.serverPort}`;
-    const credentials = this.config.useSSL 
-      ? grpc.credentials.createSsl()
-      : grpc.credentials.createInsecure();
-    return new GameServiceClient(serverAddress, credentials);
-  }
-
   async createGame(gameId: string, newGame: NewGame): Promise<void> {
     const request = {
       gameId: gameId,
@@ -43,26 +39,20 @@ export class GRPCGameClientImpl implements GRPCGameClient {
         characterPrompt: character.characterPrompt,
       })),
     };
-    this.client.createGame(
-        request,
-        (error): void => {
-          if (error) {
-            throw new Error(`Failed to create game via gRPC: ${error}`);
-          }
-        });
+    return this.retryGrpcCall(
+      'Create game',
+      callback  => this.client.createGame(request, callback)
+    );
   }
 
   async startGame(gameId: string): Promise<void> {
     const request = {
       gameId: gameId,
     };
-    this.client.startGame(
-        request,
-        (error):void => {
-          if (error) {
-            throw new Error(`Failed to start game via gRPC: ${error}`);
-          }
-        });
+    return this.retryGrpcCall(
+        'Start game',
+        callback => this.client.startGame(request, callback)
+    );
   }
 
   async submitTurn(gameId: string, newTurn: NewTurn): Promise<void> {
@@ -73,13 +63,10 @@ export class GRPCGameClientImpl implements GRPCGameClient {
         chosenOption: action.chosenOption,
       })),
     };
-    this.client.submitTurn(
-        request,
-        (error): void => {
-          if (error) {
-            throw new Error(`Failed to submit turn via gRPC: ${error}`);
-          }
-        });
+    return this.retryGrpcCall(
+      'Submit turn',
+      callback => this.client.submitTurn(request, callback)
+    );
   }
 
   close(): void {
@@ -87,4 +74,44 @@ export class GRPCGameClientImpl implements GRPCGameClient {
       grpc.closeClient(this.client);
     }
   }
-} 
+
+  private createClient(): GameServiceClient {
+    const serverAddress = `${this.config.serverAddress}:${this.config.serverPort}`;
+    const credentials = this.config.useSSL
+        ? grpc.credentials.createSsl()
+        : grpc.credentials.createInsecure();
+    return new GameServiceClient(serverAddress, credentials);
+  }
+
+  private async retryGrpcCall(
+      operationName: string,
+      grpcOperation: (callback: (error: grpc.ServiceError | null) => void) => void): Promise<void> {
+    return new Promise<void>((resolve, reject) => {
+      const operation: RetryOperation = retry.operation({
+        retries: this.config.maxRetries ?? 3,
+        factor: 2,
+        minTimeout: this.config.retryDelayMs ?? 1000,
+        maxTimeout: 30000,
+        randomize: true,
+      });
+      operation.attempt((currentAttempt: number) => {
+        grpcOperation((error: grpc.ServiceError | null) => {
+          if (!error) {
+            resolve();
+            return;
+          }
+          const errorMessage = String(error);
+          const isConnectionError = errorMessage.includes('UNAVAILABLE')
+              || errorMessage.includes('ECONNRESET')
+              || errorMessage.includes('ECONNREFUSED');
+
+          if (isConnectionError && operation.retry(new Error(errorMessage))) {
+            console.warn(`${operationName} failed (attempt ${currentAttempt}), retrying...`);
+            return;
+          }
+          reject(operation.mainError() || new Error(`${operationName} failed: ${errorMessage}`));
+        });
+      });
+    });
+  }
+}

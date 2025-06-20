@@ -11,3 +11,4 @@ export type CharacterAction = components['schemas']['CharacterAction'];
 export type ChosenCharacterAction = components['schemas']['ChosenCharacterAction'];
 export type CharacterOptions = components['schemas']['CharacterOption'];
 export type Objective = components['schemas']['Objective'];
+export type ObjectiveStep = components['schemas']['ObjectiveStep'];
