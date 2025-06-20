@@ -1,18 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NewTurn } from '@/types/api.alias.types';
-import {GameService} from "@/services/game.service";
+import { NewTurn } from '@/server/types/rest/api.alias.types';
+import {GameService} from "@/server/services/game.service";
 import {getGameServiceInstance} from "@/global";
 
 // POST /api/v1/games/{gameId}/turns - Submit a new turn for the game
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
-) {
+): Promise<Response>  {
   try {
     const { gameId } = await params;
+    console.debug(`POST /api/v1/games/${gameId}/turns - Submit a new turn for the game`)
+
+    if (!gameId) {
+      return Response.json(
+          {error: `Missing param gamedId: ${gameId}`},
+          {status: 400})
+    }
+
     const body: NewTurn = await request.json();
-    
-    // Validate required fields
     if (!body.characterActions || body.characterActions.length === 0) {
       return NextResponse.json(
         { status: 400, message: 'Missing required field: characterActions' },
@@ -32,16 +38,9 @@ export async function POST(
     }
     
     // Submit the turn
-    const success = await gameService.submitTurn(gameId, body);
-    
-    if (!success) {
-      return NextResponse.json(
-        { status: 500, message: 'Failed to submit turn' },
-        { status: 500 }
-      );
-    }
-    
-    return NextResponse.json({ message: 'Turn submission accepted' }, { status: 202 });
+    await gameService.submitTurn(gameId, body);
+    return NextResponse.json("", { status: 202 });
+
   } catch (error) {
     console.error('Error submitting turn:', error);
     return NextResponse.json(

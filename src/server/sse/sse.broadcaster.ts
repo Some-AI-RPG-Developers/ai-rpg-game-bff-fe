@@ -74,7 +74,7 @@ export class SSEBroadcasterImpl implements SSEBroadcaster{
 
   private sendFormattedMessage(sseClient: SSEClient, data: string): void {
     // Format as proper SSE message with event type and data
-    const encodedMessage = this.textEncoder.encode(`${data}\n\n`);
+    const encodedMessage = this.textEncoder.encode(`data: ${data}\n\n`);
     sseClient.controller.enqueue(encodedMessage);
   }
 }

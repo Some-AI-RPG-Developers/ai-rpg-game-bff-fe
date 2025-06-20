@@ -1,6 +1,6 @@
 import {NextResponse} from 'next/server';
-import {GameChangeStream} from "@/database/stream/game.stream";
-import {DatabaseType} from "@/database/database.type";
+import {GameChangeStream} from "@/server/database/stream/game.stream";
+import {DatabaseType} from "@/server/database/database.type";
 import {getMongoDbClientInstance, getMongodbGameChangeStreamInstance, getSSEBroadcasterInstance} from "@/global";
 
 /**
@@ -8,7 +8,7 @@ import {getMongoDbClientInstance, getMongodbGameChangeStreamInstance, getSSEBroa
  * Used to check if the application is running
  * Returns a 200 OK response with a JSON payload
  */
-export function GET() {
+export function GET(): NextResponse {
   const mongoClient = getMongoDbClientInstance();
   const changeStream: GameChangeStream = getMongodbGameChangeStreamInstance();
   const sseBroadcaster = getSSEBroadcasterInstance();

@@ -1,15 +1,20 @@
 import {NextRequest, NextResponse} from 'next/server';
-import {GameService} from "@/services/game.service";
-import {Game} from "@/types/api.alias.types";
+import {GameService} from "@/server/services/game.service";
+import {Game} from "@/server/types/rest/api.alias.types";
 import {getGameServiceInstance} from "@/global";
 
 // GET /api/v1/games/{gameId} - Get game by ID
 export async function GET(
   _: NextRequest,
   { params }: { params: Promise<{ gameId: string }> }
-) {
+): Promise<Response> {
   try {
     const { gameId } = await params;
+    if (!gameId) {
+      return Response.json(
+          {error: `Missing param gamedId: ${gameId}`},
+          {status: 400})
+    }
 
     const gameService: GameService = getGameServiceInstance()
     const game: Game | null = await gameService.getGame(gameId);
@@ -41,6 +46,7 @@ export async function POST(
 
     const gameService: GameService = getGameServiceInstance()
     const game = await gameService.getGame(gameId);
+    console.debug(`POST /api/v1/games/${gameId} - Start a game by ID`)
     
     if (!game) {
       return NextResponse.json(
@@ -57,16 +63,9 @@ export async function POST(
       );
     }
     
-    const success: boolean = await gameService.startGame(gameId);
+    await gameService.startGame(gameId);
     
-    if (!success) {
-      return NextResponse.json(
-        { status: 500, message: 'Failed to start the game' },
-        { status: 500 }
-      );
-    }
-    
-    return NextResponse.json({ message: 'Game started successfully' }, { status: 200 });
+    return NextResponse.json("", { status: 202 });
   } catch (error) {
     console.error('Error starting game:', error);
     return NextResponse.json(

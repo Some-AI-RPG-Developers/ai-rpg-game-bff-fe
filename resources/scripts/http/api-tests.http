@@ -10,12 +10,13 @@
 ### ========================================
 
 ### 1. Create Game - POST /api/v1/games
-# @name createGame
+# @name createGame (with gameId in query params resumes the creation process)
 POST {{baseUrl}}/api/v1/games
 Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
+  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "Sir Roland",

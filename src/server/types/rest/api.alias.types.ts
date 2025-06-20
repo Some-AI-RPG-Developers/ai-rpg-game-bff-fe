@@ -1,4 +1,4 @@
-import { components } from './api.types';
+import { components } from '@/server/types/rest/api.types';
 
 export type GameId = components['schemas']['GameId'];
 export type NewGame = components['schemas']['NewGame'];
@@ -8,5 +8,7 @@ export type Game = components['schemas']['Game'];
 export type Scene = components['schemas']['Scene'];
 export type Turn = components['schemas']['Turn'];
 export type CharacterAction = components['schemas']['CharacterAction'];
-export type CharacterOptions = components['schemas']['CharacterOptions'];
+export type ChosenCharacterAction = components['schemas']['ChosenCharacterAction'];
+export type CharacterOptions = components['schemas']['CharacterOption'];
 export type Objective = components['schemas']['Objective'];
+export type ObjectiveStep = components['schemas']['ObjectiveStep'];

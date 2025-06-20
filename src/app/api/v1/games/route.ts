@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {GameId, NewGame} from '@/types/api.alias.types';
-import {GameService} from "@/services/game.service";
+import {GameId, NewGame} from '@/server/types/rest/api.alias.types';
+import {GameService} from "@/server/services/game.service";
 import {getGameServiceInstance} from "@/global";
 
 // POST /api/v1/games - Create a new game
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<Response> {
   try {
+    const gameId: string | null = request.nextUrl.searchParams.get('gameId');
     const body: NewGame = await request.json();
-    
+    console.debug(`POST /api/v1/games%s - Create a new game`, gameId ? `?gameId=${gameId}` : '')
+
     // Validate required fields
     if (!body.gamePrompt || !body.characters || body.characters.length === 0) {
       return NextResponse.json(
@@ -18,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     // Create a new game
     const gameService: GameService = getGameServiceInstance()
-    const result: GameId = await gameService.createGame(body);
+    const result: GameId = await gameService.createGame(body, gameId);
     
     return NextResponse.json(result, { status: 202 });
   } catch (error) {

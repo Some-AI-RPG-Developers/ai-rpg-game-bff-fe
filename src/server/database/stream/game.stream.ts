@@ -1,5 +1,5 @@
-import {ChangeStreamConfig, ChangeStreamDocument} from "@/database/mongodb.client";
-import {Game} from "@/types/api.alias.types";
+import {ChangeStreamConfig, ChangeStreamDocument} from "@/server/database/mongodb.client";
+import {Game} from "@/server/types/rest/api.alias.types";
 import {ResumeToken} from "mongodb";
 
 export interface GameChangeStream {
