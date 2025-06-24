@@ -165,12 +165,17 @@ export function useGameState(): GameState & GameStateActions {
       
       // Rule 4: Transition from loadingGame_WaitingForData (resume game)
       if (prevStatus === 'loadingGame_WaitingForData' && gameData.gameId) {
-         // If options are available, 'idle' rule (Rule 2) handles it.
-         // If game is over, 'game_Over' rule (Rule 1) handles it.
+         // If game is over, 'game_Over' rule (Rule 1) already handled it.
          
-         // If neither, and synopsis exists, check further:
+         // Check if player input is required (current turn has options)
+         if (currentLastTurn?.options && currentLastTurn.options.length > 0) {
+            console.log("Transitioning status from 'loadingGame_WaitingForData' to 'idle' (loaded game with player options available)");
+            return 'idle';
+         }
+         
+         // If synopsis exists but no options available, check further:
          if (gameData.synopsis) {
-            // If no scenes yet, or last scene has consequences (is completed) and no new options for the player,
+            // If no scenes yet, or last scene has consequences and no new options for the player,
             // it's ready to start/restart (if applicable) or indicates the game flow is waiting for next scene generation.
             if (!currentLastScene || (currentLastScene.consequences && !currentLastTurn?.options)) {
                 console.log("Transitioning status from 'loadingGame_WaitingForData' to 'game_ReadyToStart' (loaded, no immediate player actions, or only synopsis/completed scene)");
@@ -179,12 +184,8 @@ export function useGameState(): GameState & GameStateActions {
          }
          // If it has active scenes/turns but no options (and not game over), it's some other active state.
          // This implies the game is waiting for an AI turn or some other resolution.
-         // The specific states 'turn_Resolving', 'turn_GeneratingNext', 'scene_GeneratingNext' are relevant here.
-         // If the game data itself doesn't specify the *exact* current waiting state,
-         // retaining prevStatus if it's one of these, or falling back to a general active state if one existed, would be options.
          console.log(`Loaded game from 'loadingGame_WaitingForData'. Not 'idle', 'game_Over', or 'game_ReadyToStart'. Game has scenes/turns. Current prevStatus: ${prevStatus}.`);
          // Let it fall through to Rule 5 or default. The 'idle' and 'game_Over' checks are primary.
-         // If it's not those, and not 'game_ReadyToStart', it's an active game state.
       }
       
       // Rule 5: If it was a specific "active waiting" state (e.g., turn_Resolving, startingGame_WaitingForFirstTurn)

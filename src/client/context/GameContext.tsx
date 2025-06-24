@@ -95,6 +95,16 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
   
   // Setup game status management
   const handleGameUpdate = useCallback((gameData: PlayPageGame) => {
+    console.log(`🎯 DEBUG CONTEXT: handleGameUpdate called`);
+    console.log(`🎯 DEBUG CONTEXT: Received game data:`, {
+      gameId: gameData?.gameId,
+      hasCharacters: !!(gameData?.characters?.length),
+      hasSynopsis: !!gameData?.synopsis,
+      hasScenes: !!(gameData?.scenes?.length),
+      currentGameId: gameState.gameId
+    });
+    
+    console.log(`🎯 DEBUG CONTEXT: Calling updateGameFromSSE`);
     gameState.updateGameFromSSE(gameData, gameState.game);
   }, [gameState]);
 

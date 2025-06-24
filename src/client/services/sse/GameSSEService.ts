@@ -150,14 +150,17 @@ export class GameSSEService {
 
     console.log("GameSSEService: Setting up event listeners...")
     this.eventSource.onopen = () => {
-      console.log(`GameSSEService: eventSource.onopen triggered for gameId: ${this.config?.gameId}`);
+      console.log(`🔌 DEBUG SSE: eventSource.onopen triggered for gameId: ${this.config?.gameId}`);
+      console.log(`🔌 DEBUG SSE: Connection established, readyState: ${this.eventSource?.readyState}`);
       this.isConnected = true;
       this.reconnectAttempts = 0;
       this.handlers!.onConnectionOpen();
     };
 
     this.eventSource.onmessage = (event) => {
-      console.log(`GameSSEService: eventSource.onmessage triggered for gameId: ${this.config?.gameId}, data:`, event.data);
+      console.log(`📩 DEBUG SSE: Message received for gameId: ${this.config?.gameId}`);
+      console.log(`📩 DEBUG SSE: Raw event data:`, event.data);
+      console.log(`📩 DEBUG SSE: Event data length: ${event.data?.length} characters`);
       this.handleGameUpdate(event);
     };
 
@@ -177,16 +180,26 @@ export class GameSSEService {
     if (!this.handlers || !this.config) return;
 
     try {
-      console.log(`SSE event for ${this.config.gameId}:`, event.data);
+      console.log(`🎮 DEBUG SSE: Processing game update for ${this.config.gameId}`);
       const gameData = JSON.parse(event.data) as PlayPageGame;
       
+      console.log(`🎮 DEBUG SSE: Parsed game data structure:`, {
+        gameId: gameData?.gameId,
+        hasCharacters: !!(gameData?.characters?.length),
+        hasSynopsis: !!gameData?.synopsis,
+        hasScenes: !!(gameData?.scenes?.length),
+        hasConclusion: !!gameData?.conclusion,
+        dataKeys: Object.keys(gameData || {})
+      });
+      
       if (gameData && typeof gameData === 'object') {
+        console.log(`🎮 DEBUG SSE: Calling onGameUpdate handler`);
         this.handlers.onGameUpdate(gameData);
       } else {
-        console.warn('GameSSEService: Received SSE data did not parse to a valid object:', event.data);
+        console.warn('🎮 DEBUG SSE: Invalid game data received:', event.data);
       }
     } catch (error) {
-      console.error('GameSSEService: Error parsing SSE data:', error);
+      console.error('🎮 DEBUG SSE: Error parsing game data:', error);
       this.handlers.onError('Error processing game update.');
     }
   }

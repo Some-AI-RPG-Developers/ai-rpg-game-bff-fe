@@ -110,19 +110,30 @@ export class GameService {
       return;
     }
 
+    console.log(`🚀 DEBUG LOAD: Starting loadGameById for: "${gameId}"`);
+
     // First, check if the game exists with a GET request
+    console.log(`🚀 DEBUG LOAD: Checking if game exists via API...`);
     const gameResult = await this.apiService.getGame(gameId);
+    
+    console.log(`🚀 DEBUG LOAD: API result:`, {
+      status: gameResult.status,
+      hasData: !!gameResult.data,
+      error: gameResult.error
+    });
     
     if (gameResult.status !== 200) {
       // Game not found (404) or other error - show error without changing status
+      console.log(`🚀 DEBUG LOAD: Game not found or error occurred`);
       this.callbacks.onError(gameResult.error ?? 'Failed to load game');
       return;
     }
 
     // Game exists, proceed with SSE connection
     this.currentGameId = gameId;
+    console.log(`🚀 DEBUG LOAD: Setting status to 'loadingGame_WaitingForData' for gameId: "${gameId}"`);
     this.updateStatus('loadingGame_WaitingForData');
-    console.log(`GameService: Connecting to SSE for existing game. gameId from input: "${gameId}"`);
+    console.log(`🚀 DEBUG LOAD: Connecting to SSE for existing game: "${gameId}"`);
     this.connectToGameSSE(gameId);
   }
 
@@ -252,6 +263,17 @@ export class GameService {
    * Determines the next status based on game data and current status
    */
   determineGameStatus(gameData: PlayPageGame, oldGame: PlayPageGame | null): GameStatus {
+    console.log(`🔄 DEBUG STATUS: determineGameStatus called`);
+    console.log(`🔄 DEBUG STATUS: Current status: ${this.currentStatus}`);
+    console.log(`🔄 DEBUG STATUS: Game data summary:`, {
+      gameId: gameData?.gameId,
+      hasCharacters: !!(gameData?.characters?.length),
+      charactersCount: gameData?.characters?.length || 0,
+      hasSynopsis: !!gameData?.synopsis,
+      hasScenes: !!(gameData?.scenes?.length),
+      hasConclusion: !!gameData?.conclusion
+    });
+    
     const newCurrentScene = gameData.scenes?.slice(-1)[0] || null;
     const newCurrentTurn = newCurrentScene?.turns?.slice(-1)[0] || null;
     const oldCurrentScene = oldGame?.scenes?.slice(-1)[0] || null;
@@ -259,6 +281,7 @@ export class GameService {
 
     // Game concluded
     if (gameData.conclusion) {
+      console.log(`🔄 DEBUG STATUS: Game concluded, returning 'game_Over'`);
       return 'game_Over';
     }
 
@@ -267,11 +290,15 @@ export class GameService {
       case 'creatingGame_WaitingForData':
       case 'loadingGame_WaitingForData':
       case 'recreatingGame_WaitingForData':
+        console.log(`🔄 DEBUG STATUS: Processing waiting status: ${this.currentStatus}`);
         if (!gameData.characters || gameData.characters.length === 0) {
+          console.log(`🔄 DEBUG STATUS: No characters found, returning 'contentGen_Characters_WaitingForData'`);
           return 'contentGen_Characters_WaitingForData';
         } else if (!gameData.synopsis) {
+          console.log(`🔄 DEBUG STATUS: No synopsis found, returning 'contentGen_Settings_WaitingForData'`);
           return 'contentGen_Settings_WaitingForData';
         } else {
+          console.log(`🔄 DEBUG STATUS: Characters and synopsis found, returning 'idle'`);
           return 'idle';
         }
 
