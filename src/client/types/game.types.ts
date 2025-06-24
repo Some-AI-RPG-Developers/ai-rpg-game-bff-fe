@@ -2,6 +2,16 @@
  * Enhanced type definitions for the AI RPG Game application
  * Extends base API types with UI-specific augmentations and utility types
  */
+
+/**
+ * Objective step status representing the possible states of a game objective step
+ */
+export enum ObjectiveStepStatus {
+  ACTIVE = "ACTIVE",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED"
+}
+
 import {
   Character,
   CharacterOptions as GameCharacterOption,
