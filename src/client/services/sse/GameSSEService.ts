@@ -115,6 +115,19 @@ export class GameSSEService {
     const eventSourceUrl = this.getEndpointUrl(this.config);
     console.log('GameSSEService: In createConnection. Attempting to connect to SSE URL:', eventSourceUrl);
     
+    // Set a timeout to prevent getting stuck in CONNECTING state
+    const connectionTimeout = setTimeout(() => {
+      if (this.eventSource && this.eventSource.readyState === EventSource.CONNECTING) {
+        console.error('GameSSEService: Connection timeout - SSE connection stuck in CONNECTING state');
+        this.eventSource.close();
+        this.isConnecting = false;
+        this.isConnected = false;
+        if (this.handlers) {
+          this.handlers.onError('Connection timeout - unable to establish SSE connection');
+        }
+      }
+    }, 10000); // 10 second timeout
+    
     try {
       console.log('GameSSEService: PRE new EventSource() instantiation.');
       this.eventSource = new EventSource(eventSourceUrl);
@@ -122,8 +135,10 @@ export class GameSSEService {
       if (this.eventSource) {
         console.log(`GameSSEService: EventSource readyState after instantiation: ${this.eventSource.readyState} (0=CONNECTING, 1=OPEN, 2=CLOSED)`);
       }
-      this.setupEventListeners();
+      this.setupEventListeners(connectionTimeout);
+      
     } catch (error) {
+      clearTimeout(connectionTimeout);
       console.error('GameSSEService: catch block - Error during EventSource instantiation or setupEventListeners:', error);
       this.isConnecting = false; // Reset flag on error
       const errorMessage = `Failed to initialize SSE connection to ${eventSourceUrl}: ${
@@ -142,17 +157,20 @@ export class GameSSEService {
   /**
    * Sets up event listeners for the SSE connection
    */
-  private setupEventListeners(): void {
+  private setupEventListeners(connectionTimeout?: NodeJS.Timeout): void {
     if (!this.eventSource || !this.handlers)  {
       console.warn("GameSSEService: Either eventSource or handlers is not defined.")
       return;
     }
 
     console.log("GameSSEService: Setting up event listeners...")
+    
     this.eventSource.onopen = () => {
+      if (connectionTimeout) clearTimeout(connectionTimeout);
       console.log(`🔌 DEBUG SSE: eventSource.onopen triggered for gameId: ${this.config?.gameId}`);
       console.log(`🔌 DEBUG SSE: Connection established, readyState: ${this.eventSource?.readyState}`);
       this.isConnected = true;
+      this.isConnecting = false;
       this.reconnectAttempts = 0;
       this.handlers!.onConnectionOpen();
     };

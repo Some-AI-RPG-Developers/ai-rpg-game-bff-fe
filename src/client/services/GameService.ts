@@ -129,7 +129,18 @@ export class GameService {
       return;
     }
 
-    // Game exists, proceed with SSE connection
+    // Game exists, check if it has scenes
+    const gameData = gameResult.data;
+    if (gameData && (!gameData.scenes || gameData.scenes.length === 0)) {
+      // Game has no scenes, set data immediately and transition to ready state
+      console.log(`🚀 DEBUG LOAD: Game has no scenes, transitioning directly to ready state`);
+      this.currentGameId = gameId;
+      this.callbacks.onGameUpdate(gameData);
+      this.updateStatus('game_ReadyToStart');
+      return;
+    }
+
+    // Game has scenes, proceed with SSE connection
     this.currentGameId = gameId;
     console.log(`🚀 DEBUG LOAD: Setting status to 'loadingGame_WaitingForData' for gameId: "${gameId}"`);
     this.updateStatus('loadingGame_WaitingForData');

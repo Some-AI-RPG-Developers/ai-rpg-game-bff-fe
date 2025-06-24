@@ -10,13 +10,12 @@
 ### ========================================
 
 ### 1. Create Game - POST /api/v1/games
-# @name createGame (with gameId in query params resumes the creation process)
+# @name createGame
 POST {{baseUrl}}/api/v1/games
 Content-Type: {{contentType}}
 
 {
   "gamePrompt": "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon",
-  "maxScenesNumber": 5,
   "characters": [
     {
       "name": "Sir Roland",
@@ -77,12 +76,12 @@ Content-Type: {{contentType}}
 GET {{baseUrl}}/api/v1/games/{{gameId}}
 Accept: application/json
 
-#### 7. Subscribe to Game Updates (SSE) - GET /api/v1/games/{gameId}/updates
-## @name subscribeUpdates
-## Note: This opens an SSE stream - use appropriate SSE client
-#GET {{baseUrl}}/api/v1/games/{{gameId}}/updates
-#Accept: text/event-stream
-#Cache-Control: no-cache
+### 7. Subscribe to Game Updates (SSE) - GET /api/v1/games/{gameId}/updates
+# @name subscribeUpdates
+# Note: This opens an SSE stream - use appropriate SSE client
+GET {{baseUrl}}/api/v1/games/{{gameId}}/updates
+Accept: text/event-stream
+Cache-Control: no-cache
 
 ### ========================================
 ### ERROR SCENARIOS
