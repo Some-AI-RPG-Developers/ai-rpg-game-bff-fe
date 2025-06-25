@@ -4,6 +4,7 @@
  */
 
 import { PlayPageGame, GameStatus } from '@/client/types/game.types';
+import { shouldTriggerErrorOnSSEClose } from '@/client/hooks/useGameStatus';
 
 /**
  * SSE event handlers interface
@@ -278,24 +279,7 @@ export class GameSSEService {
    * Determines if the current game status should trigger an error state on connection close
    */
   static shouldTriggerErrorOnClose(gameStatus: GameStatus): boolean {
-    const activeWaitingStatuses: GameStatus[] = [
-      'creatingGame_WaitingForCharacters',
-      'creatingGame_WaitingForSynopsis',
-      'loadingGame_WaitingForData',
-      'recreatingGame_WaitingForData',
-      'startingGame_WaitingForScene',
-      'startingGame_WaitingForFirstTurn',
-      'turn_Resolving',
-      'turn_GeneratingNext',
-      'scene_GeneratingNext',
-      'contentGen_Characters_WaitingForData',
-      'contentGen_Settings_WaitingForData',
-      'turn_Submitting',
-      'startingGame_InProgress',
-      'recreatingGame_InProgress'
-    ];
-    
-    return activeWaitingStatuses.includes(gameStatus);
+    return shouldTriggerErrorOnSSEClose(gameStatus);
   }
 }
 

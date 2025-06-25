@@ -13,14 +13,8 @@ interface CharacterActionFormProps {
   onOptionChange: (characterName: string, optionValue: string) => void;
   /** Handler for free text changes */
   onFreeTextChange: (characterName: string, text: string) => void;
-  /** Handler for turn submission */
-  onSubmitTurn: () => Promise<void>;
-  /** Whether all characters have made a choice */
-  allCharactersMadeChoice: boolean;
   /** Whether any processing is currently happening */
   isProcessing: boolean;
-  /** Whether waiting for SSE response */
-  isWaitingForSSEResponse: boolean;
 }
 
 /**
@@ -34,10 +28,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
   freeTextInputs,
   onOptionChange,
   onFreeTextChange,
-  onSubmitTurn,
-  allCharactersMadeChoice,
-  isProcessing,
-  isWaitingForSSEResponse
+  isProcessing
 }) => {
   if (!currentTurn.options) {
     return null;

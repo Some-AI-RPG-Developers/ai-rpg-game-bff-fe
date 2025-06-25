@@ -186,6 +186,7 @@ export function isActiveStatus(status: GameStatus): boolean {
 export function isProcessingStatus(status: GameStatus): boolean {
   const processingStatuses: GameStatus[] = [
     'creatingGame_InProgress',
+    'loadingGame_WaitingForData',
     'recreatingGame_InProgress',
     'startingGame_InProgress',
     'turn_Submitting'
@@ -201,6 +202,26 @@ export function isWaitingForSSEStatus(status: GameStatus): boolean {
   const waitingStatuses: GameStatus[] = [
     'creatingGame_WaitingForCharacters',
     'creatingGame_WaitingForSynopsis',
+    'recreatingGame_WaitingForData',
+    'contentGen_Characters_WaitingForData',
+    'contentGen_Settings_WaitingForData',
+    'startingGame_WaitingForScene',
+    'startingGame_WaitingForFirstTurn',
+    'turn_Resolving',
+    'turn_GeneratingNext',
+    'scene_GeneratingNext'
+  ];
+  
+  return waitingStatuses.includes(status);
+}
+
+/**
+ * Utility function to check if a status should trigger an error on SSE connection close
+ */
+export function shouldTriggerErrorOnSSEClose(status: GameStatus): boolean {
+  const errorTriggerStatuses: GameStatus[] = [
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
     'loadingGame_WaitingForData',
     'recreatingGame_WaitingForData',
     'startingGame_WaitingForScene',
@@ -209,10 +230,13 @@ export function isWaitingForSSEStatus(status: GameStatus): boolean {
     'turn_GeneratingNext',
     'scene_GeneratingNext',
     'contentGen_Characters_WaitingForData',
-    'contentGen_Settings_WaitingForData'
+    'contentGen_Settings_WaitingForData',
+    'turn_Submitting',
+    'startingGame_InProgress',
+    'recreatingGame_InProgress'
   ];
   
-  return waitingStatuses.includes(status);
+  return errorTriggerStatuses.includes(status);
 }
 
 /**
@@ -241,7 +265,7 @@ export function getStatusMessage(status: GameStatus, gameId?: string | null): st
     case 'startingGame_WaitingForScene':
       return 'Generating the opening scene...';
     case 'startingGame_WaitingForFirstTurn':
-      return 'Creating your first turn options...';
+      return 'Creating first turn options...';
     case 'turn_Submitting':
       return 'Submitting turn... Please wait.';
     case 'turn_Resolving':

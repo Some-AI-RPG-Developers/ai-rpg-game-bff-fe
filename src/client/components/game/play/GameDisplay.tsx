@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlayPageGame, PlayPageScene, PlayPageTurn, GameStatus } from '@/client/types/game.types';
+import { PlayPageGame, GameStatus } from '@/client/types/game.types';
 import { SceneDisplay } from './SceneDisplay';
 import { TurnDisplay } from './TurnDisplay';
 import { TTSWrapper } from '@/client/components/tts';
@@ -17,16 +17,8 @@ interface GameDisplayProps {
   onOptionChange: (characterName: string, optionValue: string) => void;
   /** Handler for free text changes */
   onFreeTextChange: (characterName: string, text: string) => void;
-  /** Handler for turn submission */
-  onSubmitTurn: () => Promise<void>;
-  /** Handler for starting the game */
-  onStartGame: () => Promise<void>;
-  /** Whether all characters have made a choice */
-  allCharactersMadeChoice: boolean;
   /** Whether any processing is currently happening */
   isProcessing: boolean;
-  /** Whether waiting for SSE response */
-  isWaitingForSSEResponse: boolean;
 }
 
 /**
@@ -41,11 +33,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
   freeTextInputs,
   onOptionChange,
   onFreeTextChange,
-  onSubmitTurn,
-  onStartGame,
-  allCharactersMadeChoice,
-  isProcessing,
-  isWaitingForSSEResponse
+  isProcessing
 }) => {
   return (
     <div style={{ marginTop: '20px' }}>
@@ -89,10 +77,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                       freeTextInputs={freeTextInputs}
                       onOptionChange={onOptionChange}
                       onFreeTextChange={onFreeTextChange}
-                      onSubmitTurn={onSubmitTurn}
-                      allCharactersMadeChoice={allCharactersMadeChoice}
                       isProcessing={isProcessing}
-                      isWaitingForSSEResponse={isWaitingForSSEResponse}
                     />
                   ))}
                 </div>

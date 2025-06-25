@@ -1,5 +1,6 @@
 import React from 'react';
 import { GameStatus } from '@/client/types/game.types';
+import { isProcessingStatus, isWaitingForSSEStatus, getStatusMessage } from '@/client/hooks/useGameStatus';
 
 interface GameStatusIndicatorProps {
   /** Current game status */
@@ -20,25 +21,10 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
   error
 }) => {
   // Determine if any critical loading/processing is happening
-  const isProcessing =
-    gameStatus === 'creatingGame_InProgress' ||
-    gameStatus === 'loadingGame_WaitingForData' ||
-    gameStatus === 'recreatingGame_InProgress' ||
-    gameStatus === 'startingGame_InProgress' ||
-    gameStatus === 'turn_Submitting';
+  const isProcessing = isProcessingStatus(gameStatus);
 
   // Determine if we are waiting for SSE to deliver game content/updates
-  const isWaitingForSSEResponse =
-    gameStatus === 'creatingGame_WaitingForCharacters' ||
-    gameStatus === 'creatingGame_WaitingForSynopsis' ||
-    gameStatus === 'recreatingGame_WaitingForData' ||
-    gameStatus === 'contentGen_Characters_WaitingForData' ||
-    gameStatus === 'contentGen_Settings_WaitingForData' ||
-    gameStatus === 'startingGame_WaitingForScene' ||
-    gameStatus === 'startingGame_WaitingForFirstTurn' ||
-    gameStatus === 'turn_Resolving' ||
-    gameStatus === 'turn_GeneratingNext' ||
-    gameStatus === 'scene_GeneratingNext';
+  const isWaitingForSSEResponse = isWaitingForSSEStatus(gameStatus);
 
   // Only show status indicator if we have processing, waiting, or error states
   // Also show a helpful message if game is ready to start but has scenes (retry scenario)
@@ -48,23 +34,12 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
     return null;
   }
 
+  // Get the status message from centralized function
+  const statusMessage = getStatusMessage(gameStatus, gameId);
+
   return (
     <div style={{ margin: '10px 0', padding: '10px', backgroundColor: '#f0f0f0', border: '1px solid #ddd', borderRadius: '4px' }}>
-      {gameStatus === 'creatingGame_InProgress' && <p>Creating your game world...</p>}
-      {gameStatus === 'loadingGame_WaitingForData' && gameId && <p>Loading game data for {gameId}...</p>}
-      {gameStatus === 'recreatingGame_InProgress' && <p>Re-initializing game content...</p>}
-      {gameStatus === 'creatingGame_WaitingForCharacters' && <p>Generating characters...</p>}
-      {gameStatus === 'creatingGame_WaitingForSynopsis' && <p>Generating game synopsis and objectives...</p>}
-      {gameStatus === 'recreatingGame_WaitingForData' && <p>Re-initialization triggered. Waiting for updated game data...</p>}
-      {gameStatus === 'contentGen_Characters_WaitingForData' && <p>Generating characters...</p>}
-      {gameStatus === 'contentGen_Settings_WaitingForData' && <p>Generating game setting and synopsis...</p>}
-      {gameStatus === 'startingGame_InProgress' && <p>Starting your adventure...</p>}
-      {gameStatus === 'startingGame_WaitingForScene' && <p>Generating the opening scene...</p>}
-      {gameStatus === 'startingGame_WaitingForFirstTurn' && <p>Creating your first turn options...</p>}
-      {gameStatus === 'turn_Submitting' && <p>Submitting turn... Please wait.</p>}
-      {gameStatus === 'turn_Resolving' && <p>Processing turn resolution...</p>}
-      {gameStatus === 'turn_GeneratingNext' && <p>Generating next turn...</p>}
-      {gameStatus === 'scene_GeneratingNext' && <p>Generating next scene...</p>}
+      {statusMessage && <p>{statusMessage}</p>}
       {gameStatus === 'error_GameSetupFailed' && !error && <p style={{color: 'orange'}}>Game setup encountered an issue. Please check other error messages or try again.</p>}
       {showRetryMessage && <p style={{color: '#2196F3'}}>Game ready to start. Click <b>Start Game</b> to begin or retry if needed.</p>}
     </div>

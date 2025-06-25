@@ -143,11 +143,7 @@ export default function PlayPage() {
                         freeTextInputs={freeTextInputs}
                         onOptionChange={handleOptionChange}
                         onFreeTextChange={handleFreeTextChange}
-                        onSubmitTurn={submitTurn}
-                        onStartGame={startGame}
-                        allCharactersMadeChoice={allCharactersMadeChoice}
                         isProcessing={isProcessing}
-                        isWaitingForSSEResponse={isWaitingForSSEResponse}
                     />
 
                     <GameConclusion game={game} />

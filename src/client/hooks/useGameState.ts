@@ -9,6 +9,7 @@ import {
   GameStatus,
   ViewMode
 } from '@/client/types/game.types';
+import { isProcessingStatus, isWaitingForSSEStatus } from '@/client/hooks/useGameStatus';
 
 /**
  * Game state interface
@@ -354,30 +355,9 @@ export function getProcessingState(gameStatus: GameStatus): {
   isProcessing: boolean;
   isWaitingForSSEResponse: boolean;
 } {
-  const processingStatuses: GameStatus[] = [
-    'creatingGame_InProgress',
-    'loadingGame_WaitingForData',
-    'recreatingGame_InProgress',
-    'startingGame_InProgress',
-    'turn_Submitting'
-  ];
-
-  const waitingForSSEStatuses: GameStatus[] = [
-    'creatingGame_WaitingForCharacters',
-    'creatingGame_WaitingForSynopsis',
-    'recreatingGame_WaitingForData',
-    'contentGen_Characters_WaitingForData',
-    'contentGen_Settings_WaitingForData',
-    'startingGame_WaitingForScene',
-    'startingGame_WaitingForFirstTurn',
-    'turn_Resolving',
-    'turn_GeneratingNext',
-    'scene_GeneratingNext'
-  ];
-
   return {
-    isProcessing: processingStatuses.includes(gameStatus),
-    isWaitingForSSEResponse: waitingForSSEStatuses.includes(gameStatus)
+    isProcessing: isProcessingStatus(gameStatus),
+    isWaitingForSSEResponse: isWaitingForSSEStatus(gameStatus)
   };
 }
 

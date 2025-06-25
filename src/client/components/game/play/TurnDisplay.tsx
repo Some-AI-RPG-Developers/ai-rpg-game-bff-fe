@@ -20,14 +20,8 @@ interface TurnDisplayProps {
   onOptionChange: (characterName: string, optionValue: string) => void;
   /** Handler for free text changes */
   onFreeTextChange: (characterName: string, text: string) => void;
-  /** Handler for turn submission */
-  onSubmitTurn: () => Promise<void>;
-  /** Whether all characters have made a choice */
-  allCharactersMadeChoice: boolean;
   /** Whether any processing is currently happening */
   isProcessing: boolean;
-  /** Whether waiting for SSE response */
-  isWaitingForSSEResponse: boolean;
 }
 
 /**
@@ -43,10 +37,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
   freeTextInputs,
   onOptionChange,
   onFreeTextChange,
-  onSubmitTurn,
-  allCharactersMadeChoice,
-  isProcessing,
-  isWaitingForSSEResponse
+  isProcessing
 }) => {
   return (
     <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px dashed #ccc' }}>
@@ -104,10 +95,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
           freeTextInputs={freeTextInputs}
           onOptionChange={onOptionChange}
           onFreeTextChange={onFreeTextChange}
-          onSubmitTurn={onSubmitTurn}
-          allCharactersMadeChoice={allCharactersMadeChoice}
           isProcessing={isProcessing}
-          isWaitingForSSEResponse={isWaitingForSSEResponse}
         />
       )}
     </div>

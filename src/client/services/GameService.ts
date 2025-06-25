@@ -14,6 +14,7 @@ import {
   CharacterInput,
   Game
 } from '@/client/types/game.types';
+import { isProcessingStatus, isWaitingForSSEStatus } from '@/client/hooks/useGameStatus';
 
 /**
  * Game service configuration
@@ -220,33 +221,14 @@ export class GameService {
    * Checks if the service is currently processing
    */
   isProcessing(): boolean {
-    const processingStatuses: GameStatus[] = [
-      'creatingGame_InProgress',
-      'recreatingGame_InProgress',
-      'startingGame_InProgress',
-      'turn_Submitting'
-    ];
-    return processingStatuses.includes(this.currentStatus);
+    return isProcessingStatus(this.currentStatus);
   }
 
   /**
    * Checks if the service is waiting for SSE response
    */
   isWaitingForSSE(): boolean {
-    const waitingStatuses: GameStatus[] = [
-      'creatingGame_WaitingForCharacters',
-      'creatingGame_WaitingForSynopsis',
-      'recreatingGame_WaitingForData',
-      'contentGen_Characters_WaitingForData',
-      'contentGen_Settings_WaitingForData',
-      'startingGame_WaitingForScene',
-      'startingGame_WaitingForFirstTurn',
-      'turn_Resolving',
-      'turn_GeneratingNext',
-      'scene_GeneratingNext',
-      'loadingGame_WaitingForData'
-    ];
-    return waitingStatuses.includes(this.currentStatus);
+    return isWaitingForSSEStatus(this.currentStatus);
   }
 
   /**
