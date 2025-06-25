@@ -30,7 +30,8 @@ interface GameDisplayProps {
 }
 
 /**
- * GameDisplay shows the main game area including game details, start button, and current scene/turn.
+ * GameDisplay shows the main game area including game details and current scene/turn.
+ * Buttons have been moved to a centralized location at the bottom of the page.
  * Extracted from the original monolithic component (lines 770-890).
  */
 export const GameDisplay: React.FC<GameDisplayProps> = ({
@@ -46,10 +47,6 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
   isProcessing,
   isWaitingForSSEResponse
 }) => {
-  // Get current turn for the "Start Game" button logic
-  const currentScene: PlayPageScene | null = game && game.scenes?.length > 0 ? game.scenes[game.scenes.length - 1] : null;
-  const currentTurn: PlayPageTurn | null = currentScene && currentScene.turns?.length > 0 ? currentScene.turns[currentScene.turns.length - 1] : null;
-
   return (
     <div style={{ marginTop: '20px' }}>
       <div style={{ marginBottom: '20px', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
@@ -69,27 +66,6 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         )}
         {/* Specific messages for content generation are handled by the centralized status messages now */}
       </div>
-
-      {/* Start Game Button: if synopsis exists, no current turn, not concluded, and status is 'game_ReadyToStart' */}
-      {game.synopsis && !currentTurn && !game.conclusion && gameStatus === 'game_ReadyToStart' && (
-        <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-          <button
-            onClick={onStartGame}
-            disabled={isProcessing || isWaitingForSSEResponse}
-            style={{
-              padding: '15px 25px',
-              fontSize: '18px',
-              backgroundColor: (isProcessing || isWaitingForSSEResponse) ? '#ccc' : '#4CAF50',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: (isProcessing || isWaitingForSSEResponse) ? 'not-allowed' : 'pointer'
-            }}
-          >
-            Start Game
-          </button>
-        </div>
-      )}
 
       {/* All Scenes and Turns Display */}
       {game.scenes && game.scenes.length > 0 && (
@@ -127,4 +103,4 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
       )}
     </div>
   );
-};
+}; 

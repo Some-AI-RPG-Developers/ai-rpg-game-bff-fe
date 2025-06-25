@@ -56,7 +56,10 @@ export async function POST(
     }
     
     // Check if the game has already been started
-    if (game.scenes && game.scenes.length > 0) {
+    if (game.scenes
+        && game.scenes.length > 0
+        && game.scenes[0].turns
+        && game.scenes[0].turns.length > 0) {
       return NextResponse.json(
         { status: 409, message: 'Game has already been started' },
         { status: 409 }

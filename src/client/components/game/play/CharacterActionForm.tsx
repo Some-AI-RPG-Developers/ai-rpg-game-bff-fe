@@ -25,6 +25,7 @@ interface CharacterActionFormProps {
 
 /**
  * CharacterActionForm displays the character action selection interface with radio buttons and free text input.
+ * Submit button has been moved to a centralized location at the bottom of the page.
  * Extracted from the original monolithic component (lines 820-868).
  */
 export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
@@ -72,23 +73,6 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
           />
         </div>
       ))}
-      <div style={{textAlign: 'center', marginTop: '20px'}}>
-        <button
-          onClick={onSubmitTurn}
-          disabled={!allCharactersMadeChoice || isProcessing || isWaitingForSSEResponse}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            backgroundColor: (isProcessing || isWaitingForSSEResponse) ? '#ccc' : (!allCharactersMadeChoice ? '#ccc' : '#007bff'),
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: (isProcessing || isWaitingForSSEResponse || !allCharactersMadeChoice) ? 'not-allowed' : 'pointer'
-          }}
-        >
-          Submit Turn
-        </button>
-      </div>
     </div>
   );
 };

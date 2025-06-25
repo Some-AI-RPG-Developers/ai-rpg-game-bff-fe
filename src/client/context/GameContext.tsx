@@ -113,7 +113,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     onGameUpdate: handleGameUpdate,
     onStatusChange: gameState.setGameStatus,
     onError: gameState.setError
-  }), [gameService, handleGameUpdate, gameState.setGameStatus, gameState.setError]);
+  }), [handleGameUpdate, gameState.setGameStatus, gameState.setError]);
   
   useGameStatus(gameStatusConfig);
   

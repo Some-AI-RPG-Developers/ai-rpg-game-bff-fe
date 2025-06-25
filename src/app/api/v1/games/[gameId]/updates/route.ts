@@ -1,6 +1,6 @@
 import {NextRequest} from 'next/server';
 import {SSEBroadcaster} from '@/server/sse/sse.broadcaster';
-import {getSSEBroadcasterInstance} from "@/global";
+import {getSSEBroadcasterInstance, getGameServiceInstance} from "@/global";
 
 export async function GET(
     request: NextRequest,
@@ -15,6 +15,8 @@ export async function GET(
 
   try {
     const sseBroadcaster: SSEBroadcaster = getSSEBroadcasterInstance()
+    const gameService = getGameServiceInstance()
+    
     request.signal.addEventListener('abort', reason => {
       console.error(`Client ${gameId} disconnected, reason: ${reason.type}`);
       sseBroadcaster.removeClientSubscription(gameId);
@@ -22,9 +24,16 @@ export async function GET(
 
     // Create a readable stream for SSE
     const sseBroadcast = new ReadableStream({
-      start(controller: ReadableStreamDefaultController): void {
+      start: async (controller: ReadableStreamDefaultController): Promise<void> => {
         console.info(`SSE connection request from client: ${gameId}`);
         sseBroadcaster.addClientSubscription(gameId, controller);
+        
+        // Send current game state immediately to trigger onopen event
+        const currentGame = await gameService.getGame(gameId);
+        if (currentGame) {
+          console.debug(`Sending initial game state to SSE client ${gameId}`);
+          sseBroadcaster.broadcastEventToClient(JSON.stringify(currentGame), gameId);
+        }
       },
       cancel(reason: string): void {
         console.info(`SSE stream cancelled for client ${gameId}:`, reason);

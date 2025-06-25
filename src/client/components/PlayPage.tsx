@@ -5,6 +5,7 @@ import {CreateGameForm} from "@/client/components/game/setup/CreateGameForm";
 import {ResumeGameForm} from "@/client/components/game/setup/ResumeGameForm";
 import {WelcomeScreen} from "@/client/components/game/setup/WelcomeScreen";
 import {GameStatusIndicator} from "@/client/components/game/GameStatusIndicator";
+import {GameActionButtons} from "@/client/components/game/GameActionButtons";
 import {GameHeader} from "@/client/components/game/GameHeader";
 import {ViewMode} from "@/client/types/ui.types";
 import {useGameContext} from "@/client/context/GameContext";
@@ -12,7 +13,7 @@ import {useGameContext} from "@/client/context/GameContext";
 /**
  * Main Play Page Component
  *
- * - **11 focused UI components**
+ * - **12 focused UI components** (added GameActionButtons)
  * - **Centralized GameContext** for state management
  * - **Service layer** for all API and SSE operations
  * - **Custom hooks** for business logic
@@ -24,6 +25,7 @@ import {useGameContext} from "@/client/context/GameContext";
  * ✅ Centralized service layer
  * ✅ Type-safe context system
  * ✅ Maintainable codebase
+ * ✅ Centralized button positioning
  */
 export default function PlayPage() {
     // Use the centralized game context for all state and operations
@@ -149,6 +151,17 @@ export default function PlayPage() {
                     />
 
                     <GameConclusion game={game} />
+
+                    {/* Centralized Action Buttons - positioned before status indicator */}
+                    <GameActionButtons
+                        game={game}
+                        gameStatus={gameStatus}
+                        onStartGame={startGame}
+                        onSubmitTurn={submitTurn}
+                        allCharactersMadeChoice={allCharactersMadeChoice}
+                        isProcessing={isProcessing}
+                        isWaitingForSSEResponse={isWaitingForSSEResponse}
+                    />
 
                     <GameStatusIndicator
                         gameStatus={gameStatus}

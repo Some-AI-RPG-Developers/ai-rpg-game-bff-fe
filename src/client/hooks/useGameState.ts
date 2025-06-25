@@ -3,7 +3,7 @@
  * Manages the core game state including game data, status, and error handling
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   PlayPageGame,
   GameStatus,
@@ -183,12 +183,26 @@ export function useGameState(): GameState & GameStateActions {
             return 'idle';
          }
          
+         // Check game creation completeness
+         if (!gameData.characters || gameData.characters.length === 0) {
+            console.log("Transitioning status from 'loadingGame_WaitingForData' to 'creatingGame_WaitingForCharacters' (loaded game missing characters)");
+            return 'creatingGame_WaitingForCharacters';
+         }
+         
+         if (!gameData.synopsis) {
+            console.log("Transitioning status from 'loadingGame_WaitingForData' to 'creatingGame_WaitingForSynopsis' (loaded game missing synopsis)");
+            return 'creatingGame_WaitingForSynopsis';
+         }
+         
          // If synopsis exists but no options available, check further:
          if (gameData.synopsis) {
             // If no scenes yet, or last scene has consequences and no new options for the player,
-            // it's ready to start/restart (if applicable) or indicates the game flow is waiting for next scene generation.
-            if (!currentLastScene || (currentLastScene.consequences && !currentLastTurn?.options)) {
-                console.log("Transitioning status from 'loadingGame_WaitingForData' to 'game_ReadyToStart' (loaded, no immediate player actions, or only synopsis/completed scene)");
+            // OR if scene exists but has no playable turns, it's ready to start/restart
+            if (!currentLastScene || 
+                (currentLastScene.consequences && !currentLastTurn?.options) ||
+                (!currentLastScene.turns || currentLastScene.turns.length === 0 || 
+                 (currentLastScene.turns.length > 0 && (!currentLastScene.turns[0].options || currentLastScene.turns[0].options.length === 0)))) {
+                console.log("Transitioning status from 'loadingGame_WaitingForData' to 'game_ReadyToStart' (loaded, no immediate player actions, or incomplete scene)");
                 return 'game_ReadyToStart';
             }
          }
@@ -198,11 +212,39 @@ export function useGameState(): GameState & GameStateActions {
          // Let it fall through to Rule 5 or default. The 'idle' and 'game_Over' checks are primary.
       }
       
-      // Rule 5: Handle startingGame transitions
+      // Rule 5: Handle incomplete game start - scene exists but no playable turn
+      // This can happen if scene generation succeeded but turn generation failed
+      if (gameData.synopsis && gameData.scenes && gameData.scenes.length > 0) {
+        const latestScene = gameData.scenes[gameData.scenes.length - 1];
+        // If scene exists but has no turns, or turns exist but have no options, return to ready state
+        if (!latestScene.turns || latestScene.turns.length === 0 || 
+            (latestScene.turns.length > 0 && (!latestScene.turns[0].options || latestScene.turns[0].options.length === 0))) {
+          // Only transition to game_ReadyToStart if we're not already in a waiting state
+          // (to avoid interrupting active generation processes)
+          if (!['startingGame_WaitingForScene', 'startingGame_WaitingForFirstTurn', 'startingGame_InProgress'].includes(prevStatus)) {
+            console.log("Transitioning to 'game_ReadyToStart' (scene exists but no playable turn - allowing retry)");
+            return 'game_ReadyToStart';
+          }
+        }
+      }
+      
+      // Rule 6: Handle startingGame transitions
       if (prevStatus === 'startingGame_WaitingForScene' && gameData.scenes && gameData.scenes.length > 0) {
         const latestScene = gameData.scenes[gameData.scenes.length - 1];
+        console.log(`startingGame_WaitingForScene transition. Scene exists:`, {
+          sceneId: latestScene.sceneId,
+          hasTurns: !!(latestScene.turns && latestScene.turns.length > 0),
+          turnsCount: latestScene.turns?.length || 0
+        });
+        
         if (latestScene.turns && latestScene.turns.length > 0) {
           const latestTurn = latestScene.turns[latestScene.turns.length - 1];
+          console.log(`startingGame_WaitingForScene transition. Scene has turns. Latest turn:`, {
+            turnId: latestTurn.turnId,
+            hasOptions: !!(latestTurn.options && latestTurn.options.length > 0),
+            optionsCount: latestTurn.options?.length || 0
+          });
+          
           if (latestTurn.options && latestTurn.options.length > 0) {
             console.log("Transitioning status from 'startingGame_WaitingForScene' to 'idle' (first turn options available)");
             return 'idle';
@@ -211,12 +253,14 @@ export function useGameState(): GameState & GameStateActions {
             return 'startingGame_WaitingForFirstTurn';
           }
         } else {
-          console.log("Transitioning status from 'startingGame_WaitingForScene' to 'startingGame_WaitingForFirstTurn' (scene created, no turns yet)");
+          // Scene exists but has no turns - this means the scene was already generated 
+          // and now we need to wait for the first turn to be created
+          console.log("Transitioning status from 'startingGame_WaitingForScene' to 'startingGame_WaitingForFirstTurn' (scene already exists, waiting for first turn)");
           return 'startingGame_WaitingForFirstTurn';
         }
       }
       
-      // Rule 6: If it was a specific "active waiting" state (e.g., turn_Resolving, startingGame_WaitingForFirstTurn)
+      // Rule 7: If it was a specific "active waiting" state (e.g., turn_Resolving, startingGame_WaitingForFirstTurn)
       // and new data arrives that doesn't shift to 'idle' or 'game_Over',
       // it might still be in that waiting state or has transitioned to another waiting state.
       // The 'idle' (Rule 2) and 'game_Over' (Rule 1) rules should take precedence and are checked earlier.
@@ -241,7 +285,7 @@ export function useGameState(): GameState & GameStateActions {
         return prevStatus;
       }
 
-      // Rule 7: Transition from 'startingGame_InProgress' if data arrives
+      // Rule 8: Transition from 'startingGame_InProgress' if data arrives
       // (assuming 'startingGame_InProgress' is set before an API call, and SSE provides the first turn)
       if (prevStatus === 'startingGame_InProgress' && gameData.gameId) {
         // Rule 2 ('idle') would catch if options are present.
@@ -268,6 +312,20 @@ export function useGameState(): GameState & GameStateActions {
       return prevStatus; // Default: keep current status if no other rule applies
     });
   }, [/* setGameStatusInternal is stable, no dependencies needed for functional update */]);
+
+  // Auto-transition effect: Handle status changes that need immediate evaluation
+  // This handles cases where status changes but no SSE event is triggered
+  useEffect(() => {
+    // When status changes to startingGame_WaitingForScene, check if we should immediately 
+    // transition to startingGame_WaitingForFirstTurn if a scene already exists
+    if (gameStatus === 'startingGame_WaitingForScene' && game && game.scenes && game.scenes.length > 0) {
+      const latestScene = game.scenes[game.scenes.length - 1];
+      if (!latestScene.turns || latestScene.turns.length === 0) {
+        console.log("Auto-transition: Scene exists but has no turns. Transitioning from 'startingGame_WaitingForScene' to 'startingGame_WaitingForFirstTurn'");
+        setGameStatusInternal('startingGame_WaitingForFirstTurn');
+      }
+    }
+  }, [gameStatus, game]);
 
   return {
     // State

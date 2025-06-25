@@ -47,7 +47,7 @@ export function useGameStatus(config: GameStatusConfig) {
       onError
     });
     return () => {};
-  }, [onGameUpdate, onStatusChange, onError]);
+  }, [gameService, onGameUpdate, onStatusChange, onError]);
 
   /**
    * Determines the next game status based on game data and current status
@@ -252,6 +252,8 @@ export function getStatusMessage(status: GameStatus, gameId?: string | null): st
       return 'Generating next scene...';
     case 'error_GameSetupFailed':
       return 'Game setup encountered an issue. Please check other error messages or try again.';
+    case 'game_ReadyToStart':
+      return 'Game ready to start. Click "Start Game" to begin or retry if needed.';
     case 'game_Over':
       return 'Game completed!';
     case 'idle':

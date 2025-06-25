@@ -41,7 +41,10 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
     gameStatus === 'scene_GeneratingNext';
 
   // Only show status indicator if we have processing, waiting, or error states
-  if (!isProcessing && !isWaitingForSSEResponse && gameStatus !== 'error_GameSetupFailed') {
+  // Also show a helpful message if game is ready to start but has scenes (retry scenario)
+  const showRetryMessage = gameStatus === 'game_ReadyToStart' && gameId;
+  
+  if (!isProcessing && !isWaitingForSSEResponse && gameStatus !== 'error_GameSetupFailed' && !showRetryMessage) {
     return null;
   }
 
@@ -63,6 +66,7 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
       {gameStatus === 'turn_GeneratingNext' && <p>Generating next turn...</p>}
       {gameStatus === 'scene_GeneratingNext' && <p>Generating next scene...</p>}
       {gameStatus === 'error_GameSetupFailed' && !error && <p style={{color: 'orange'}}>Game setup encountered an issue. Please check other error messages or try again.</p>}
+      {showRetryMessage && <p style={{color: '#2196F3'}}>Game ready to start. Click <b>Start Game</b> to begin or retry if needed.</p>}
     </div>
   );
 };
