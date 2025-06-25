@@ -277,7 +277,7 @@ export function getStatusMessage(status: GameStatus, gameId?: string | null): st
     case 'error_GameSetupFailed':
       return 'Game setup encountered an issue. Please check other error messages or try again.';
     case 'game_ReadyToStart':
-      return 'Game ready to start. Click "Start Game" to begin or retry if needed.';
+      return '';
     case 'game_Over':
       return 'Game completed!';
     case 'idle':
