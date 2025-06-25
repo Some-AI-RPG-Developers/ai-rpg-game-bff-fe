@@ -155,11 +155,21 @@ export function useGameState(): GameState & GameStateActions {
         return 'idle';
       }
       
-      // Rule 3: Transition from creatingGame_WaitingForData
-      if (prevStatus === 'creatingGame_WaitingForData' && gameData.synopsis) {
+      // Rule 3: Transition from creatingGame_WaitingForCharacters and creatingGame_WaitingForSynopsis
+      if (prevStatus === 'creatingGame_WaitingForCharacters' && gameData.characters && gameData.characters.length > 0) {
+        if (gameData.synopsis) {
+          console.log("Transitioning status from 'creatingGame_WaitingForCharacters' to 'game_ReadyToStart' (characters and synopsis ready)");
+          return 'game_ReadyToStart';
+        } else {
+          console.log("Transitioning status from 'creatingGame_WaitingForCharacters' to 'creatingGame_WaitingForSynopsis' (characters ready, waiting for synopsis)");
+          return 'creatingGame_WaitingForSynopsis';
+        }
+      }
+      
+      if (prevStatus === 'creatingGame_WaitingForSynopsis' && gameData.synopsis) {
         // If game creation results in immediate options, 'idle' rule (Rule 2) would have already handled it.
         // Otherwise, it's ready to be started.
-        console.log("Transitioning status from 'creatingGame_WaitingForData' to 'game_ReadyToStart'");
+        console.log("Transitioning status from 'creatingGame_WaitingForSynopsis' to 'game_ReadyToStart'");
         return 'game_ReadyToStart';
       }
       
@@ -188,7 +198,25 @@ export function useGameState(): GameState & GameStateActions {
          // Let it fall through to Rule 5 or default. The 'idle' and 'game_Over' checks are primary.
       }
       
-      // Rule 5: If it was a specific "active waiting" state (e.g., turn_Resolving, startingGame_WaitingForFirstTurn)
+      // Rule 5: Handle startingGame transitions
+      if (prevStatus === 'startingGame_WaitingForScene' && gameData.scenes && gameData.scenes.length > 0) {
+        const latestScene = gameData.scenes[gameData.scenes.length - 1];
+        if (latestScene.turns && latestScene.turns.length > 0) {
+          const latestTurn = latestScene.turns[latestScene.turns.length - 1];
+          if (latestTurn.options && latestTurn.options.length > 0) {
+            console.log("Transitioning status from 'startingGame_WaitingForScene' to 'idle' (first turn options available)");
+            return 'idle';
+          } else {
+            console.log("Transitioning status from 'startingGame_WaitingForScene' to 'startingGame_WaitingForFirstTurn' (scene created, waiting for turn options)");
+            return 'startingGame_WaitingForFirstTurn';
+          }
+        } else {
+          console.log("Transitioning status from 'startingGame_WaitingForScene' to 'startingGame_WaitingForFirstTurn' (scene created, no turns yet)");
+          return 'startingGame_WaitingForFirstTurn';
+        }
+      }
+      
+      // Rule 6: If it was a specific "active waiting" state (e.g., turn_Resolving, startingGame_WaitingForFirstTurn)
       // and new data arrives that doesn't shift to 'idle' or 'game_Over',
       // it might still be in that waiting state or has transitioned to another waiting state.
       // The 'idle' (Rule 2) and 'game_Over' (Rule 1) rules should take precedence and are checked earlier.
@@ -196,10 +224,11 @@ export function useGameState(): GameState & GameStateActions {
         'turn_Resolving',
         'turn_GeneratingNext',
         'scene_GeneratingNext',
+        'startingGame_WaitingForScene',
         'startingGame_WaitingForFirstTurn',
         'contentGen_Characters_WaitingForData',
         'contentGen_Settings_WaitingForData'
-        // 'creatingGame_WaitingForData' and 'loadingGame_WaitingForData' are handled by specific rules above if they transition.
+        // 'creatingGame_WaitingForCharacters', 'creatingGame_WaitingForSynopsis' and 'loadingGame_WaitingForData' are handled by specific rules above if they transition.
       ];
       if (activeWaitingStates.includes(prevStatus)) {
         // If we are in these states and receive new game data:
@@ -212,7 +241,7 @@ export function useGameState(): GameState & GameStateActions {
         return prevStatus;
       }
 
-      // Rule 6: Transition from 'startingGame_InProgress' if data arrives
+      // Rule 7: Transition from 'startingGame_InProgress' if data arrives
       // (assuming 'startingGame_InProgress' is set before an API call, and SSE provides the first turn)
       if (prevStatus === 'startingGame_InProgress' && gameData.gameId) {
         // Rule 2 ('idle') would catch if options are present.
@@ -276,10 +305,12 @@ export function getProcessingState(gameStatus: GameStatus): {
   ];
 
   const waitingForSSEStatuses: GameStatus[] = [
-    'creatingGame_WaitingForData',
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
     'recreatingGame_WaitingForData',
     'contentGen_Characters_WaitingForData',
     'contentGen_Settings_WaitingForData',
+    'startingGame_WaitingForScene',
     'startingGame_WaitingForFirstTurn',
     'turn_Resolving',
     'turn_GeneratingNext',

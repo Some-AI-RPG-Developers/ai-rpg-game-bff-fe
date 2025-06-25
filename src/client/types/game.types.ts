@@ -30,12 +30,14 @@ import {
 export type GameStatus =
   | 'idle' // Default, or ready for user input on a new turn
   | 'creatingGame_InProgress' // POST /api/v1/games (client-side loading)
-  | 'creatingGame_WaitingForData' // After POST /api/v1/games, waiting for SSE for synopsis/initial content
+  | 'creatingGame_WaitingForCharacters' // After POST /api/v1/games, waiting for SSE for character generation
+  | 'creatingGame_WaitingForSynopsis' // After characters received, waiting for SSE for synopsis generation
   | 'loadingGame_WaitingForData' // Game ID known (e.g. resume), waiting for SSE for game data
   | 'recreatingGame_InProgress' // POST /api/v1/games?gameId=... (client-side loading)
   | 'recreatingGame_WaitingForData' // After recreation trigger, waiting for SSE for synopsis
   | 'startingGame_InProgress' // POST /api/v1/games/{id} (to start it, client-side loading)
-  | 'startingGame_WaitingForFirstTurn' // After POST to start, waiting for first turn options via SSE
+  | 'startingGame_WaitingForScene' // After POST to start, waiting for first scene via SSE
+  | 'startingGame_WaitingForFirstTurn' // After scene received, waiting for first turn options via SSE
   | 'turn_Submitting' // Player submitted turn, POST /turns in progress (client-side loading)
   | 'turn_Resolving' // Turn submitted (POST complete), waiting for consequences via SSE
   | 'turn_GeneratingNext' // Consequences received, waiting for next turn's options via SSE

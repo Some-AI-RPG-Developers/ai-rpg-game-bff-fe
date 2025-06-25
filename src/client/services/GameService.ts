@@ -80,7 +80,7 @@ export class GameService {
     
     if (result.status === 200 && result.data) {
       this.currentGameId = result.data.gameId;
-      this.updateStatus('creatingGame_WaitingForData');
+      this.updateStatus('creatingGame_WaitingForCharacters');
       console.log(`GameService: Connecting to SSE for new game. gameId from API: "${result.data.gameId}"`);
       this.connectToGameSSE(result.data.gameId);
     } else {
@@ -164,7 +164,7 @@ export class GameService {
     const result = await this.apiService.startGame(this.currentGameId);
     
     if (result.status === 200) {
-      this.updateStatus('startingGame_WaitingForFirstTurn');
+      this.updateStatus('startingGame_WaitingForScene');
     } else {
       this.updateStatus('error_GameSetupFailed');
     }
@@ -234,10 +234,12 @@ export class GameService {
    */
   isWaitingForSSE(): boolean {
     const waitingStatuses: GameStatus[] = [
-      'creatingGame_WaitingForData',
+      'creatingGame_WaitingForCharacters',
+      'creatingGame_WaitingForSynopsis',
       'recreatingGame_WaitingForData',
       'contentGen_Characters_WaitingForData',
       'contentGen_Settings_WaitingForData',
+      'startingGame_WaitingForScene',
       'startingGame_WaitingForFirstTurn',
       'turn_Resolving',
       'turn_GeneratingNext',
@@ -298,7 +300,8 @@ export class GameService {
 
     // Status transition logic based on current status and new data
     switch (this.currentStatus) {
-      case 'creatingGame_WaitingForData':
+      case 'creatingGame_WaitingForCharacters':
+      case 'creatingGame_WaitingForSynopsis':
       case 'loadingGame_WaitingForData':
       case 'recreatingGame_WaitingForData':
         console.log(`🔄 DEBUG STATUS: Processing waiting status: ${this.currentStatus}`);

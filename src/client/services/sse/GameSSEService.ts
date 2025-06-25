@@ -279,9 +279,11 @@ export class GameSSEService {
    */
   static shouldTriggerErrorOnClose(gameStatus: GameStatus): boolean {
     const activeWaitingStatuses: GameStatus[] = [
-      'creatingGame_WaitingForData',
+      'creatingGame_WaitingForCharacters',
+      'creatingGame_WaitingForSynopsis',
       'loadingGame_WaitingForData',
       'recreatingGame_WaitingForData',
+      'startingGame_WaitingForScene',
       'startingGame_WaitingForFirstTurn',
       'turn_Resolving',
       'turn_GeneratingNext',

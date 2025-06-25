@@ -109,7 +109,8 @@ export default function PlayPage() {
 
             {/* Create New Game Form */}
             {viewMode === 'create' && !gameId &&
-                gameStatus !== 'creatingGame_WaitingForData' &&
+                gameStatus !== 'creatingGame_WaitingForCharacters' &&
+                gameStatus !== 'creatingGame_WaitingForSynopsis' &&
                 gameStatus !== 'loadingGame_WaitingForData' &&
                 gameStatus !== 'recreatingGame_WaitingForData' &&
                 !isWaitingForSSEResponse && (

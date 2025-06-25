@@ -161,11 +161,13 @@ export function useGameRecreation(config: RecreationConfig & {
 export function isActiveStatus(status: GameStatus): boolean {
   const activeStatuses: GameStatus[] = [
     'creatingGame_InProgress',
-    'creatingGame_WaitingForData',
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
     'loadingGame_WaitingForData',
     'recreatingGame_InProgress',
     'recreatingGame_WaitingForData',
     'startingGame_InProgress',
+    'startingGame_WaitingForScene',
     'startingGame_WaitingForFirstTurn',
     'turn_Submitting',
     'turn_Resolving',
@@ -197,9 +199,11 @@ export function isProcessingStatus(status: GameStatus): boolean {
  */
 export function isWaitingForSSEStatus(status: GameStatus): boolean {
   const waitingStatuses: GameStatus[] = [
-    'creatingGame_WaitingForData',
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
     'loadingGame_WaitingForData',
     'recreatingGame_WaitingForData',
+    'startingGame_WaitingForScene',
     'startingGame_WaitingForFirstTurn',
     'turn_Resolving',
     'turn_GeneratingNext',
@@ -222,8 +226,10 @@ export function getStatusMessage(status: GameStatus, gameId?: string | null): st
       return gameId ? `Loading game data for ${gameId}...` : 'Loading game data...';
     case 'recreatingGame_InProgress':
       return 'Re-initializing game content...';
-    case 'creatingGame_WaitingForData':
-      return 'Game created! Waiting for initial game data (characters, synopsis)...';
+    case 'creatingGame_WaitingForCharacters':
+      return 'Generating characters...';
+    case 'creatingGame_WaitingForSynopsis':
+      return 'Generating game synopsis and objectives...';
     case 'recreatingGame_WaitingForData':
       return 'Re-initialization triggered. Waiting for updated game data...';
     case 'contentGen_Characters_WaitingForData':
@@ -232,8 +238,10 @@ export function getStatusMessage(status: GameStatus, gameId?: string | null): st
       return 'Generating game setting and synopsis...';
     case 'startingGame_InProgress':
       return 'Starting your adventure...';
+    case 'startingGame_WaitingForScene':
+      return 'Generating the opening scene...';
     case 'startingGame_WaitingForFirstTurn':
-      return 'Preparing the first scene...';
+      return 'Creating your first turn options...';
     case 'turn_Submitting':
       return 'Submitting turn... Please wait.';
     case 'turn_Resolving':
