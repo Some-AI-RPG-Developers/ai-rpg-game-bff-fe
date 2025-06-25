@@ -1,5 +1,5 @@
 import {NextRequest} from 'next/server';
-import {SSEBroadcaster} from '@/sse/sse.broadcaster';
+import {SSEBroadcaster} from '@/server/sse/sse.broadcaster';
 import {getSSEBroadcasterInstance} from "@/global";
 
 export async function GET(

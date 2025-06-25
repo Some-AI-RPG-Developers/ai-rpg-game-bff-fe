@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { NewTurn } from '@/server/types/rest/api.alias.types';
+import { NewTurn, ChosenCharacterAction } from '@/server/types/rest/api.alias.types';
 import {GameService} from "@/server/services/game.service";
 import {getGameServiceInstance} from "@/global";
 
@@ -36,9 +36,24 @@ export async function POST(
         { status: 404 }
       );
     }
-    
-    // Submit the turn
-    await gameService.submitTurn(gameId, body);
+
+    // Convert character names to character IDs
+    const nameToIdMap = new Map<string, string>();
+    game.characters.forEach(char => {
+      nameToIdMap.set(char.name, char.characterId);
+    });
+
+    const convertedCharacterActions: ChosenCharacterAction[] = body.characterActions
+      .map(action => ({
+          characterId: nameToIdMap.get(action.characterName),
+          characterName: action.characterName,
+          chosenOption: action.chosenOption
+        }));
+            
+    await gameService.submitTurn(gameId, {
+      ...body,
+      characterActions: convertedCharacterActions
+    });
     return NextResponse.json("", { status: 202 });
 
   } catch (error) {

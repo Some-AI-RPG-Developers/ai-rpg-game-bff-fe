@@ -270,14 +270,20 @@ components:
     Character:
       type: object
       required:
+        - characterId
         - name
         - description
         - prompt
         - status
       properties:
+        characterId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+          description: "Unique identifier for the character"
         name:
           type: string
           example: "Sir Roland"
+          description: "Display name of the character (used in UI)"
         description:
           type: string
           example: "A brave knight with shining armor and unwavering loyalty"
@@ -347,12 +353,18 @@ components:
     CharacterOption:
       type: object
       required:
+        - characterId
         - name
         - descriptions
       properties:
+        characterId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+          description: "Unique identifier for the character"
         name:
           type: string
           example: "Sir Roland"
+          description: "Display name of the character"
         descriptions:
           type: array
           items:
@@ -449,6 +461,7 @@ components:
             $ref: '#/components/schemas/ChosenCharacterAction'
     ChosenCharacterAction:
       type: object
+      description: "Character action."
       required:
         - characterName
         - chosenOption
@@ -456,9 +469,11 @@ components:
         characterName:
           type: string
           example: "Sir Roland"
+          description: "Display name of the character"
         chosenOption:
           type: string
           example: "Try to sneak past the sleeping dragon"
+          description: "The action chosen by the player for this character"
     ErrorResponse:
       type: object
       properties:

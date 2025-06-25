@@ -3,13 +3,13 @@
  * Manages character action state, option selection, and turn submission validation
  */
 
-import { useState, useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import {
-  ChosenCharacterAction,
   NewTurn,
   GameCharacterOption,
   PlayPageGame,
-  TurnSubmissionValidationResult
+  TurnSubmissionValidationResult,
+  ChosenCharacterAction
 } from '@/client/types/game.types';
 
 /**
@@ -62,80 +62,69 @@ export function useCharacterActions(): CharacterActionState & CharacterActionAct
   }, []);
 
   /**
-   * Handles free text input for a character
+   * Handles free text input changes for a character
    */
   const handleFreeTextChange = useCallback((characterName: string, text: string) => {
     setFreeTextInputs(prev => ({ ...prev, [characterName]: text }));
     
-    // If free text is used, it overrides the selected option
-    if (text.trim() !== '') {
-      // Only consider it an override if there's actual text
-      setSelectedOptions(prev => ({ ...prev, [characterName]: `freeText:${text}` }));
-    } else {
-      // If free text is cleared, remove it as the selected option
-      // This allows radio buttons to be re-selected if desired.
-      setSelectedOptions(prev => {
-        const newSelected = { ...prev };
-        // Only delete if the current selection was from this free text field
+    // If there's text, set it as the selected option with freeText prefix
+    // If no text, clear the selection
+    setSelectedOptions(prev => {
+      const newSelected = { ...prev };
+      if (text.trim()) {
+        newSelected[characterName] = `freeText:${text}`;
+      } else {
+        // Only clear if it was a freeText option
         if (newSelected[characterName]?.startsWith('freeText:')) {
           delete newSelected[characterName];
         }
-        return newSelected;
-      });
-    }
+      }
+      return newSelected;
+    });
   }, []);
 
   /**
-   * Validates turn submission data
+   * Validates turn submission requirements
    */
   const validateTurnSubmission = useCallback((
     currentTurn: PlayPageGame['scenes'][0]['turns'][0] | null
   ): TurnSubmissionValidationResult => {
-    if (!currentTurn || !currentTurn.options) {
-      return {
-        isValid: false,
-        characterActions: [],
-        errors: ['No current turn or options available.']
-      };
+    if (!currentTurn) {
+      return { isValid: false, characterActions: [], errors: ['No current turn available'] };
     }
 
-    const characterActions: ChosenCharacterAction[] = [];
     const errors: string[] = [];
+    const characterActions: ChosenCharacterAction[] = [];
 
     // Process each character's options
     currentTurn.options.forEach((charOption: GameCharacterOption) => {
       const characterName = charOption.name;
       const actionValue = selectedOptions[characterName];
 
-      if (actionValue) {
-        // If an option was selected or free text was entered
-        if (actionValue.startsWith('freeText:')) {
-          const freeTextValue = actionValue.substring('freeText:'.length);
-          if (freeTextValue.trim()) {
-            characterActions.push({ 
-              characterName, 
-              chosenOption: freeTextValue.trim() 
-            });
-          } else {
-            errors.push(`${characterName} must provide valid free text input.`);
-          }
-        } else {
+      if (!actionValue) {
+        errors.push(`${characterName} must make a choice`);
+        return;
+      }
+
+      // Handle free text input
+      if (actionValue.startsWith('freeText:')) {
+        const freeTextValue = actionValue.substring(9); // Remove 'freeText:' prefix
+        if (freeTextValue.trim()) {
           characterActions.push({ 
-            characterName, 
-            chosenOption: actionValue 
+            characterName,
+            chosenOption: freeTextValue.trim() 
           });
+        } else {
+          errors.push(`${characterName} must provide text for their custom action`);
         }
       } else {
-        errors.push(`${characterName} must select an action or provide free text input.`);
+        // Handle radio option selection
+        characterActions.push({ 
+          characterName,
+          chosenOption: actionValue 
+        });
       }
     });
-
-    // Ensure all characters who had options made a choice
-    if (characterActions.length !== currentTurn.options.length) {
-      if (errors.length === 0) {
-        errors.push("All characters with options must select an action or provide free text input.");
-      }
-    }
 
     return {
       isValid: errors.length === 0,
@@ -145,7 +134,20 @@ export function useCharacterActions(): CharacterActionState & CharacterActionAct
   }, [selectedOptions]);
 
   /**
-   * Prepares turn data for submission
+   * Validates all required characters have made a choice
+   */
+  const checkAllCharactersMadeChoice = useCallback((
+    currentTurn: PlayPageGame['scenes'][0]['turns'][0] | null
+  ): boolean => {
+    if (!currentTurn) return false;
+    
+    return currentTurn.options.every(
+      (charOpt: GameCharacterOption) => selectedOptions[charOpt.name]
+    );
+  }, [selectedOptions]);
+
+  /**
+   * Prepares turn submission data with proper validation
    */
   const prepareTurnData = useCallback((
     currentTurn: PlayPageGame['scenes'][0]['turns'][0] | null
@@ -160,19 +162,6 @@ export function useCharacterActions(): CharacterActionState & CharacterActionAct
       characterActions: validation.characterActions
     };
   }, [validateTurnSubmission]);
-
-  /**
-   * Checks if all characters have made their choice
-   */
-  const checkAllCharactersMadeChoice = useCallback((
-    currentTurn: PlayPageGame['scenes'][0]['turns'][0] | null
-  ): boolean => {
-    if (!currentTurn?.options) return false;
-    
-    return currentTurn.options.every(
-      (charOpt: GameCharacterOption) => selectedOptions[charOpt.name]
-    );
-  }, [selectedOptions]);
 
   /**
    * Clears all current selections (used after successful turn submission)
