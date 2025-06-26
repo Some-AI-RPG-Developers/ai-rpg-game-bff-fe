@@ -38,10 +38,11 @@ export type GameStatus =
   | 'startingGame_InProgress' // POST /api/v1/games/{id} (to start it, client-side loading)
   | 'startingGame_WaitingForScene' // After POST to start, waiting for first scene via SSE
   | 'startingGame_WaitingForFirstTurn' // After scene received, waiting for first turn options via SSE
-  | 'turn_Submitting' // Player submitted turn, POST /turns in progress (client-side loading)
-  | 'turn_Resolving' // Turn submitted (POST complete), waiting for consequences via SSE
-  | 'turn_GeneratingNext' // Consequences received, waiting for next turn's options via SSE
-  | 'scene_GeneratingNext' // Scene consequences received, waiting for next scene's options via SSE
+  | 'submittingTurn_InProgress' // Player submitted turn, PUT /turns in progress (client-side loading)
+  | 'submittingTurn_WaitingForTurnResolution' // Turn submitted (PUT complete), waiting for consequences via SSE
+  | 'submittingTurn_WaitingForNewScene' // Turn consequences received, scene completed, waiting for new scene via SSE
+  | 'submittingTurn_WaitingForNewTurn' // Scene/consequences received, waiting for new turn options via SSE
+  | 'turn_Creating' // Creating new turn, POST /turns in progress (client-side loading)
   | 'contentGen_Characters_WaitingForData' // Game loaded, but characters missing, waiting for SSE
   | 'contentGen_Settings_WaitingForData' // Game loaded, characters present, but synopsis missing, waiting for SSE
   | 'error_GameSetupFailed' // An error occurred that prevents game from starting/continuing

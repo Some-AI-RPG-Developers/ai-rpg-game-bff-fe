@@ -80,6 +80,33 @@ export class GameApiService {
   }
 
   /**
+   * Creates a new turn for the current game
+   * @param gameId - The ID of the game
+   * @returns Promise resolving to the operation result
+   */
+    async createTurn(gameId: string): Promise<GameServiceResponse<void>> {
+      try {
+        const response = await fetch(`${this.baseUrl}/games/${gameId}/turns`, {
+          method: 'POST',
+        });
+  
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({}));
+          throw new Error(errorData.message ?? `Error creating turn: ${response.statusText}`);
+        }
+  
+        return {
+          status: 200
+        };
+      } catch (error) {
+        return {
+          status: 500,
+          error: error instanceof Error ? error.message : 'An unknown error occurred while creating the turn.'
+        };
+      }
+    }
+
+  /**
    * Submits a turn for the current game
    * @param gameId - The ID of the game
    * @param turnData - The turn submission data
@@ -88,7 +115,7 @@ export class GameApiService {
   async submitTurn(gameId: string, turnData: NewTurn): Promise<GameServiceResponse<void>> {
     try {
       const response = await fetch(`${this.baseUrl}/games/${gameId}/turns`, {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(turnData),
       });

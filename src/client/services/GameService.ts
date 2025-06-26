@@ -14,7 +14,7 @@ import {
   CharacterInput,
   Game
 } from '@/client/types/game.types';
-import { isProcessingStatus, isWaitingForSSEStatus } from '@/client/hooks/useGameStatus';
+import { isProcessingStatus, isWaitingForSSEStatus } from '@/client/hooks/useGameState';
 
 /**
  * Game service configuration
@@ -173,6 +173,29 @@ export class GameService {
     return result;
   }
 
+    /**
+   * Creates a new turn for the current game
+   */
+    async createTurn(): Promise<GameServiceResponse<void>> {
+      if (!this.currentGameId || !this.callbacks) {
+        return {
+          status: 400,
+          error: 'No game ID available or service not initialized'
+        };
+      }
+  
+      this.updateStatus('turn_Creating');
+  
+      const result = await this.apiService.createTurn(this.currentGameId);
+      
+      if (result.status !== 200) {
+        this.updateStatus('error_GameSetupFailed');
+      }
+      // If successful, SSE will handle the status transition
+  
+      return result;
+    }
+
   /**
    * Submits a turn for the current game
    */
@@ -184,14 +207,16 @@ export class GameService {
       };
     }
 
-    this.updateStatus('turn_Submitting');
+    this.updateStatus('submittingTurn_InProgress');
 
     const result = await this.apiService.submitTurn(this.currentGameId, turnData);
     
     if (result.status !== 200) {
       this.updateStatus('error_GameSetupFailed');
+    } else {
+      // Transition to waiting for turn resolution after successful API call
+      this.updateStatus('submittingTurn_WaitingForTurnResolution');
     }
-    // If successful, SSE will handle the status transition
 
     return result;
   }
@@ -273,6 +298,26 @@ export class GameService {
     const newCurrentTurn = newCurrentScene?.turns?.slice(-1)[0] || null;
     const oldCurrentScene = oldGame?.scenes?.slice(-1)[0] || null;
     const oldCurrentTurn = oldCurrentScene?.turns?.slice(-1)[0] || null;
+    
+    console.log(`🔄 DEBUG STATUS: Turn comparison:`, {
+      oldTurnId: oldCurrentTurn?.turnId,
+      newTurnId: newCurrentTurn?.turnId,
+      oldTurnNumber: oldCurrentTurn?.turnNumber,
+      newTurnNumber: newCurrentTurn?.turnNumber,
+      oldHasConsequences: !!oldCurrentTurn?.consequences,
+      newHasConsequences: !!newCurrentTurn?.consequences,
+      oldHasOptions: !!oldCurrentTurn?.options?.length,
+      newHasOptions: !!newCurrentTurn?.options?.length
+    });
+    
+    console.log(`🔄 DEBUG STATUS: Scene comparison:`, {
+      oldSceneId: oldCurrentScene?.sceneId,
+      newSceneId: newCurrentScene?.sceneId,
+      oldSceneNumber: oldCurrentScene?.sceneNumber,
+      newSceneNumber: newCurrentScene?.sceneNumber,
+      oldSceneHasConsequences: !!oldCurrentScene?.consequences,
+      newSceneHasConsequences: !!newCurrentScene?.consequences
+    });
 
     // Game concluded
     if (gameData.conclusion) {
@@ -320,34 +365,103 @@ export class GameService {
         }
         break;
 
-      case 'turn_Submitting':
-        if (newCurrentTurn?.consequences && newCurrentTurn.turnNumber === oldCurrentTurn?.turnNumber) {
-          return 'turn_Resolving';
-        } else if (newCurrentTurn?.options && !newCurrentTurn.consequences && 
-                   newCurrentTurn.turnNumber !== oldCurrentTurn?.turnNumber) {
-          return 'idle';
-        } else if (newCurrentTurn?.options && !newCurrentTurn.consequences && 
-                   newCurrentTurn.turnNumber === oldCurrentTurn?.turnNumber) {
-          return 'idle';
+      case 'submittingTurn_InProgress':
+        // This status should only be used briefly during API call
+        // It should transition to submittingTurn_WaitingForTurnResolution immediately after API success
+        console.log(`🔄 DEBUG STATUS: submittingTurn_InProgress should not receive SSE updates`);
+        break;
+
+      case 'submittingTurn_WaitingForTurnResolution':
+        console.log(`🔄 DEBUG STATUS: Processing submittingTurn_WaitingForTurnResolution transition`);
+        
+        // Check if game concluded
+        if (gameData.conclusion) {
+          console.log(`🔄 DEBUG STATUS: Game concluded, transitioning to 'game_Over'`);
+          return 'game_Over';
+        }
+        
+        // Check if the current turn got consequences (turn was resolved)
+        if (newCurrentTurn?.consequences && 
+            newCurrentTurn.turnNumber === oldCurrentTurn?.turnNumber &&
+            !oldCurrentTurn?.consequences) {
+          console.log(`🔄 DEBUG STATUS: Turn resolved with consequences`);
+          
+          // Check if scene is completed (has consequences)
+          if (newCurrentScene?.consequences && !oldCurrentScene?.consequences) {
+            console.log(`🔄 DEBUG STATUS: Scene completed, moving to 'submittingTurn_WaitingForNewScene'`);
+            return 'submittingTurn_WaitingForNewScene';
+          }
+          // Check if a new turn already appeared in the same scene
+          else if (newCurrentScene?.turns && newCurrentScene.turns.length > (oldCurrentScene?.turns?.length || 0)) {
+            const latestTurn = newCurrentScene.turns[newCurrentScene.turns.length - 1];
+            if (latestTurn.options && !latestTurn.consequences) {
+              console.log(`🔄 DEBUG STATUS: New turn already available, transitioning to 'idle'`);
+              return 'idle';
+            } else {
+              console.log(`🔄 DEBUG STATUS: Turn resolved, waiting for new turn in same scene`);
+              return 'submittingTurn_WaitingForNewTurn';
+            }
+          }
+          // Scene not completed, waiting for new turn in same scene
+          else {
+            console.log(`🔄 DEBUG STATUS: Turn resolved, scene not completed, waiting for new turn`);
+            return 'submittingTurn_WaitingForNewTurn';
+          }
         }
         break;
 
-      case 'turn_Resolving':
-        if (newCurrentTurn?.options && !newCurrentTurn.consequences && 
-            newCurrentTurn.turnNumber !== oldCurrentTurn?.turnNumber) {
-          return 'idle';
-        } else if (newCurrentScene?.consequences && 
-                   newCurrentScene.sceneNumber !== oldCurrentScene?.sceneNumber) {
-          return 'scene_GeneratingNext';
-        } else if (newCurrentScene?.consequences && !newCurrentTurn?.options && 
-                   newCurrentScene.sceneNumber === oldCurrentScene?.sceneNumber) {
-          return 'scene_GeneratingNext';
+      case 'submittingTurn_WaitingForNewScene':
+        console.log(`🔄 DEBUG STATUS: Processing submittingTurn_WaitingForNewScene transition`);
+        
+        // Check if game concluded
+        if (gameData.conclusion) {
+          console.log(`🔄 DEBUG STATUS: Game concluded, transitioning to 'game_Over'`);
+          return 'game_Over';
+        }
+        
+        // Check if a new scene appeared
+        if (newCurrentScene?.sceneNumber !== oldCurrentScene?.sceneNumber) {
+          console.log(`🔄 DEBUG STATUS: New scene appeared, waiting for new turn`);
+          
+          // Check if the new scene already has a turn with options
+          if (newCurrentScene?.turns && newCurrentScene.turns.length > 0) {
+            const latestTurn = newCurrentScene.turns[newCurrentScene.turns.length - 1];
+            if (latestTurn.options && !latestTurn.consequences) {
+              console.log(`🔄 DEBUG STATUS: New scene with turn options available, transitioning to 'idle'`);
+              return 'idle';
+            }
+          }
+          
+          console.log(`🔄 DEBUG STATUS: New scene created, waiting for first turn`);
+          return 'submittingTurn_WaitingForNewTurn';
         }
         break;
 
-      case 'scene_GeneratingNext':
-        if (newCurrentTurn?.options && !newCurrentTurn.consequences &&
-            (newCurrentScene?.sceneNumber !== oldCurrentScene?.sceneNumber || !oldCurrentScene)) {
+      case 'submittingTurn_WaitingForNewTurn':
+        console.log(`🔄 DEBUG STATUS: Processing submittingTurn_WaitingForNewTurn transition`);
+        
+        // Check if game concluded
+        if (gameData.conclusion) {
+          console.log(`🔄 DEBUG STATUS: Game concluded, transitioning to 'game_Over'`);
+          return 'game_Over';
+        }
+        
+        // Check if new turn options are available
+        if (newCurrentTurn?.options && !newCurrentTurn.consequences) {
+          // Make sure it's actually a different turn (either new turn number or in new scene)
+          const isDifferentTurn = newCurrentTurn.turnNumber !== oldCurrentTurn?.turnNumber;
+          const isNewScene = newCurrentScene?.sceneNumber !== oldCurrentScene?.sceneNumber;
+          
+          if (isDifferentTurn || isNewScene) {
+            console.log(`🔄 DEBUG STATUS: New turn options available, transitioning to 'idle'`);
+            return 'idle';
+          }
+        }
+        break;
+
+      case 'turn_Creating':
+        if (newCurrentTurn?.options && !newCurrentTurn.consequences) {
+          console.log(`🔄 DEBUG STATUS: Turn options available, moving to 'idle'`);
           return 'idle';
         }
         break;

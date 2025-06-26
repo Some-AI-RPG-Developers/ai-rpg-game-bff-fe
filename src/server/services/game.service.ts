@@ -52,6 +52,19 @@ export class GameService {
     }
   }
 
+  async createTurn(gameId: string): Promise<void> {
+    const game = await this.gameRepository.getGame(gameId);
+    if (!game) {
+      throw new Error(`Game with id ${gameId} not found`);
+    }
+    try {
+      await this.grpcClient.createTurn(gameId);
+    } catch (error) {
+      console.error('Failed to create turn via gRPC:', error);
+      throw new Error('Failed to create turn in game manager service');
+    }
+  }
+
   async submitTurn(gameId: string, newTurn: NewTurn): Promise<void> {
     const game = await this.gameRepository.getGame(gameId);
     if (!game) {

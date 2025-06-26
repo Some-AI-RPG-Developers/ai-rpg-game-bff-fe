@@ -17,6 +17,7 @@ export interface GRPCGameClient {
   createGame(gameId: string, newGame: NewGame): Promise<void>;
   startGame(gameId: string): Promise<void>;
   submitTurn(gameId: string, newTurn: NewTurn): Promise<void>;
+  createTurn(gameId: string): Promise<void>;
   close(): void;
 }
 
@@ -66,6 +67,16 @@ export class GRPCGameClientImpl implements GRPCGameClient {
     return this.retryGrpcCall(
       'Submit turn',
       callback => this.client.submitTurn(request, callback)
+    );
+  }
+
+  async createTurn(gameId: string): Promise<void> {
+    const request = {
+      gameId: gameId,
+    };
+    return this.retryGrpcCall(
+      'Create turn',
+      callback => this.client.createTurn(request, callback)
     );
   }
 

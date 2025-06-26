@@ -341,12 +341,18 @@ components:
     CharacterAction:
       type: object
       required:
+        - characterId
         - name
         - message
       properties:
+        characterId:
+          type: string
+          example: "123e4567-e89b-12d3-a456-426614174000"
+          description: "Unique identifier for the character"
         name:
           type: string
           example: "Sir Roland"
+          description: "Display name of the character"
         message:
           type: string
           example: "I will distract the dragon while you flank from behind"

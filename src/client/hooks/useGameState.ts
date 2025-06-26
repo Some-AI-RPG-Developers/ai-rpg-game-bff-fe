@@ -1,15 +1,11 @@
 /**
- * useGameState - Central game state management hook
- * Manages the core game state including game data, status, and error handling
+ * useGameState - Comprehensive game state management hook
+ * Handles all aspects of game state including data, status, SSE integration, and game service operations
  */
 
-import { useState, useCallback, useEffect } from 'react';
-import {
-  PlayPageGame,
-  GameStatus,
-  ViewMode
-} from '@/client/types/game.types';
-import { isProcessingStatus, isWaitingForSSEStatus } from '@/client/hooks/useGameStatus';
+import {useCallback, useEffect, useState} from 'react';
+import {GameStatus, NewGame, PlayPageGame, ViewMode} from '@/client/types/game.types';
+import {GameService} from '@/client/services/GameService';
 
 /**
  * Game state interface
@@ -37,6 +33,13 @@ export interface GameStateActions {
 }
 
 /**
+ * Game service integration configuration
+ */
+export interface GameServiceConfig {
+  gameService: GameService;
+}
+
+/**
  * Initial game state
  */
 const initialGameState: GameState = {
@@ -48,10 +51,10 @@ const initialGameState: GameState = {
 };
 
 /**
- * Central game state management hook
- * Provides state and actions for managing game data, status, and UI state
+ * Comprehensive game state management hook
+ * Provides state, actions, and service integration for managing all aspects of game state
  */
-export function useGameState(): GameState & GameStateActions {
+export function useGameState(config?: GameServiceConfig): GameState & GameStateActions {
   const [game, setGameInternal] = useState<PlayPageGame | null>(initialGameState.game);
   const [gameId, setGameIdInternal] = useState<string | null>(initialGameState.gameId);
   const [error, setErrorInternal] = useState<string | null>(initialGameState.error);
@@ -261,14 +264,15 @@ export function useGameState(): GameState & GameStateActions {
         }
       }
       
-      // Rule 7: If it was a specific "active waiting" state (e.g., turn_Resolving, startingGame_WaitingForFirstTurn)
+      // Rule 7: If it was a specific "active waiting" state (e.g., submittingTurn_WaitingForTurnResolution, startingGame_WaitingForFirstTurn)
       // and new data arrives that doesn't shift to 'idle' or 'game_Over',
       // it might still be in that waiting state or has transitioned to another waiting state.
       // The 'idle' (Rule 2) and 'game_Over' (Rule 1) rules should take precedence and are checked earlier.
       const activeWaitingStates: GameStatus[] = [
-        'turn_Resolving',
-        'turn_GeneratingNext',
-        'scene_GeneratingNext',
+        'submittingTurn_WaitingForTurnResolution',
+        'submittingTurn_WaitingForNewScene',
+        'submittingTurn_WaitingForNewTurn',
+        'turn_Creating',
         'startingGame_WaitingForScene',
         'startingGame_WaitingForFirstTurn',
         'contentGen_Characters_WaitingForData',
@@ -307,7 +311,7 @@ export function useGameState(): GameState & GameStateActions {
       }
 
       // Default: if no other rule applies, retain the previous status.
-      // This is important for states like 'turn_Submitting', 'creatingGame_InProgress', etc.,
+      // This is important for states like 'submittingTurn_InProgress', 'creatingGame_InProgress', etc.,
       // where an SSE update might be a partial one not meant to change the overall client-side status yet.
       console.log(`updateGameFromSSE: No specific status transition rule met for prevStatus='${prevStatus}'. Retaining status '${prevStatus}'.`);
       return prevStatus; // Default: keep current status if no other rule applies
@@ -328,6 +332,79 @@ export function useGameState(): GameState & GameStateActions {
     }
   }, [gameStatus, game]);
 
+  // Game service integration effects
+  useEffect(() => {
+    if (!config?.gameService) return;
+
+    // Initialize the game service with callbacks
+    config.gameService.initialize({
+      onGameUpdate: (gameData: PlayPageGame) => {
+        updateGameFromSSE(gameData, game);
+      },
+      onStatusChange: setGameStatus,
+      onError: setError
+    });
+
+    return () => {};
+  }, [config?.gameService, updateGameFromSSE, game, setGameStatus, setError]);
+
+  // Game recreation management effect
+  useEffect(() => {
+    if (!game || !gameId || !config?.gameService) return;
+
+    // Only consider recreation if the game is loaded but incomplete,
+    // and we are in a state where recreation makes sense
+    const canConsiderRecreation =
+      gameStatus === 'idle' ||
+      gameStatus === 'contentGen_Characters_WaitingForData' ||
+      gameStatus === 'contentGen_Settings_WaitingForData' ||
+      gameStatus === 'error_GameSetupFailed';
+
+    if (!game.synopsis && canConsiderRecreation) {
+      // Check if we have the necessary data from the 'game' object to make the call
+      if (game.gamePrompt && 
+          typeof game.maxScenesNumber === 'number' && 
+          game.characters && 
+          game.characters.length > 0) {
+        
+        console.log(`Recreation Trigger: Game ${game.gameId} incomplete (no synopsis), status ${gameStatus}. Triggering recreation.`);
+
+        const newGamePayload: NewGame = {
+          gamePrompt: game.gamePrompt,
+          maxScenesNumber: game.maxScenesNumber,
+          characters: game.characters.map(c => ({
+            name: c.name,
+            characterPrompt: c.prompt || `Default prompt for ${c.name}`,
+          })),
+        };
+
+        // Use the game service to recreate content
+        config.gameService.recreateGameContent(newGamePayload, game.gameId)
+          .then(result => {
+            if (result.status !== 200) {
+              console.error(`Recreation error for ${game.gameId}:`, result.error);
+              const currentError = result.error || 'Error re-initializing game content.';
+              setError(currentError);
+              setGameStatus('error_GameSetupFailed');
+            }
+            // Success case is handled by the service internally
+          })
+          .catch(error => {
+            console.error(`Recreation error for ${game.gameId}:`, error);
+            setError('Error re-initializing game content.');
+            setGameStatus('error_GameSetupFailed');
+          });
+      } else {
+        console.warn(`Recreation Trigger: Cannot re-trigger game ${game.gameId}, missing initial data. Current gameStatus: ${gameStatus}`);
+        // Could optionally set an error here if critical data is missing
+      }
+    } else if (game.synopsis && gameStatus === 'recreatingGame_WaitingForData') {
+      // If synopsis arrived while we were waiting for recreation data, transition to idle
+      console.log(`Recreation Trigger: Synopsis received for ${game.gameId} while waiting for recreation. Transitioning to idle.`);
+      setGameStatus('idle');
+    }
+  }, [game, gameId, gameStatus, config?.gameService, setError, setGameStatus]);
+
   return {
     // State
     game,
@@ -347,6 +424,149 @@ export function useGameState(): GameState & GameStateActions {
     updateGameFromSSE
   };
 }
+
+// =============================================================================
+// STATUS UTILITY FUNCTIONS
+// =============================================================================
+
+/**
+ * Utility function to check if a status represents an active operation
+ */
+export function isActiveStatus(status: GameStatus): boolean {
+  const activeStatuses: GameStatus[] = [
+    'creatingGame_InProgress',
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
+    'loadingGame_WaitingForData',
+    'recreatingGame_InProgress',
+    'recreatingGame_WaitingForData',
+    'startingGame_InProgress',
+    'startingGame_WaitingForScene',
+    'startingGame_WaitingForFirstTurn',
+    'submittingTurn_InProgress',
+    'submittingTurn_WaitingForTurnResolution',
+    'submittingTurn_WaitingForNewScene',
+    'submittingTurn_WaitingForNewTurn',
+    'turn_Creating',
+    'contentGen_Characters_WaitingForData',
+    'contentGen_Settings_WaitingForData'
+  ];
+  
+  return activeStatuses.includes(status);
+}
+
+/**
+ * Utility function to check if a status represents a processing state
+ */
+export function isProcessingStatus(status: GameStatus): boolean {
+  const processingStatuses: GameStatus[] = [
+    'creatingGame_InProgress',
+    'loadingGame_WaitingForData',
+    'recreatingGame_InProgress',
+    'startingGame_InProgress',
+    'submittingTurn_InProgress',
+    'turn_Creating'
+  ];
+  
+  return processingStatuses.includes(status);
+}
+
+/**
+ * Utility function to check if a status represents waiting for SSE
+ */
+export function isWaitingForSSEStatus(status: GameStatus): boolean {
+  const waitingStatuses: GameStatus[] = [
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
+    'recreatingGame_WaitingForData',
+    'contentGen_Characters_WaitingForData',
+    'contentGen_Settings_WaitingForData',
+    'startingGame_WaitingForScene',
+    'startingGame_WaitingForFirstTurn',
+    'submittingTurn_WaitingForTurnResolution',
+    'submittingTurn_WaitingForNewScene',
+    'submittingTurn_WaitingForNewTurn'
+  ];
+  
+  return waitingStatuses.includes(status);
+}
+
+/**
+ * Utility function to check if a status should trigger an error on SSE connection close
+ */
+export function shouldTriggerErrorOnSSEClose(status: GameStatus): boolean {
+  const errorTriggerStatuses: GameStatus[] = [
+    'creatingGame_WaitingForCharacters',
+    'creatingGame_WaitingForSynopsis',
+    'loadingGame_WaitingForData',
+    'recreatingGame_WaitingForData',
+    'startingGame_WaitingForScene',
+    'startingGame_WaitingForFirstTurn',
+    'submittingTurn_WaitingForTurnResolution',
+    'submittingTurn_WaitingForNewScene',
+    'submittingTurn_WaitingForNewTurn',
+    'contentGen_Characters_WaitingForData',
+    'contentGen_Settings_WaitingForData',
+    'submittingTurn_InProgress',
+    'startingGame_InProgress',
+    'recreatingGame_InProgress'
+  ];
+  
+  return errorTriggerStatuses.includes(status);
+}
+
+/**
+ * Utility function to get user-friendly status messages
+ */
+export function getStatusMessage(status: GameStatus, gameId?: string | null): string {
+  switch (status) {
+    case 'creatingGame_InProgress':
+      return 'Creating your game world...';
+    case 'loadingGame_WaitingForData':
+      return gameId ? `Loading game data for ${gameId}...` : 'Loading game data...';
+    case 'recreatingGame_InProgress':
+      return 'Re-initializing game content...';
+    case 'creatingGame_WaitingForCharacters':
+      return 'Generating characters...';
+    case 'creatingGame_WaitingForSynopsis':
+      return 'Generating game synopsis and objectives...';
+    case 'recreatingGame_WaitingForData':
+      return 'Re-initialization triggered. Waiting for updated game data...';
+    case 'contentGen_Characters_WaitingForData':
+      return 'Generating characters...';
+    case 'contentGen_Settings_WaitingForData':
+      return 'Generating game setting and synopsis...';
+    case 'startingGame_InProgress':
+      return 'Starting your adventure...';
+    case 'startingGame_WaitingForScene':
+      return 'Generating the opening scene...';
+    case 'startingGame_WaitingForFirstTurn':
+      return 'Creating first turn options...';
+    case 'submittingTurn_InProgress':
+      return 'Submitting turn... Please wait.';
+    case 'submittingTurn_WaitingForTurnResolution':
+      return 'Processing turn resolution...';
+    case 'submittingTurn_WaitingForNewScene':
+      return 'Generating next scene...';
+    case 'submittingTurn_WaitingForNewTurn':
+      return 'Generating next turn...';
+    case 'turn_Creating':
+      return 'Creating new turn...';
+    case 'error_GameSetupFailed':
+      return 'Game setup encountered an issue. Please check other error messages or try again.';
+    case 'game_ReadyToStart':
+      return '';
+    case 'game_Over':
+      return 'Game completed!';
+    case 'idle':
+    default:
+      return '';
+  }
+}
+
+// =============================================================================
+// UTILITY FUNCTIONS
+// =============================================================================
 
 /**
  * Utility function to determine processing state

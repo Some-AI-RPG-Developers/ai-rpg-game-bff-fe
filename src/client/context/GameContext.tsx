@@ -5,12 +5,11 @@
 
 'use client';
 
-import React, {createContext, useCallback, useContext, useMemo} from 'react';
+import React, {createContext, useCallback, useContext} from 'react';
 import {GameService} from '@/client/services/GameService';
 import {getCurrentSceneAndTurn, getProcessingState, useGameState} from '@/client/hooks/useGameState';
 import {useGameForm} from '@/client/hooks/useGameForm';
 import {useCharacterActions} from '@/client/hooks/useCharacterActions';
-import {useGameRecreation, useGameStatus} from '@/client/hooks/useGameStatus';
 import {GameStatus, PlayPageGame, ViewMode} from '@/client/types/game.types';
 
 /**
@@ -48,6 +47,7 @@ export interface GameContextValue {
   loadGameById: () => void;
   startGame: () => Promise<void>;
   submitTurn: () => Promise<void>;
+  startNextTurn: () => Promise<void>;
   
   // Form operations
   setGamePromptInput: (value: string) => void;
@@ -88,44 +88,10 @@ export interface GameContextProviderProps {
  * Game context provider component
  */
 export function GameContextProvider({ children }: Readonly<GameContextProviderProps>) {
-  // Initialize hooks
-  const gameState = useGameState();
+  // Initialize hooks with game service integration
+  const gameState = useGameState({ gameService });
   const gameForm = useGameForm();
   const characterActions = useCharacterActions();
-  
-  // Setup game status management
-  const handleGameUpdate = useCallback((gameData: PlayPageGame) => {
-    console.log(`🎯 DEBUG CONTEXT: handleGameUpdate called`);
-    console.log(`🎯 DEBUG CONTEXT: Received game data:`, {
-      gameId: gameData?.gameId,
-      hasCharacters: !!(gameData?.characters?.length),
-      hasSynopsis: !!gameData?.synopsis,
-      hasScenes: !!(gameData?.scenes?.length),
-      currentGameId: gameState.gameId
-    });
-    
-    console.log(`🎯 DEBUG CONTEXT: Calling updateGameFromSSE`);
-    gameState.updateGameFromSSE(gameData, gameState.game);
-  }, [gameState]);
-
-  const gameStatusConfig = useMemo(() => ({
-    gameService,
-    onGameUpdate: handleGameUpdate,
-    onStatusChange: gameState.setGameStatus,
-    onError: gameState.setError
-  }), [handleGameUpdate, gameState.setGameStatus, gameState.setError]);
-  
-  useGameStatus(gameStatusConfig);
-  
-  // Setup game recreation management
-  useGameRecreation({
-    game: gameState.game,
-    gameId: gameState.gameId,
-    gameStatus: gameState.gameStatus,
-    gameService,
-    onStatusChange: gameState.setGameStatus,
-    onError: gameState.setError
-  });
 
   // Derived state
   const { currentScene, currentTurn } = getCurrentSceneAndTurn(gameState.game);
@@ -226,6 +192,23 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
   }, [characterActions, currentTurn, gameState]);
 
   /**
+   * Starts the next turn (when current turn is resolved and we need to generate a new turn)
+   */
+  const startNextTurn = useCallback(async () => {
+    if (!gameState.game || !currentTurn) {
+      gameState.setError('No current turn available');
+      return;
+    }
+
+    gameState.clearError();
+    const result = await gameService.createTurn();
+    
+    if (result.status !== 200) {
+      gameState.setError(result.error ?? 'Failed to start next turn');
+    }
+  }, [gameState, currentTurn]);
+
+  /**
    * Resets the entire game state
    */
   const resetGame = useCallback(() => {
@@ -268,6 +251,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     loadGameById,
     startGame,
     submitTurn,
+    startNextTurn,
     
     // Form operations
     setGamePromptInput: gameForm.setGamePromptInput,

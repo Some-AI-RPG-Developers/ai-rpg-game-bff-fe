@@ -1,6 +1,6 @@
 import React from 'react';
 import { GameStatus } from '@/client/types/game.types';
-import { isProcessingStatus, isWaitingForSSEStatus, getStatusMessage } from '@/client/hooks/useGameStatus';
+import { isProcessingStatus, isWaitingForSSEStatus, getStatusMessage } from '@/client/hooks/useGameState';
 
 interface GameStatusIndicatorProps {
   /** Current game status */

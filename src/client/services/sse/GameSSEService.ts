@@ -4,7 +4,7 @@
  */
 
 import { PlayPageGame, GameStatus } from '@/client/types/game.types';
-import { shouldTriggerErrorOnSSEClose } from '@/client/hooks/useGameStatus';
+import { shouldTriggerErrorOnSSEClose } from '@/client/hooks/useGameState';
 
 /**
  * SSE event handlers interface

@@ -57,6 +57,7 @@ export default function PlayPage() {
         loadGameById,
         startGame,
         submitTurn,
+        startNextTurn,
 
         // Form operations
         setGamePromptInput,
@@ -154,6 +155,7 @@ export default function PlayPage() {
                         gameStatus={gameStatus}
                         onStartGame={startGame}
                         onSubmitTurn={submitTurn}
+                        onStartNextTurn={startNextTurn}
                         allCharactersMadeChoice={allCharactersMadeChoice}
                         isProcessing={isProcessing}
                         isWaitingForSSEResponse={isWaitingForSSEResponse}
