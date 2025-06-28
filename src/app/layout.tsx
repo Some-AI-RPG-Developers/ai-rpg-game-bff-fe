@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { GameContextProvider } from '@/client/context/GameContext';
+import { ThemeProvider } from '@/client/context/ThemeContext';
 import React from "react";
-// If you have a global CSS file, import it here.
-// import './globals.css';
+import '../styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,9 +20,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <GameContextProvider>
-          {children}
-        </GameContextProvider>
+        <ThemeProvider>
+          <GameContextProvider>
+            {children}
+          </GameContextProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

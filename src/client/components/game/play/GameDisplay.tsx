@@ -3,6 +3,8 @@ import { PlayPageGame, GameStatus } from '@/client/types/game.types';
 import { SceneDisplay } from './SceneDisplay';
 import { TurnDisplay } from './TurnDisplay';
 import { TTSWrapper } from '@/client/components/tts';
+import { useTheme } from '@/client/context/ThemeContext';
+import { getThemeStyles } from '@/client/utils/themeStyles';
 
 interface GameDisplayProps {
   /** Current game object */
@@ -35,29 +37,52 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
   onFreeTextChange,
   isProcessing
 }) => {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
   return (
-    <div style={{ marginTop: '20px' }}>
-      <div style={{ marginBottom: '20px', padding: '15px', border: '1px solid #e0e0e0', borderRadius: '5px', backgroundColor: '#f9f9f9' }}>
-        <h4>Game Details:</h4>
-        <p><strong>ID:</strong> {game.gameId}</p>
+    <div className="flex flex-col items-center mt-8">
+      <div className={`rounded-3xl p-8 max-w-lg mb-8`}
+           style={{
+             backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
+             border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
+             backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
+           }}>
+        <h4 className={`text-2xl font-bold mb-6 ${theme !== 'matrix' ? styles.text : ''}`}
+            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+          Game Details
+        </h4>
+        <p className={`mb-4 text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+          <strong>ID:</strong> {game.gameId}
+        </p>
         {game.synopsis && (
-          <div style={{ marginTop: '10px' }}>
+          <div className="mt-6">
             <TTSWrapper
               text={`Synopsis: ${game.synopsis}`}
               buttonPosition="inline-end"
               title="Read synopsis aloud"
             >
-              <strong>Synopsis:</strong>
+              <strong className={theme !== 'matrix' ? styles.text : ''}
+                      style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                Synopsis:
+              </strong>
             </TTSWrapper>
-            <p style={{ margin: '5px 0 0 0', maxWidth: '90ch' }}>{game.synopsis}</p>
+            <p className={`mt-3 text-lg leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+               style={{ 
+                 color: theme === 'matrix' ? '#00ff41' : undefined,
+                 opacity: theme === 'matrix' ? 0.9 : 0.8,
+                 maxWidth: '90ch' 
+               }}>
+              {game.synopsis}
+            </p>
           </div>
         )}
-        {/* Specific messages for content generation are handled by the centralized status messages now */}
       </div>
 
       {/* All Scenes and Turns Display */}
       {game.scenes && game.scenes.length > 0 && (
-        <div>
+        <div className="w-full max-w-lg space-y-6">
           {game.scenes.map((scene, sceneIndex) => (
             <SceneDisplay
               key={scene.sceneId || sceneIndex}
@@ -65,7 +90,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
               sceneNumber={sceneIndex + 1}
             >
               {scene.turns && scene.turns.length > 0 && (
-                <div>
+                <div className="space-y-4">
                   {scene.turns.map((turn, turnIndex) => (
                     <TurnDisplay
                       key={turn.turnId || turnIndex}
