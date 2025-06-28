@@ -1,5 +1,8 @@
 import React from 'react';
 import { ViewMode } from '@/client/types/ui.types';
+import { useTheme } from '@/client/context/ThemeContext';
+import { getThemeStyles } from '@/client/utils/themeStyles';
+import { ArrowLeft, Download } from 'lucide-react';
 
 interface ResumeGameFormProps {
   /** Current value of the game ID input */
@@ -28,37 +31,86 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
   onErrorClear,
   isProcessing
 }) => {
+  const { theme } = useTheme();
+  const styles = getThemeStyles(theme);
+
   return (
-    <div style={{ marginTop: '20px', padding: '20px', border: '1px solid #ccc', borderRadius: '5px' }}>
-      <h3>Resume Game</h3>
-      <div>
-        <label htmlFor="resumeGameId" style={{ display: 'block', marginBottom: '5px' }}>Enter Game ID:</label>
-        <input
-          type="text"
-          id="resumeGameId"
-          value={resumeGameIdInput}
-          onChange={(e) => onResumeGameIdChange(e.target.value)}
-          style={{ padding: '8px', marginRight: '10px', minWidth: '250px' }}
-          disabled={isProcessing}
-        />
-        <button
-          onClick={onLoadGameById}
-          disabled={isProcessing || !resumeGameIdInput.trim()}
-          style={{ padding: '8px 15px', fontSize: '16px' }}
-        >
-          Load Game
-        </button>
+    <div className="flex flex-col items-center justify-center min-h-[60vh]">
+      <div className={`rounded-3xl p-12 max-w-lg`}
+           style={{
+             backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
+             border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
+             backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
+           }}>
+        <h3 className={`text-3xl font-bold mb-8 text-center ${theme !== 'matrix' ? styles.text : ''}`}
+            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+          Resume Game
+        </h3>
+        
+        <div className="space-y-6">
+          <div>
+            <label 
+              htmlFor="resumeGameId" 
+              className={`block text-lg font-medium mb-3 ${theme !== 'matrix' ? styles.text : ''}`}
+              style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+            >
+              Enter Game ID:
+            </label>
+            <input
+              type="text"
+              id="resumeGameId"
+              value={resumeGameIdInput}
+              onChange={(e) => onResumeGameIdChange(e.target.value)}
+              disabled={isProcessing}
+              className={`w-full max-w-md mx-auto p-4 rounded-lg text-lg font-medium transition-all duration-300 
+                focus:outline-none focus:ring-2 ${theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''}`}
+              style={{
+                backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
+                color: theme === 'matrix' ? '#00ff41' : undefined,
+                border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined,
+                focusRingColor: theme === 'matrix' ? '#00ff41' : undefined
+              }}
+              placeholder="Enter your game ID here..."
+            />
+          </div>
+          
+          <div className="flex gap-4 justify-center">
+            <button
+              onClick={onLoadGameById}
+              disabled={isProcessing || !resumeGameIdInput.trim()}
+              className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
+                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.accent} ${styles.text}` : ''}`}
+              style={{
+                backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
+                color: theme === 'matrix' ? '#00ff41' : undefined,
+                border: theme === 'matrix' ? '1px solid #00ff41' : undefined,
+                boxShadow: theme === 'matrix' ? '0 0 10px rgba(0, 255, 65, 0.3)' : undefined
+              }}
+            >
+              <Download size={24} />
+              Load Game
+            </button>
+            
+            <button 
+              onClick={() => { 
+                onViewModeChange('choice'); 
+                onErrorClear(); 
+              }} 
+              disabled={isProcessing}
+              className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
+                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+              style={{
+                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                color: theme === 'matrix' ? '#00ff41' : undefined,
+                border: theme === 'matrix' ? '1px solid #00ff41' : undefined
+              }}
+            >
+              <ArrowLeft size={24} />
+              Back to choices
+            </button>
+          </div>
+        </div>
       </div>
-      <button 
-        onClick={() => { 
-          onViewModeChange('choice'); 
-          onErrorClear(); 
-        }} 
-        style={{ marginTop: '15px', fontSize: '14px' }} 
-        disabled={isProcessing}
-      >
-        Back to choices
-      </button>
     </div>
   );
 };
