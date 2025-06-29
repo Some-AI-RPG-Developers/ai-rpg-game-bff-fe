@@ -28,7 +28,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
     return (
         <div className="flex flex-col items-center mt-8">
-            <div className={`rounded-2xl p-6 mb-6 max-w-lg text-center`}
+            <div className={`rounded-2xl p-6 mb-6 w-full text-center`}
                  style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.5)' : undefined,
                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined,
@@ -49,11 +49,10 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                             </strong>
                         </TTSWrapper>
                     </div>
-                    <p className={`text-base leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                    <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
                        style={{
                            color: theme === 'matrix' ? '#00ff41' : undefined,
-                           opacity: theme === 'matrix' ? 0.9 : 0.8,
-                           maxWidth: '90ch'
+                           opacity: theme === 'matrix' ? 0.9 : 0.8
                        }}>
                         {currentScene.description}
                     </p>
@@ -69,21 +68,22 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                              border: theme === 'matrix' ? '1px dashed rgba(0, 255, 65, 0.5)' : '1px solid #b3e0ff',
                              borderTop: theme === 'matrix' ? '2px dashed rgba(0, 255, 65, 0.7)' : '1px dashed #ccc'
                          }}>
-                        <TTSWrapper
-                            text={`Scene Conclusion: ${currentScene.consequences}`}
-                            buttonPosition="inline-end"
-                            title="Read scene conclusion aloud"
-                        >
-                            <strong className={`text-lg ${theme !== 'matrix' ? styles.text : ''}`}
-                                    style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                                Scene Conclusion:
-                            </strong>
-                        </TTSWrapper>
-                        <p className={`mt-3 text-base leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                        <div className="text-center mb-3">
+                            <TTSWrapper
+                                text={`Scene Conclusion: ${currentScene.consequences}`}
+                                buttonPosition="inline-end"
+                                title="Read scene conclusion aloud"
+                            >
+                                <strong className={`text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+                                        style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                                    Scene Conclusion:
+                                </strong>
+                            </TTSWrapper>
+                        </div>
+                        <p className={`mt-3 text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
                            style={{
                                color: theme === 'matrix' ? '#00ff41' : undefined,
-                               opacity: theme === 'matrix' ? 0.9 : 0.8,
-                               maxWidth: '90ch'
+                               opacity: theme === 'matrix' ? 0.9 : 0.8
                            }}>
                             {currentScene.consequences}
                         </p>

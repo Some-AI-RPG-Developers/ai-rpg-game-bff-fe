@@ -36,7 +36,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <div className={`rounded-3xl p-12 max-w-lg`}
+      <div className={`rounded-3xl p-12 w-2/3 max-w-2xl mx-auto`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,

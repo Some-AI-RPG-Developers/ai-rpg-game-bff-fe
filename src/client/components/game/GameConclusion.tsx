@@ -27,7 +27,7 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-8">
-      <div className={`rounded-3xl p-8 max-w-lg text-center`}
+      <div className={`rounded-3xl p-8 w-2/3 max-w-2xl text-center mx-auto`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
@@ -54,11 +54,10 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
               Conclusion:
             </strong>
           </TTSWrapper>
-          <p className={`mt-4 text-lg leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+          <p className={`mt-4 text-lg leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
              style={{ 
                color: theme === 'matrix' ? '#00ff41' : undefined,
-               opacity: theme === 'matrix' ? 0.9 : 0.8,
-               maxWidth: '90ch' 
+               opacity: theme === 'matrix' ? 0.9 : 0.8
              }}>
             {game.conclusion}
           </p>
