@@ -129,8 +129,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                     style={{
                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : '#ffffff',
                                         color: theme === 'matrix' ? '#ffa500' : undefined,
-                                        border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : '1px solid #ddd',
-                                        focusRingColor: theme === 'matrix' ? '#ffa500' : undefined
+                                        border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : '1px solid #ddd'
                                     }}
                                 />
                             </div>

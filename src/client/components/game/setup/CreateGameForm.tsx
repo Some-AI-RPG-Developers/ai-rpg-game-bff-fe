@@ -98,8 +98,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,
               border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined,
-              focusRingColor: theme === 'matrix' ? '#00ff41' : undefined
-            }}
+                          }}
             disabled={isProcessing}
             placeholder="Describe your adventure setting..."
           />
@@ -117,8 +116,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,
               border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined,
-              focusRingColor: theme === 'matrix' ? '#00ff41' : undefined
-            }}
+                          }}
             disabled={isProcessing}
             min="1"
             max="20"
@@ -148,8 +146,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                         backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                         color: theme === 'matrix' ? '#00ff41' : undefined,
                         border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined,
-                        focusRingColor: theme === 'matrix' ? '#00ff41' : undefined
-                      }}
+                                              }}
                       disabled={isProcessing}
                       placeholder="Character name..."
                     />
@@ -167,8 +164,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                         backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                         color: theme === 'matrix' ? '#00ff41' : undefined,
                         border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined,
-                        focusRingColor: theme === 'matrix' ? '#00ff41' : undefined
-                      }}
+                                              }}
                       disabled={isProcessing}
                       placeholder="Character description..."
                     />
