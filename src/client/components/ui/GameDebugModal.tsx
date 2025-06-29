@@ -118,7 +118,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : undefined
           }}
         >
-          <GameDebugViewer game={game} gameStatus={gameStatus} />
+          {game && <GameDebugViewer game={game} gameStatus={gameStatus} />}
         </div>
       </div>
     </div>

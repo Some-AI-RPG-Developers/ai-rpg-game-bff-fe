@@ -67,8 +67,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
-                border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined,
-                focusRingColor: theme === 'matrix' ? '#00ff41' : undefined
+                border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined
               }}
               placeholder="Enter your game ID here..."
             />
