@@ -47,7 +47,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
 
     return (
         <div className="flex flex-col items-center mt-4">
-            <div className={`rounded-2xl p-6 max-w-lg text-center`}
+            <div className={`rounded-2xl p-6 w-full text-center`}
                  style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined,
@@ -70,11 +70,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         </TTSWrapper>
                     </div>
                     {currentTurn.description && (
-                        <p className={`text-base leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                        <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
                            style={{
                                color: theme === 'matrix' ? '#00ff41' : undefined,
-                               opacity: theme === 'matrix' ? 0.9 : 0.8,
-                               maxWidth: '90ch'
+                               opacity: theme === 'matrix' ? 0.9 : 0.8
                            }}>
                             {currentTurn.description}
                         </p>
@@ -105,11 +104,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         <div className="space-y-2">
                             {currentTurn.actions.map((action, index) => (
                                 <p key={index}
-                                   className={`text-sm leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                                   className={`text-sm leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
                                    style={{
                                        color: theme === 'matrix' ? '#ffa500' : undefined,
-                                       opacity: theme === 'matrix' ? 0.9 : 0.8,
-                                       maxWidth: '90ch'
+                                       opacity: theme === 'matrix' ? 0.9 : 0.8
                                    }}>
                                     <strong>{action.name}:</strong> {action.message}
                                 </p>
@@ -138,11 +136,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                 </strong>
                             </TTSWrapper>
                         </div>
-                        <p className={`text-base leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                        <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
                            style={{
                                color: theme === 'matrix' ? '#00ff41' : undefined,
-                               opacity: theme === 'matrix' ? 0.9 : 0.8,
-                               maxWidth: '90ch'
+                               opacity: theme === 'matrix' ? 0.9 : 0.8
                            }}>
                             {currentTurn.consequences}
                         </p>

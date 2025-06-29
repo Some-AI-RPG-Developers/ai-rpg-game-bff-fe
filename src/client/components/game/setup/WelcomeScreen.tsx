@@ -24,7 +24,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <div className={`rounded-3xl p-12 max-w-lg text-center`}
+      <div className={`rounded-3xl p-12 w-2/3 max-w-2xl text-center mx-auto`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,

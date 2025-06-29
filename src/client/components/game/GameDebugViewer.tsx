@@ -49,7 +49,7 @@ export const GameDebugViewer: React.FC<GameDebugViewerProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-8">
-      <div className={`rounded-3xl p-8 max-w-lg`}
+      <div className={`rounded-3xl p-8 w-2/3 max-w-2xl mx-auto`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,

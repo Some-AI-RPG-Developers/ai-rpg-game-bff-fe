@@ -44,7 +44,7 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-6">
-      <div className={`rounded-3xl p-6 max-w-lg text-center`}
+      <div className={`rounded-3xl p-6 w-2/3 max-w-2xl text-center mx-auto`}
            style={{
              backgroundColor: theme === 'matrix' ? 
                (isError ? 'rgba(51, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)') : undefined,
