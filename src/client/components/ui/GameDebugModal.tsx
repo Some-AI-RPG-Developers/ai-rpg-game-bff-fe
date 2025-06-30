@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { useTheme } from '@/client/context/ThemeContext';
 import { getThemeStyles } from '@/client/utils/themeStyles';
 import { X, Bug } from 'lucide-react';
@@ -55,16 +56,34 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
     };
   }, [isOpen, onClose]);
 
+  console.log('GameDebugModal render - isOpen:', isOpen, 'game:', !!game);
+  
   if (!isOpen) {
+    console.log('GameDebugModal: Modal not open, returning null');
     return null;
   }
 
-  return (
+  console.log('GameDebugModal: Rendering modal with z-index 50');
+  
+  const modalContent = (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{
         backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        backdropFilter: 'blur(4px)'
+        backdropFilter: 'blur(4px)',
+        zIndex: 99999,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: '16px',
+        boxSizing: 'border-box',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
       }}
       onClick={handleBackdropClick}
     >
@@ -118,9 +137,20 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : undefined
           }}
         >
+          <div style={{ color: theme === 'matrix' ? '#00ff41' : '#000000', fontSize: '16px' }}>
+            <p><strong>Debug Modal Test</strong></p>
+            <p>Game ID: {game?.gameId || 'No game'}</p>
+            <p>Game Status: {gameStatus}</p>
+            <p>Modal is working correctly!</p>
+          </div>
           {game && <GameDebugViewer game={game} gameStatus={gameStatus} />}
         </div>
       </div>
     </div>
   );
+
+  // Render modal using portal to bypass container padding/margins
+  return typeof document !== 'undefined' 
+    ? createPortal(modalContent, document.body)
+    : null;
 };

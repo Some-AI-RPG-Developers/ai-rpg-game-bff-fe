@@ -101,7 +101,9 @@ export default function PlayPage() {
 
     // Handle debug modal toggle
     const handleToggleDebug = () => {
+        console.log('Debug button clicked, current state:', isDebugModalOpen);
         setIsDebugModalOpen(!isDebugModalOpen);
+        console.log('Debug modal state will be:', !isDebugModalOpen);
     };
 
     return (
@@ -120,7 +122,7 @@ export default function PlayPage() {
                 />
 
                 {/* Main Content */}
-                <main className="container mx-auto px-4 py-8 flex-1">
+                <main className={`flex-1 ${theme === 'matrix' ? 'px-6 py-8' : 'container mx-auto px-4 py-8'}`}>
 
             {/* Initial choice: Create or Resume (only if no gameId and not processing/waiting) */}
             {viewMode === 'choice' && !gameId && !isProcessing && !isWaitingForSSEResponse && gameStatus === 'idle' && (
