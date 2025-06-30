@@ -39,22 +39,27 @@ export function TTSButton({
   size = 'md'
 }: TTSButtonProps) {
   const tts = useTextToSpeech();
-  const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
+  const [isThisButtonSpeaking, setIsThisButtonSpeaking] = useState(false);
   const { theme } = useTheme();
 
   const handlePlayClick = async () => {
     if (!text.trim()) return;
 
     try {
-      setIsCurrentlyPlaying(true);
+      // Stop any current speech before starting new one
+      if (tts.isSpeaking) {
+        tts.stop();
+      }
+      
+      setIsThisButtonSpeaking(true);
       onSpeakStart?.();
       
       await tts.speak(text);
       
-      setIsCurrentlyPlaying(false);
+      setIsThisButtonSpeaking(false);
       onSpeakEnd?.();
     } catch (error) {
-      setIsCurrentlyPlaying(false);
+      setIsThisButtonSpeaking(false);
       const errorMessage = error instanceof Error ? error.message : 'Speech synthesis failed';
       onError?.(errorMessage);
     }
@@ -70,7 +75,7 @@ export function TTSButton({
 
   const handleStopClick = () => {
     tts.stop();
-    setIsCurrentlyPlaying(false);
+    setIsThisButtonSpeaking(false);
     onSpeakEnd?.();
   };
 
@@ -174,8 +179,8 @@ export function TTSButton({
     return null; // Don't render if TTS is not supported
   }
 
-  // If currently playing or speaking, show pause/stop controls
-  if (isCurrentlyPlaying || tts.isSpeaking) {
+  // Only show pause/stop controls for the button that initiated the speech
+  if (isThisButtonSpeaking && tts.isSpeaking) {
     return renderControlButtons();
   }
 

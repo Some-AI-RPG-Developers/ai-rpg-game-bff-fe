@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PlayPageGame, GameStatus } from '@/client/types/game.types';
 import { SceneDisplay } from './SceneDisplay';
 import { TurnDisplay } from './TurnDisplay';
 import { TTSWrapper } from '@/client/components/tts';
 import { useTheme } from '@/client/context/ThemeContext';
 import { getThemeStyles } from '@/client/utils/themeStyles';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 interface GameDisplayProps {
   /** Current game object */
@@ -39,6 +40,16 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
 }) => {
   const { theme } = useTheme();
   const styles = getThemeStyles(theme);
+  
+  // State for expanded characters
+  const [expandedCharacters, setExpandedCharacters] = useState<Record<string, boolean>>({});
+  
+  const toggleCharacter = (characterId: string) => {
+    setExpandedCharacters(prev => ({
+      ...prev,
+      [characterId]: !prev[characterId]
+    }));
+  };
 
   return (
     <div className="flex flex-col items-center mt-8">
@@ -56,6 +67,81 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
           <strong>ID:</strong> {game.gameId}
         </p>
+        
+        {/* Characters Section */}
+        {game.characters && game.characters.length > 0 && (
+          <div className="mt-6">
+            <div className={`rounded-xl p-6 ${theme !== 'matrix' ? styles.border : ''}`}
+                 style={{
+                   backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.08)' : undefined,
+                   border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.3)' : undefined
+                 }}>
+              <h5 className={`text-xl font-bold mb-4 text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                  style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                Characters
+              </h5>
+              <div className="space-y-2">
+                {game.characters.map((character, index) => {
+                  const characterId = character.characterId || `char-${index}`;
+                  const isExpanded = expandedCharacters[characterId];
+                  
+                  return (
+                    <div key={characterId} 
+                         className={`rounded-lg ${theme !== 'matrix' ? styles.border : ''}`}
+                         style={{
+                           backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
+                           border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
+                         }}>
+                      {/* Character Name - Clickable Header with TTS */}
+                      <div className="p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-3 flex-1">
+                          <TTSWrapper
+                            text={`${character.name}: ${character.description}`}
+                            buttonPosition="inline-end"
+                            title={`Read ${character.name}'s description aloud`}
+                          >
+                            <span className={`font-bold text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+                                  style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                              {character.name}
+                            </span>
+                          </TTSWrapper>
+                        </div>
+                        <button
+                          onClick={() => toggleCharacter(characterId)}
+                          className={`transition-all duration-200 hover:opacity-80 p-1 ${theme !== 'matrix' ? styles.text : ''}`}
+                          style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+                        >
+                          {isExpanded ? (
+                            <ChevronDown size={20} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
+                          ) : (
+                            <ChevronRight size={20} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
+                          )}
+                        </button>
+                      </div>
+                      
+                      {/* Character Description - Expandable Content */}
+                      {isExpanded && (
+                        <div className="px-4 pb-4 border-t"
+                             style={{ borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : undefined }}>
+                          <div className="mt-3">
+                            <p className={`text-sm leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                               style={{ 
+                                 color: theme === 'matrix' ? '#00ff41' : undefined,
+                                 opacity: theme === 'matrix' ? 0.9 : 0.8
+                               }}>
+                              {character.description}
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+        
         {game.synopsis && (
           <div className="mt-6 text-center">
             <div className="text-center mb-3">
