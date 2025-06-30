@@ -105,7 +105,7 @@ export default function PlayPage() {
     };
 
     return (
-        <div className={`min-h-screen ${styles.bg} relative`}>
+        <div className={`min-h-screen ${styles.bg} relative ${theme === 'light' ? 'fantasy-background' : ''}`}>
             {theme === 'matrix' && <MatrixRain />}
             
             <div className="relative z-10 min-h-screen flex flex-col">
@@ -193,7 +193,9 @@ export default function PlayPage() {
                 </main>
 
                 {/* Footer */}
-                <footer className={`${theme !== 'matrix' ? styles.card + ' ' + styles.border : ''} border-t`}
+                <footer className={`${theme !== 'matrix' ? styles.card + ' ' + styles.border : ''} border-t ${
+                  theme === 'light' ? 'fantasy-card' : ''
+                }`}
                         style={{
                           backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
                           borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : undefined,
@@ -205,7 +207,7 @@ export default function PlayPage() {
                              color: theme === 'matrix' ? '#00ff41' : undefined,
                              opacity: theme === 'matrix' ? 0.8 : 0.7
                            }}>
-                            © 2025 AI RPG Adventure - Powered by Advanced AI
+                            {theme === 'light' ? '✨ © 2025 AI RPG Adventure - Powered by Advanced AI ⚡' : '© 2025 AI RPG Adventure - Powered by Advanced AI'}
                         </p>
                     </div>
                 </footer>

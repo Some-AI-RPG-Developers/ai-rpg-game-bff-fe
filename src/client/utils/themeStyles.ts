@@ -1,13 +1,13 @@
-// Theme Styles
+// Theme Styles - Updated with Fantasy Theme
 export const getThemeStyles = (theme: string) => {
   const themes = {
     light: {
-      bg: 'bg-gradient-to-br from-blue-50 to-purple-50',
-      card: 'bg-white/90 backdrop-blur-md shadow-xl',
-      text: 'text-gray-800',
-      border: 'border-gray-200',
-      accent: 'bg-blue-500 hover:bg-blue-600',
-      secondary: 'bg-purple-500 hover:bg-purple-600'
+      bg: 'bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50',
+      card: 'bg-gradient-to-br from-white/90 to-purple-50/90 backdrop-blur-md shadow-xl border border-purple-200 fantasy-card',
+      text: 'text-emerald-800',
+      border: 'border-purple-200',
+      accent: 'bg-gradient-to-r from-purple-500 to-violet-600 hover:from-purple-600 hover:to-violet-700 fantasy-button',
+      secondary: 'bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700'
     },
     dark: {
       bg: 'bg-gradient-to-br from-gray-900 to-black',

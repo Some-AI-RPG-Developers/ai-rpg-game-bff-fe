@@ -4,6 +4,7 @@ import { GameContextProvider } from '@/client/context/GameContext';
 import { ThemeProvider } from '@/client/context/ThemeContext';
 import React from "react";
 import '../styles/globals.css';
+import '../client/styles/fantasy-animations.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
