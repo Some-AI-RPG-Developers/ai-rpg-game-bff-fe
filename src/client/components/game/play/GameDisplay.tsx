@@ -167,35 +167,57 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         )}
       </div>
 
-      {/* All Scenes and Turns Display */}
+      {/* Scenes Section */}
       {game.scenes && game.scenes.length > 0 && (
-        <div className="w-2/3 max-w-2xl mx-auto space-y-6">
-          {game.scenes.map((scene, sceneIndex) => (
-            <SceneDisplay
-              key={scene.sceneId || sceneIndex}
-              currentScene={scene}
-              sceneNumber={sceneIndex + 1}
-            >
-              {scene.turns && scene.turns.length > 0 && (
-                <div className="space-y-4">
-                  {scene.turns.map((turn, turnIndex) => (
-                    <TurnDisplay
-                      key={turn.turnId || turnIndex}
-                      currentTurn={turn}
-                      gameStatus={gameStatus}
-                      isGameConcluded={!!game.conclusion}
-                      turnNumber={turnIndex + 1}
-                      selectedOptions={selectedOptions}
-                      freeTextInputs={freeTextInputs}
-                      onOptionChange={onOptionChange}
-                      onFreeTextChange={onFreeTextChange}
-                      isProcessing={isProcessing}
-                    />
-                  ))}
-                </div>
-              )}
-            </SceneDisplay>
-          ))}
+        <div className={`rounded-xl p-6 w-2/3 max-w-2xl mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+             style={{
+               backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.08)' : undefined,
+               border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.3)' : undefined
+             }}>
+          <h5 className={`text-xl font-bold mb-4 text-center ${theme !== 'matrix' ? styles.text : ''}`}
+              style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+            Game Scenes
+          </h5>
+          <div className="space-y-6">
+            {game.scenes.map((scene, sceneIndex) => (
+              <SceneDisplay
+                key={scene.sceneId || sceneIndex}
+                currentScene={scene}
+                sceneNumber={sceneIndex + 1}
+              >
+                {scene.turns && scene.turns.length > 0 && (
+                  <div className="mt-6">
+                    <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                         style={{
+                           backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
+                           border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
+                         }}>
+                      <h6 className={`text-lg font-bold mb-4 text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                          style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                        Scene Turns
+                      </h6>
+                      <div className="space-y-4">
+                        {scene.turns.map((turn, turnIndex) => (
+                          <TurnDisplay
+                            key={turn.turnId || turnIndex}
+                            currentTurn={turn}
+                            gameStatus={gameStatus}
+                            isGameConcluded={!!game.conclusion}
+                            turnNumber={turnIndex + 1}
+                            selectedOptions={selectedOptions}
+                            freeTextInputs={freeTextInputs}
+                            onOptionChange={onOptionChange}
+                            onFreeTextChange={onFreeTextChange}
+                            isProcessing={isProcessing}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </SceneDisplay>
+            ))}
+          </div>
         </div>
       )}
     </div>
