@@ -57,16 +57,21 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
   const styles = getThemeStyles(theme);
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] py-8">
-      <div className={`rounded-3xl p-12 w-2/3 max-w-4xl mx-auto overflow-hidden`}
+      <div className={`rounded-3xl p-12 w-2/3 max-w-4xl mx-auto overflow-hidden ${
+        theme === 'light' ? 'fantasy-card fantasy-glow' : ''
+      }`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
              backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
            }}>
         <div className="text-center mb-8">
-          <h3 className={`text-4xl font-bold mb-4 ${theme !== 'matrix' ? styles.text : ''}`}
+          <h3 className={`text-4xl font-bold mb-4 ${
+            theme === 'light' ? 'fantasy-text-magical' : 
+            theme !== 'matrix' ? styles.text : ''
+          }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-            Create New Game
+            {theme === 'light' ? '🎲 Create New Game ⚡' : 'Create New Game'}
           </h3>
           <div className="flex justify-center">
             <button 

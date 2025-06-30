@@ -48,8 +48,10 @@ html, body {
 }
 
 [data-theme="light"] {
-  --color-primary: #3B82F6;
-  --color-secondary: #8B5CF6;
+  --color-primary: #8b5cf6;
+  --color-secondary: #f59e0b;
+  --bg-primary: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 50%, #ede9fe 100%);
+  --bg-secondary: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
 }
 
 [data-theme="dark"] {

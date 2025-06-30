@@ -12,12 +12,12 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Theme Provider Component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState('matrix');
+  const [theme, setTheme] = useState('light');
 
   // Load theme from localStorage on client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') || 'matrix';
+      const savedTheme = localStorage.getItem('theme') || 'light';
       setTheme(savedTheme);
     }
   }, []);

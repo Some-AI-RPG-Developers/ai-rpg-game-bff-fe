@@ -90,7 +90,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   };
 
   return (
-    <nav className={`sticky top-0 border-b`}
+    <nav className={`sticky top-0 border-b ${
+      theme === 'light' ? 'fantasy-border' : ''
+    }`}
          style={{
            backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? '#1a1a1a' : '#ffffff'),
            borderColor: theme === 'matrix' ? '#00ff41' : undefined,
@@ -105,7 +107,10 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       <div className="flex justify-between items-center px-6 py-4">
         {/* Left Side - Game Title */}
         <div className="flex items-center gap-6">
-          <h1 className={`text-xl font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+          <h1 className={`text-xl font-bold ${
+            theme === 'light' ? 'fantasy-text-magical' : 
+            theme !== 'matrix' ? styles.text : ''
+          }`}
               style={{ 
                 margin: 0,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -115,7 +120,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 borderRadius: '4px'
               }}>
             <Sword className="transform rotate-45" size={32} />
-            AI RPG Adventure
+            {theme === 'light' ? '⚔️ AI RPG Adventure 🛡️' : 'AI RPG Adventure'}
             <Shield size={32} />
           </h1>
           

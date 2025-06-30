@@ -1,21 +1,12 @@
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '@/client/context/ThemeContext';
-import { getThemeStyles } from '@/client/utils/themeStyles';
+import { getThemeColors, getSyntaxColors, getComponentStyles, ThemeName } from '@/client/utils/designSystem';
 import { X, Bug, Copy, Check } from 'lucide-react';
 import { PlayPageGame, GameStatus } from '@/client/types/game.types';
 import { JsonViewer } from '@textea/json-viewer';
 import { stringify as yamlStringify } from 'yaml';
-
-// Color scheme for YAML syntax highlighting
-const getYamlColors = (theme: string) => ({
-  key: '#ff9500', // Orange for keys
-  string: '#32d74b', // Green for strings
-  number: '#64d2ff', // Light blue for numbers
-  boolean: '#ff9500', // Orange for booleans
-  null: '#ff453a', // Red for null values
-  default: theme === 'matrix' ? '#00ff41' : theme === 'dark' ? '#f3f4f6' : '#374151'
-});
+import '@/client/styles/fantasy-animations.css';
 
 // Component to render colorized YAML
 interface YamlColorizedViewerProps {
@@ -24,7 +15,7 @@ interface YamlColorizedViewerProps {
 }
 
 const YamlColorizedViewer: React.FC<YamlColorizedViewerProps> = ({ data, theme }) => {
-  const colors = getYamlColors(theme);
+  const colors = getSyntaxColors(theme as ThemeName);
   
   const colorizeYamlLine = (line: string): React.ReactNode => {
     // Handle empty lines
@@ -89,7 +80,7 @@ const YamlColorizedViewer: React.FC<YamlColorizedViewerProps> = ({ data, theme }
     return <span style={{ color: colors.default }}>{line}</span>;
   };
   
-  const colorizeValue = (value: string, colors: ReturnType<typeof getYamlColors>): React.ReactNode => {
+  const colorizeValue = (value: string, colors: ReturnType<typeof getSyntaxColors>): React.ReactNode => {
     const trimmedValue = value.trim();
     
     // Check for quoted strings
@@ -160,7 +151,8 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
   game
 }) => {
   const { theme } = useTheme();
-  const styles = getThemeStyles(theme);
+  const themeColors = getThemeColors(theme as ThemeName);
+  const componentStyles = getComponentStyles(theme as ThemeName);
   const [copiedSSE, setCopiedSSE] = useState(false);
   const [copiedGameId, setCopiedGameId] = useState(false);
   const [debugFormat, setDebugFormat] = useState<'json' | 'yaml'>('json');
@@ -250,7 +242,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
   const modalContent = (
     <div 
       style={{
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        backgroundColor: componentStyles.modal.backdrop,
         backdropFilter: 'blur(4px)',
         zIndex: 99999,
         position: 'fixed',
@@ -270,11 +262,15 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
       onClick={handleBackdropClick}
     >
       <div 
-        className="relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl"
+        className={`relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl ${
+          theme === 'light' ? 'fantasy-modal fantasy-border fantasy-glow fantasy-sparkles' : ''
+        }`}
         style={{
-          backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.95)' : '#ffffff',
-          border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.5)' : '1px solid #e5e7eb',
-          boxShadow: theme === 'matrix' ? '0 0 30px rgba(0, 255, 65, 0.3)' : '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
+          background: componentStyles.modal.container,
+          border: theme === 'light' ? undefined : `2px solid ${themeColors.border.primary}`,
+          boxShadow: theme === 'matrix' ? '0 0 30px rgba(0, 255, 65, 0.3)' : 
+                    theme === 'light' ? undefined : 
+                    '0 25px 50px -12px rgba(0, 0, 0, 0.25)'
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -282,29 +278,31 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
         <div 
           className="flex items-center justify-between p-6 border-b"
           style={{
-            borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : '#e5e7eb',
-            backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : '#f9fafb'
+            borderColor: themeColors.border.primary,
+            backgroundColor: componentStyles.modal.header
           }}
         >
           <div className="flex items-center gap-3">
             <Bug 
               size={24} 
-              style={{ color: theme === 'matrix' ? '#00ff41' : '#6b7280' }}
+              style={{ color: themeColors.text.secondary }}
             />
             <h2 
-              className={`text-2xl font-bold text-center flex-1 ${theme !== 'matrix' ? styles.text : ''}`}
-              style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+              className={`text-2xl font-bold text-center flex-1 ${
+                theme === 'light' ? 'fantasy-text-magical' : ''
+              }`}
+              style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
             >
-              Game Debug Information
+              {theme === 'light' ? '🔮 Game Debug Information ✨' : 'Game Debug Information'}
             </h2>
           </div>
           <button
             onClick={onClose}
-            className={`p-2 rounded-lg transition-all duration-200 hover:scale-110 ${theme !== 'matrix' ? 'hover:bg-gray-100' : ''}`}
+            className="p-2 rounded-lg transition-all duration-200 hover:scale-110"
             style={{
-              backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-              color: theme === 'matrix' ? '#00ff41' : '#6b7280',
-              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined
+              backgroundColor: componentStyles.button.ghost,
+              color: themeColors.text.secondary,
+              border: `1px solid ${themeColors.border.primary}`
             }}
           >
             <X size={20} />
@@ -316,28 +314,32 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
           className="overflow-y-auto p-8"
           style={{ 
             maxHeight: 'calc(90vh - 120px)',
-            backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : undefined
+            backgroundColor: componentStyles.modal.content
           }}
         >
           <div className="flex flex-col items-center space-y-8">
             {/* Game ID Section */}
             <div className="text-center">
               <h3 
-                className={`text-xl font-bold mb-4 ${theme !== 'matrix' ? styles.text : ''}`}
-                style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+                className={`text-xl font-bold mb-4 ${
+                  theme === 'light' ? 'fantasy-text-magical' : ''
+                }`}
+                style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
               >
-                Game ID
+                {theme === 'light' ? '🆔 Game Identifier' : 'Game ID'}
               </h3>
               <div className="flex items-center gap-3">
                 <p 
-                  className={`text-lg font-mono p-4 rounded-lg ${theme !== 'matrix' ? 'bg-gray-100' : ''}`}
+                  className={`text-lg font-mono p-4 rounded-lg ${
+                    theme === 'light' ? 'fantasy-card' : ''
+                  }`}
                   style={{ 
-                    color: theme === 'matrix' ? '#00ff41' : '#374151',
-                    backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-                    border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined
+                    color: themeColors.text.primary,
+                    background: componentStyles.card.base,
+                    border: theme === 'light' ? undefined : `1px solid ${themeColors.border.primary}`
                   }}
                 >
-                  {game?.gameId || 'No game loaded'}
+                  {game?.gameId ?? 'No game loaded'}
                 </p>
                 {game?.gameId && (
                   <button
@@ -370,8 +372,8 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             {game?.gameId && (
               <div className="text-center">
                 <h3 
-                  className={`text-xl font-bold mb-4 ${theme !== 'matrix' ? styles.text : ''}`}
-                  style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+                  className="text-xl font-bold mb-4"
+                  style={{ color: themeColors.text.primary }}
                 >
                   SSE Subscription URL
                 </h3>
@@ -417,8 +419,8 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
           {game && (
             <details className="mt-8">
               <summary 
-                className={`cursor-pointer text-lg font-semibold p-2 rounded text-center ${theme !== 'matrix' ? styles.text : ''}`}
-                style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+                className="cursor-pointer text-lg font-semibold p-2 rounded text-center"
+                style={{ color: themeColors.text.primary }}
               >
                 Advanced Debug Information
               </summary>
