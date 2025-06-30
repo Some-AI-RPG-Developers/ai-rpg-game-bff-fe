@@ -1,10 +1,144 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useTheme } from '@/client/context/ThemeContext';
 import { getThemeStyles } from '@/client/utils/themeStyles';
-import { X, Bug } from 'lucide-react';
-import { GameDebugViewer } from '@/client/components/game/GameDebugViewer';
+import { X, Bug, Copy, Check } from 'lucide-react';
 import { PlayPageGame, GameStatus } from '@/client/types/game.types';
+import { JsonViewer } from '@textea/json-viewer';
+import { stringify as yamlStringify } from 'yaml';
+
+// Color scheme for YAML syntax highlighting
+const getYamlColors = (theme: string) => ({
+  key: '#ff9500', // Orange for keys
+  string: '#32d74b', // Green for strings
+  number: '#64d2ff', // Light blue for numbers
+  boolean: '#ff9500', // Orange for booleans
+  null: '#ff453a', // Red for null values
+  default: theme === 'matrix' ? '#00ff41' : theme === 'dark' ? '#f3f4f6' : '#374151'
+});
+
+// Component to render colorized YAML
+interface YamlColorizedViewerProps {
+  data: PlayPageGame;
+  theme: string;
+}
+
+const YamlColorizedViewer: React.FC<YamlColorizedViewerProps> = ({ data, theme }) => {
+  const colors = getYamlColors(theme);
+  
+  const colorizeYamlLine = (line: string): React.ReactNode => {
+    // Handle empty lines
+    if (!line.trim()) {
+      return <>&nbsp;</>;
+    }
+    
+    // Match key-value pairs
+    const keyValueMatch = line.match(/^(\s*)([\w-]+):\s*(.*)$/);
+    if (keyValueMatch) {
+      const [, indent, key, value] = keyValueMatch;
+      return (
+        <>
+          <span style={{ color: colors.default }}>{indent}</span>
+          <span style={{ color: colors.key }}>{key}</span>
+          <span style={{ color: colors.default }}>: </span>
+          {colorizeValue(value, colors)}
+        </>
+      );
+    }
+    
+    // Match array items with key-value pairs (- key: value)
+    const arrayKeyValueMatch = line.match(/^(\s*)-\s*([\w-]+):\s*(.*)$/);
+    if (arrayKeyValueMatch) {
+      const [, indent, key, value] = arrayKeyValueMatch;
+      return (
+        <>
+          <span style={{ color: colors.default }}>{indent}- </span>
+          <span style={{ color: colors.key }}>{key}</span>
+          <span style={{ color: colors.default }}>: </span>
+          {colorizeValue(value, colors)}
+        </>
+      );
+    }
+    
+    // Match array items without key-value pairs
+    const arrayMatch = line.match(/^(\s*)-\s*(.*)$/);
+    if (arrayMatch) {
+      const [, indent, value] = arrayMatch;
+      return (
+        <>
+          <span style={{ color: colors.default }}>{indent}- </span>
+          {colorizeValue(value, colors)}
+        </>
+      );
+    }
+    
+    // Match nested keys (keys without values on same line)
+    const nestedKeyMatch = line.match(/^(\s*)([\w-]+):\s*$/);
+    if (nestedKeyMatch) {
+      const [, indent, key] = nestedKeyMatch;
+      return (
+        <>
+          <span style={{ color: colors.default }}>{indent}</span>
+          <span style={{ color: colors.key }}>{key}</span>
+          <span style={{ color: colors.default }}>:</span>
+        </>
+      );
+    }
+    
+    // Default case
+    return <span style={{ color: colors.default }}>{line}</span>;
+  };
+  
+  const colorizeValue = (value: string, colors: ReturnType<typeof getYamlColors>): React.ReactNode => {
+    const trimmedValue = value.trim();
+    
+    // Check for quoted strings
+    if (trimmedValue.startsWith('"') && trimmedValue.endsWith('"')) {
+      return <span style={{ color: colors.string }}>{value}</span>;
+    }
+    
+    // Check for single quoted strings
+    if (trimmedValue.startsWith("'") && trimmedValue.endsWith("'")) {
+      return <span style={{ color: colors.string }}>{value}</span>;
+    }
+    
+    // Check for null
+    if (trimmedValue === 'null' || trimmedValue === '~') {
+      return <span style={{ color: colors.null }}>{value}</span>;
+    }
+    
+    // Check for booleans
+    if (trimmedValue === 'true' || trimmedValue === 'false') {
+      return <span style={{ color: colors.boolean }}>{value}</span>;
+    }
+    
+    // Check for numbers
+    if (/^-?\d+(\.\d+)?$/.test(trimmedValue)) {
+      return <span style={{ color: colors.number }}>{value}</span>;
+    }
+    
+    // Check for unquoted strings (everything else)
+    if (trimmedValue && !trimmedValue.includes(':') && !trimmedValue.startsWith('-')) {
+      return <span style={{ color: colors.string }}>{value}</span>;
+    }
+    
+    // Default
+    return <span style={{ color: colors.default }}>{value}</span>;
+  };
+  
+  const yamlString = yamlStringify(data);
+  const lines = yamlString.split('\n');
+  
+  return (
+    <div style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word', margin: 0 }}>
+      {lines.map((line, index) => (
+        <div key={index}>
+          {colorizeYamlLine(line)}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 interface GameDebugModalProps {
   /** Whether the modal is open */
@@ -23,11 +157,59 @@ interface GameDebugModalProps {
 export const GameDebugModal: React.FC<GameDebugModalProps> = ({
   isOpen,
   onClose,
-  game,
-  gameStatus
+  game
 }) => {
   const { theme } = useTheme();
   const styles = getThemeStyles(theme);
+  const [copiedSSE, setCopiedSSE] = useState(false);
+  const [copiedGameId, setCopiedGameId] = useState(false);
+  const [debugFormat, setDebugFormat] = useState<'json' | 'yaml'>('json');
+
+  // Copy Game ID to clipboard
+  const copyGameId = async () => {
+    if (!game?.gameId) return;
+    
+    try {
+      await navigator.clipboard.writeText(game.gameId);
+      setCopiedGameId(true);
+      setTimeout(() => setCopiedGameId(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy Game ID:', err);
+    }
+  };
+
+  // Copy SSE URL to clipboard
+  const copySSEUrl = async () => {
+    if (!game?.gameId) return;
+    
+    const sseUrl = `${window.location.origin}/api/v1/games/${game.gameId}/updates`;
+    try {
+      await navigator.clipboard.writeText(sseUrl);
+      setCopiedSSE(true);
+      setTimeout(() => setCopiedSSE(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy SSE URL:', err);
+    }
+  };
+
+  // Copy debug data to clipboard
+  const copyDebugData = async () => {
+    if (!game) return;
+    
+    try {
+      let data: string;
+      
+      if (debugFormat === 'json') {
+        data = JSON.stringify(game, null, 2);
+      } else {
+        data = yamlStringify(game);
+      }
+      
+      await navigator.clipboard.writeText(data);
+    } catch (err) {
+      console.error('Failed to copy debug data:', err);
+    }
+  };
 
   // Handle backdrop click to close modal
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -110,7 +292,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
               style={{ color: theme === 'matrix' ? '#00ff41' : '#6b7280' }}
             />
             <h2 
-              className={`text-2xl font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+              className={`text-2xl font-bold text-center flex-1 ${theme !== 'matrix' ? styles.text : ''}`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
             >
               Game Debug Information
@@ -131,19 +313,212 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
 
         {/* Modal Content */}
         <div 
-          className="overflow-y-auto p-6"
+          className="overflow-y-auto p-8"
           style={{ 
             maxHeight: 'calc(90vh - 120px)',
             backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : undefined
           }}
         >
-          <div style={{ color: theme === 'matrix' ? '#00ff41' : '#000000', fontSize: '16px' }}>
-            <p><strong>Debug Modal Test</strong></p>
-            <p>Game ID: {game?.gameId || 'No game'}</p>
-            <p>Game Status: {gameStatus}</p>
-            <p>Modal is working correctly!</p>
+          <div className="flex flex-col items-center space-y-8">
+            {/* Game ID Section */}
+            <div className="text-center">
+              <h3 
+                className={`text-xl font-bold mb-4 ${theme !== 'matrix' ? styles.text : ''}`}
+                style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+              >
+                Game ID
+              </h3>
+              <div className="flex items-center gap-3">
+                <p 
+                  className={`text-lg font-mono p-4 rounded-lg ${theme !== 'matrix' ? 'bg-gray-100' : ''}`}
+                  style={{ 
+                    color: theme === 'matrix' ? '#00ff41' : '#374151',
+                    backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                    border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined
+                  }}
+                >
+                  {game?.gameId || 'No game loaded'}
+                </p>
+                {game?.gameId && (
+                  <button
+                    onClick={copyGameId}
+                    className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${theme !== 'matrix' ? 'hover:bg-gray-200' : ''}`}
+                    style={{
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6',
+                      color: theme === 'matrix' ? '#00ff41' : '#374151',
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #d1d5db'
+                    }}
+                    title="Copy Game ID"
+                  >
+                    {copiedGameId ? (
+                      <>
+                        <Check size={16} />
+                        <span className="text-sm font-medium">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={16} />
+                        <span className="text-sm font-medium">Copy</span>
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* SSE URL Section */}
+            {game?.gameId && (
+              <div className="text-center">
+                <h3 
+                  className={`text-xl font-bold mb-4 ${theme !== 'matrix' ? styles.text : ''}`}
+                  style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+                >
+                  SSE Subscription URL
+                </h3>
+                <div className="flex items-center gap-3">
+                  <p 
+                    className={`text-sm font-mono p-3 rounded-lg ${theme !== 'matrix' ? 'bg-gray-100' : ''}`}
+                    style={{ 
+                      color: theme === 'matrix' ? '#00ff41' : '#374151',
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined
+                    }}
+                  >
+                    {`${window.location.origin}/api/v1/games/${game.gameId}/updates`}
+                  </p>
+                  <button
+                    onClick={copySSEUrl}
+                    className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${theme !== 'matrix' ? 'hover:bg-gray-200' : ''}`}
+                    style={{
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6',
+                      color: theme === 'matrix' ? '#00ff41' : '#374151',
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #d1d5db'
+                    }}
+                    title="Copy SSE URL"
+                  >
+                    {copiedSSE ? (
+                      <>
+                        <Check size={16} />
+                        <span className="text-sm font-medium">Copied!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={16} />
+                        <span className="text-sm font-medium">Copy</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-          {game && <GameDebugViewer game={game} gameStatus={gameStatus} />}
+          
+          {/* Advanced Debug Information with JSON/YAML toggle */}
+          {game && (
+            <details className="mt-8">
+              <summary 
+                className={`cursor-pointer text-lg font-semibold p-2 rounded text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
+              >
+                Advanced Debug Information
+              </summary>
+              <div className="mt-6 text-center">
+                {/* Format Toggle Buttons */}
+                <div className="flex justify-center gap-2 mb-4">
+                  <button
+                    onClick={() => setDebugFormat('json')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      debugFormat === 'json' ? 'scale-105' : 'hover:scale-105'
+                    }`}
+                    style={{
+                      backgroundColor: debugFormat === 'json' 
+                        ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : '#3b82f6')
+                        : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6'),
+                      color: debugFormat === 'json'
+                        ? (theme === 'matrix' ? '#00ff41' : '#ffffff')
+                        : (theme === 'matrix' ? '#00ff41' : '#374151'),
+                      border: theme === 'matrix' 
+                        ? `1px solid ${debugFormat === 'json' ? 'rgba(0, 255, 65, 0.5)' : 'rgba(0, 255, 65, 0.3)'}` 
+                        : `1px solid ${debugFormat === 'json' ? '#3b82f6' : '#d1d5db'}`
+                    }}
+                  >
+                    JSON
+                  </button>
+                  <button
+                    onClick={() => setDebugFormat('yaml')}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                      debugFormat === 'yaml' ? 'scale-105' : 'hover:scale-105'
+                    }`}
+                    style={{
+                      backgroundColor: debugFormat === 'yaml' 
+                        ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : '#3b82f6')
+                        : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6'),
+                      color: debugFormat === 'yaml'
+                        ? (theme === 'matrix' ? '#00ff41' : '#ffffff')
+                        : (theme === 'matrix' ? '#00ff41' : '#374151'),
+                      border: theme === 'matrix' 
+                        ? `1px solid ${debugFormat === 'yaml' ? 'rgba(0, 255, 65, 0.5)' : 'rgba(0, 255, 65, 0.3)'}` 
+                        : `1px solid ${debugFormat === 'yaml' ? '#3b82f6' : '#d1d5db'}`
+                    }}
+                  >
+                    YAML
+                  </button>
+                </div>
+
+                {/* Debug Data Display with Copy Button */}
+                <div className="relative">
+                  <div className="flex justify-end mb-2">
+                    <button
+                      onClick={copyDebugData}
+                      className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2`}
+                      style={{
+                        backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6',
+                        color: theme === 'matrix' ? '#00ff41' : '#374151',
+                        border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #d1d5db'
+                      }}
+                      title="Copy debug data"
+                    >
+                      <Copy size={14} />
+                      Copy {debugFormat.toUpperCase()}
+                    </button>
+                  </div>
+                  
+                  <div 
+                    className="rounded-lg max-h-96 overflow-y-auto"
+                    style={{
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : '#f8f9fa',
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #e5e7eb'
+                    }}
+                  >
+                    {debugFormat === 'json' ? (
+                      <div 
+                        className="text-left"
+                        style={{
+                          '--json-key-color': '#ff9500',
+                          '--json-string-color': '#32d74b',
+                          '--json-number-color': '#64d2ff',
+                          '--json-boolean-color': '#ff9500',
+                          '--json-null-color': '#ff453a'
+                        } as React.CSSProperties}
+                      >
+                        <JsonViewer 
+                          value={game}
+                          theme={theme === 'light' ? 'light' : 'dark'}
+                        />
+                      </div>
+                    ) : (
+                      <div className="text-left p-4 text-sm font-mono">
+                        <YamlColorizedViewer 
+                          data={game} 
+                          theme={theme}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </details>
+          )}
         </div>
       </div>
     </div>

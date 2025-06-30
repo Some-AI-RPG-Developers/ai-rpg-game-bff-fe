@@ -44,23 +44,31 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
         </div>
         <div className="mt-6">
-          <TTSWrapper
-            text={`Game Over! Conclusion: ${game.conclusion}`}
-            buttonPosition="inline-end"
-            title="Read game conclusion aloud"
-          >
-            <strong className={`text-xl ${theme !== 'matrix' ? styles.text : ''}`}
-                    style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-              Conclusion:
-            </strong>
-          </TTSWrapper>
-          <p className={`mt-4 text-lg leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
-             style={{ 
-               color: theme === 'matrix' ? '#00ff41' : undefined,
-               opacity: theme === 'matrix' ? 0.9 : 0.8
-             }}>
-            {game.conclusion}
-          </p>
+          <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+               style={{
+                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
+                 border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #b3e0ff'
+               }}>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <TTSWrapper
+                text={`Game Conclusion: ${game.conclusion}`}
+                buttonPosition="inline-end"
+                title="Read game conclusion aloud"
+              >
+                <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                    style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                  Game Conclusion
+                </h6>
+              </TTSWrapper>
+            </div>
+            <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+               style={{
+                 color: theme === 'matrix' ? '#00ff41' : undefined,
+                 opacity: theme === 'matrix' ? 0.9 : 0.8
+               }}>
+              {game.conclusion}
+            </p>
+          </div>
         </div>
       </div>
     </div>

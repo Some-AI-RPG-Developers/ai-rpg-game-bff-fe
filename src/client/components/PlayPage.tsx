@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import {GameConclusion} from "@/client/components/game/GameConclusion";
 import {GameDisplay} from "@/client/components/game/play/GameDisplay";
 import {CreateGameForm} from "@/client/components/game/setup/CreateGameForm";
 import {ResumeGameForm} from "@/client/components/game/setup/ResumeGameForm";
 import {WelcomeScreen} from "@/client/components/game/setup/WelcomeScreen";
 import {GameStatusIndicator} from "@/client/components/game/GameStatusIndicator";
 import {GameHeader} from "@/client/components/game/GameHeader";
-import {GameActionButtons} from "@/client/components/game/GameActionButtons";
 import {GameDebugModal} from "@/client/components/ui/GameDebugModal";
 import {ViewMode} from "@/client/types/ui.types";
 import {useGameContext} from "@/client/context/GameContext";
@@ -179,19 +177,11 @@ export default function PlayPage() {
                         onOptionChange={handleOptionChange}
                         onFreeTextChange={handleFreeTextChange}
                         isProcessing={isProcessing}
-                    />
-
-                    <GameActionButtons
-                        game={game}
-                        gameStatus={gameStatus}
                         allCharactersMadeChoice={allCharactersMadeChoice}
-                        isProcessing={isProcessing}
                         onSubmitTurn={submitTurn}
                         onStartGame={startGame}
                         onStartNextTurn={startNextTurn}
                     />
-
-                    <GameConclusion game={game} />
 
                     <GameStatusIndicator
                         gameStatus={gameStatus}

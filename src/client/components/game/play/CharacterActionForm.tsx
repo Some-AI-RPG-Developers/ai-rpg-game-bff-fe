@@ -59,7 +59,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                 <div className="space-y-6">
                     {currentTurn.options.map((charOption: GameCharacterOption) => (
                         <div key={charOption.name}
-                             className={`p-4 rounded-lg`}
+                             className={`p-4 rounded-lg w-11/12 mx-auto`}
                              style={{
                                  backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
                                  border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : '1px solid #b3e0ff'
@@ -74,7 +74,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                             <div className="space-y-3 mb-4">
                                 {charOption.descriptions.map((optionDesc: string, index: number) => (
                                     <label key={index}
-                                           className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all duration-200 ${theme !== 'matrix' ? styles.text : ''}`}
+                                           className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all duration-200 w-11/12 mx-auto ${theme !== 'matrix' ? styles.text : ''}`}
                                            style={{
                                                backgroundColor: selectedOptions[charOption.name] === optionDesc ? 
                                                    (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : '#e6f2ff') : 
@@ -106,7 +106,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                 ))}
                             </div>
 
-                            <div className={`p-3 rounded-md`}
+                            <div className={`p-3 rounded-md w-11/12 mx-auto`}
                                  style={{
                                      backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : '#fff4e6',
                                      border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : '1px solid #ffcc99'
