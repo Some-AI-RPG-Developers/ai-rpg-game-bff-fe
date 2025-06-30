@@ -22,34 +22,77 @@ export const GameDebugViewer: React.FC<GameDebugViewerProps> = ({
   const { theme } = useTheme();
   const styles = getThemeStyles(theme);
 
-  // Custom theme overrides for better visibility
+  // Custom theme for better visibility and colors
   const getCustomTheme = (currentTheme: string) => {
-    const baseTheme = {
-      scheme: currentTheme === 'light' ? 'light' : 'dark',
-      author: 'custom',
-      base00: currentTheme === 'light' ? '#ffffff' : currentTheme === 'matrix' ? '#000000' : '#1a1a1a',
-      base01: currentTheme === 'light' ? '#f5f5f5' : currentTheme === 'matrix' ? '#0a0a0a' : '#2d2d2d',
-      base02: currentTheme === 'light' ? '#e8e8e8' : currentTheme === 'matrix' ? '#1a1a1a' : '#383838',
-      base03: currentTheme === 'light' ? '#969896' : currentTheme === 'matrix' ? '#008f11' : '#5e5e5e',
-      base04: currentTheme === 'light' ? '#282a2e' : currentTheme === 'matrix' ? '#00ff41' : '#b4b7b4',
-      base05: currentTheme === 'light' ? '#1d1f21' : currentTheme === 'matrix' ? '#00ff41' : '#c5c8c6',
-      base06: currentTheme === 'light' ? '#1d1f21' : currentTheme === 'matrix' ? '#00ff41' : '#e0e0e0',
-      base07: currentTheme === 'light' ? '#ffffff' : currentTheme === 'matrix' ? '#00ff41' : '#ffffff',
-      base08: currentTheme === 'light' ? '#cc6666' : currentTheme === 'matrix' ? '#ff6b6b' : '#cc6666',
-      base09: currentTheme === 'light' ? '#de935f' : currentTheme === 'matrix' ? '#00ff41' : '#de935f',
-      base0A: currentTheme === 'light' ? '#f0c674' : currentTheme === 'matrix' ? '#00ff41' : '#f0c674',
-      base0B: currentTheme === 'light' ? '#b5bd68' : currentTheme === 'matrix' ? '#00ff41' : '#b5bd68',
-      base0C: currentTheme === 'light' ? '#8abeb7' : currentTheme === 'matrix' ? '#00ff41' : '#8abeb7',
-      base0D: currentTheme === 'light' ? '#81a2be' : currentTheme === 'matrix' ? '#00ff41' : '#81a2be',
-      base0E: currentTheme === 'light' ? '#b294bb' : currentTheme === 'matrix' ? '#00ff41' : '#b294bb',
-      base0F: currentTheme === 'light' ? '#a3685a' : currentTheme === 'matrix' ? '#00ff41' : '#a3685a'
-    };
-    return baseTheme;
+    if (currentTheme === 'matrix') {
+      return {
+        scheme: 'matrix',
+        author: 'custom',
+        base00: '#000000', // Background
+        base01: '#0a0a0a', // Lighter background
+        base02: '#1a1a1a', // Selection background
+        base03: '#008f11', // Comments
+        base04: '#00cc33', // Dark foreground
+        base05: '#00ff41', // Default foreground
+        base06: '#00ff41', // Light foreground
+        base07: '#00ff41', // Lightest foreground
+        base08: '#ff6b6b', // Variables, XML Tags
+        base09: '#66ff66', // Numbers
+        base0A: '#88ff88', // Strings, URLs
+        base0B: '#44ff44', // Classes, markup bold
+        base0C: '#22ff22', // Support, regex
+        base0D: '#00ffaa', // Functions
+        base0E: '#00dd77', // Keywords
+        base0F: '#00bb55'  // Deprecated
+      };
+    } else if (currentTheme === 'dark') {
+      return {
+        scheme: 'dark',
+        author: 'custom',
+        base00: '#1a1a1a', // Background
+        base01: '#2d2d2d', // Lighter background
+        base02: '#383838', // Selection background
+        base03: '#5e5e5e', // Comments
+        base04: '#b4b7b4', // Dark foreground
+        base05: '#c5c8c6', // Default foreground
+        base06: '#e0e0e0', // Light foreground
+        base07: '#ffffff', // Lightest foreground
+        base08: '#cc6666', // Variables, XML Tags
+        base09: '#de935f', // Numbers
+        base0A: '#f0c674', // Strings
+        base0B: '#b5bd68', // Classes
+        base0C: '#8abeb7', // Support
+        base0D: '#81a2be', // Functions
+        base0E: '#b294bb', // Keywords
+        base0F: '#a3685a'  // Deprecated
+      };
+    } else {
+      return {
+        scheme: 'light',
+        author: 'custom',
+        base00: '#ffffff', // Background
+        base01: '#f5f5f5', // Lighter background
+        base02: '#e8e8e8', // Selection background
+        base03: '#969896', // Comments
+        base04: '#282a2e', // Dark foreground
+        base05: '#1d1f21', // Default foreground
+        base06: '#1d1f21', // Light foreground
+        base07: '#1d1f21', // Lightest foreground
+        base08: '#cc6666', // Variables
+        base09: '#de935f', // Numbers
+        base0A: '#f0c674', // Strings
+        base0B: '#b5bd68', // Classes
+        base0C: '#8abeb7', // Support
+        base0D: '#81a2be', // Functions
+        base0E: '#b294bb', // Keywords
+        base0F: '#a3685a'  // Deprecated
+      };
+    }
   };
 
   return (
-    <div className="flex flex-col items-center mt-8">
-      <div className={`rounded-3xl p-8 w-2/3 max-w-2xl mx-auto`}
+    <div className="w-full mt-8">
+      <div className={`rounded-3xl p-8 w-full`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
@@ -78,10 +121,12 @@ export const GameDebugViewer: React.FC<GameDebugViewerProps> = ({
             enableClipboard={true}
             collapseStringsAfterLength={80}
             defaultInspectDepth={1}
+            rootName={false}
             style={{
               backgroundColor: theme === 'matrix' ? '#000000' : theme === 'dark' ? '#1a1a1a' : '#ffffff',
-              fontFamily: 'monospace',
-              fontSize: '14px',
+              fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+              fontSize: '13px',
+              lineHeight: '1.4',
               color: theme === 'matrix' ? '#00ff41' : undefined,
               width: '100%',
               minWidth: 0,
