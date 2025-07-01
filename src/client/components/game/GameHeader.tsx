@@ -29,7 +29,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   error,
   gameStatus: _gameStatus, // eslint-disable-line @typescript-eslint/no-unused-vars
   onToggleDebug,
-  isDebugOpen
+  isDebugOpen: _isDebugOpen // eslint-disable-line @typescript-eslint/no-unused-vars
 }) => {
   const [showTTSSettings, setShowTTSSettings] = useState(false);
   const tts = useTextToSpeech();
@@ -155,7 +155,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             
             <button
               onClick={() => setTheme('light')}
-              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${theme === 'light' ? styles.accent : styles.secondary}`}
+              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
               title="Light Theme"
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
@@ -170,7 +170,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             
             <button
               onClick={() => setTheme('dark')}
-              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${theme === 'dark' ? styles.accent : styles.secondary}`}
+              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
               title="Dark Theme"
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
@@ -188,9 +188,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           {onToggleDebug && (
             <button
               onClick={onToggleDebug}
-              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${
-                isDebugOpen ? styles.accent : styles.secondary
-              }`}
+              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
               title="Toggle Debug Information"
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
@@ -205,9 +203,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           {/* TTS Settings Button */}
           <button
             onClick={handleOpenTTSSettings}
-            className={`p-2 rounded transition-all duration-300 hover:scale-105 ${
-              showTTSSettings ? styles.accent : styles.secondary
-            }`}
+            className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
             title="Text-to-Speech Settings"
             style={{
               backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
@@ -448,7 +444,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
               onClick={() => setShowTTSSettings(false)}
               style={{
                 padding: '8px 16px',
-                backgroundColor: theme === 'matrix' ? '#333333' : '#6c757d',
+                backgroundColor: theme === 'matrix' ? '#333333' : (theme === 'light' ? '#f59e0b' : '#6c757d'),
                 color: theme === 'matrix' ? '#00ff41' : 'white',
                 border: theme === 'matrix' ? '1px solid #00ff41' : 'none',
                 borderRadius: '4px',
@@ -461,7 +457,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
               onClick={handleConfirmSettings}
               style={{
                 padding: '8px 16px',
-                backgroundColor: theme === 'matrix' ? '#004d00' : '#28a745',
+                backgroundColor: theme === 'matrix' ? '#004d00' : (theme === 'light' ? '#f59e0b' : '#28a745'),
                 color: theme === 'matrix' ? '#00ff41' : 'white',
                 border: theme === 'matrix' ? '1px solid #00ff41' : 'none',
                 borderRadius: '4px',

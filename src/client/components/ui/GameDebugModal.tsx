@@ -263,10 +263,10 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
     >
       <div 
         className={`relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl ${
-          theme === 'light' ? 'fantasy-modal fantasy-border fantasy-glow fantasy-sparkles' : ''
+          theme === 'light' ? 'magical-scroll magical-scroll-corners' : ''
         }`}
         style={{
-          background: componentStyles.modal.container,
+          background: theme === 'light' ? undefined : componentStyles.modal.container,
           border: theme === 'light' ? undefined : `2px solid ${themeColors.border.primary}`,
           boxShadow: theme === 'matrix' ? '0 0 30px rgba(0, 255, 65, 0.3)' : 
                     theme === 'light' ? undefined : 
@@ -276,10 +276,12 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
       >
         {/* Modal Header */}
         <div 
-          className="flex items-center justify-between p-6 border-b"
+          className={`flex items-center justify-between p-6 border-b ${
+            theme === 'light' ? 'magical-scroll-content' : ''
+          }`}
           style={{
-            borderColor: themeColors.border.primary,
-            backgroundColor: componentStyles.modal.header
+            borderColor: theme === 'light' ? '#d4af37' : themeColors.border.primary,
+            backgroundColor: theme === 'light' ? undefined : componentStyles.modal.header
           }}
         >
           <div className="flex items-center gap-3">
@@ -289,7 +291,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             />
             <h2 
               className={`text-2xl font-bold text-center flex-1 ${
-                theme === 'light' ? 'fantasy-text-magical' : ''
+                theme === 'light' ? 'spell-title' : ''
               }`}
               style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
             >
@@ -311,10 +313,12 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
 
         {/* Modal Content */}
         <div 
-          className="overflow-y-auto p-8"
+          className={`overflow-y-auto p-8 ${
+            theme === 'light' ? 'magical-scroll-content' : ''
+          }`}
           style={{ 
             maxHeight: 'calc(90vh - 120px)',
-            backgroundColor: componentStyles.modal.content
+            backgroundColor: theme === 'light' ? undefined : componentStyles.modal.content
           }}
         >
           <div className="flex flex-col items-center space-y-8">
@@ -322,7 +326,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             <div className="text-center">
               <h3 
                 className={`text-xl font-bold mb-4 ${
-                  theme === 'light' ? 'fantasy-text-magical' : ''
+                  theme === 'light' ? 'spell-text' : ''
                 }`}
                 style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
               >
@@ -331,11 +335,11 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
               <div className="flex items-center gap-3">
                 <p 
                   className={`text-lg font-mono p-4 rounded-lg ${
-                    theme === 'light' ? 'fantasy-card' : ''
+                    theme === 'light' ? 'spell-writing-area' : ''
                   }`}
                   style={{ 
-                    color: themeColors.text.primary,
-                    background: componentStyles.card.base,
+                    color: theme === 'light' ? undefined : themeColors.text.primary,
+                    background: theme === 'light' ? undefined : componentStyles.card.base,
                     border: theme === 'light' ? undefined : `1px solid ${themeColors.border.primary}`
                   }}
                 >
@@ -346,9 +350,9 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     onClick={copyGameId}
                     className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${theme !== 'matrix' ? 'hover:bg-gray-200' : ''}`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6',
-                      color: theme === 'matrix' ? '#00ff41' : '#374151',
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #d1d5db'
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : '#f3f4f6'),
+                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151'),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : '1px solid #d1d5db')
                     }}
                     title="Copy Game ID"
                   >
@@ -372,18 +376,22 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             {game?.gameId && (
               <div className="text-center">
                 <h3 
-                  className="text-xl font-bold mb-4"
-                  style={{ color: themeColors.text.primary }}
+                  className={`text-xl font-bold mb-4 ${
+                    theme === 'light' ? 'spell-text' : ''
+                  }`}
+                  style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
                 >
                   SSE Subscription URL
                 </h3>
                 <div className="flex items-center gap-3">
                   <p 
-                    className={`text-sm font-mono p-3 rounded-lg ${theme !== 'matrix' ? 'bg-gray-100' : ''}`}
+                    className={`text-sm font-mono p-3 rounded-lg ${
+                      theme === 'light' ? 'spell-writing-area' : (theme !== 'matrix' ? 'bg-gray-100' : '')
+                    }`}
                     style={{ 
-                      color: theme === 'matrix' ? '#00ff41' : '#374151',
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined
+                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? undefined : '#374151'),
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? undefined : undefined),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : undefined)
                     }}
                   >
                     {`${window.location.origin}/api/v1/games/${game.gameId}/updates`}
@@ -392,9 +400,9 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     onClick={copySSEUrl}
                     className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${theme !== 'matrix' ? 'hover:bg-gray-200' : ''}`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6',
-                      color: theme === 'matrix' ? '#00ff41' : '#374151',
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #d1d5db'
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : '#f3f4f6'),
+                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151'),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : '1px solid #d1d5db')
                     }}
                     title="Copy SSE URL"
                   >
@@ -419,8 +427,10 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
           {game && (
             <details className="mt-8">
               <summary 
-                className="cursor-pointer text-lg font-semibold p-2 rounded text-center"
-                style={{ color: themeColors.text.primary }}
+                className={`cursor-pointer text-lg font-semibold p-2 rounded text-center ${
+                  theme === 'light' ? 'spell-text' : ''
+                }`}
+                style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
               >
                 Advanced Debug Information
               </summary>
@@ -434,11 +444,11 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     }`}
                     style={{
                       backgroundColor: debugFormat === 'json' 
-                        ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : '#3b82f6')
-                        : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6'),
+                        ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : (theme === 'light' ? '#f59e0b' : '#3b82f6'))
+                        : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f97316' : '#f3f4f6')),
                       color: debugFormat === 'json'
                         ? (theme === 'matrix' ? '#00ff41' : '#ffffff')
-                        : (theme === 'matrix' ? '#00ff41' : '#374151'),
+                        : (theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151')),
                       border: theme === 'matrix' 
                         ? `1px solid ${debugFormat === 'json' ? 'rgba(0, 255, 65, 0.5)' : 'rgba(0, 255, 65, 0.3)'}` 
                         : `1px solid ${debugFormat === 'json' ? '#3b82f6' : '#d1d5db'}`
@@ -453,11 +463,11 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     }`}
                     style={{
                       backgroundColor: debugFormat === 'yaml' 
-                        ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : '#3b82f6')
-                        : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6'),
+                        ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : (theme === 'light' ? '#f59e0b' : '#3b82f6'))
+                        : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f97316' : '#f3f4f6')),
                       color: debugFormat === 'yaml'
                         ? (theme === 'matrix' ? '#00ff41' : '#ffffff')
-                        : (theme === 'matrix' ? '#00ff41' : '#374151'),
+                        : (theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151')),
                       border: theme === 'matrix' 
                         ? `1px solid ${debugFormat === 'yaml' ? 'rgba(0, 255, 65, 0.5)' : 'rgba(0, 255, 65, 0.3)'}` 
                         : `1px solid ${debugFormat === 'yaml' ? '#3b82f6' : '#d1d5db'}`
@@ -474,9 +484,9 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                       onClick={copyDebugData}
                       className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2`}
                       style={{
-                        backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#f3f4f6',
-                        color: theme === 'matrix' ? '#00ff41' : '#374151',
-                        border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #d1d5db'
+                        backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : '#f3f4f6'),
+                        color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151'),
+                        border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : '1px solid #d1d5db')
                       }}
                       title="Copy debug data"
                     >
@@ -486,10 +496,12 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                   </div>
                   
                   <div 
-                    className="rounded-lg max-h-96 overflow-y-auto"
+                    className={`rounded-lg max-h-96 overflow-y-auto ${
+                      theme === 'light' ? 'spell-writing-area' : ''
+                    }`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : '#f8f9fa',
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #e5e7eb'
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : (theme === 'light' ? undefined : '#f8f9fa'),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : '1px solid #e5e7eb')
                     }}
                   >
                     {debugFormat === 'json' ? (

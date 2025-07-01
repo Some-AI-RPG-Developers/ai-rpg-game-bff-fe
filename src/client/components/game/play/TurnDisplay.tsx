@@ -36,12 +36,16 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
 
     return (
         <div className="flex flex-col items-center mt-4">
-            <div className={`rounded-2xl w-11/12 mx-auto text-center`}
+            <div className={`rounded-2xl w-11/12 mx-auto text-center ${
+                theme === 'light' ? 'magical-scroll' : 
+                theme !== 'matrix' ? styles.card : ''
+            }`}
                  style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined,
                      backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined,
-                     borderTop: theme === 'matrix' ? '1px dashed rgba(0, 255, 65, 0.5)' : '1px dashed #ccc'
+                     borderTop: theme === 'matrix' ? '1px dashed rgba(0, 255, 65, 0.5)' : 
+                               theme === 'light' ? undefined : '1px dashed #ccc'
                  }}>
                 {/* Turn Main Header - Controls entire turn visibility */}
                 <div className="flex items-center justify-center gap-2 p-3 cursor-pointer border-b"

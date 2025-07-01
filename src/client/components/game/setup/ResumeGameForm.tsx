@@ -36,25 +36,35 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <div className={`rounded-3xl p-12 w-2/3 max-w-2xl mx-auto`}
+      <div className={`rounded-3xl p-12 w-2/3 max-w-2xl mx-auto ${
+        theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
+        theme !== 'matrix' ? styles.card : ''
+      }`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
              backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
            }}>
-        <h3 className={`text-3xl font-bold mb-8 text-center ${theme !== 'matrix' ? styles.text : ''}`}
-            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-          Resume Game
-        </h3>
+        <div className={theme === 'light' ? 'magical-scroll-content' : ''}>
+          <h3 className={`text-3xl font-bold mb-8 text-center ${
+            theme === 'light' ? 'spell-title' : 
+            theme !== 'matrix' ? styles.text : ''
+          }`}
+              style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+            {theme === 'light' ? '🗝️ Resume Adventure 🗝️' : 'Resume Game'}
+          </h3>
         
         <div className="space-y-6">
           <div>
             <label 
               htmlFor="resumeGameId" 
-              className={`block text-lg font-medium mb-3 ${theme !== 'matrix' ? styles.text : ''}`}
+              className={`block text-lg font-medium mb-3 ${
+                theme === 'light' ? 'spell-text' : 
+                theme !== 'matrix' ? styles.text : ''
+              }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
             >
-              Enter Game ID:
+              {theme === 'light' ? '🔮 Enter Quest Identifier:' : 'Enter Game ID:'}
             </label>
             <input
               type="text"
@@ -63,13 +73,19 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               onChange={(e) => onResumeGameIdChange(e.target.value)}
               disabled={isProcessing}
               className={`w-full max-w-md mx-auto p-4 rounded-lg text-lg font-medium transition-all duration-300 
-                focus:outline-none focus:ring-2 ${theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''}`}
+                focus:outline-none focus:ring-2 ${
+                  theme === 'light' ? 'spell-writing-area' :
+                  theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''
+                }`}
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
                 border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined
               }}
-              placeholder="Enter your game ID here..."
+              placeholder={theme === 'light' ? 
+                "Inscribe thy quest's sacred identifier upon this mystical scroll..." :
+                "Enter your game ID here..."
+              }
             />
           </div>
           
@@ -78,7 +94,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               onClick={onLoadGameById}
               disabled={isProcessing || !resumeGameIdInput.trim()}
               className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.accent} ${styles.text}` : ''}`}
+                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
               style={{
                 backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -108,6 +124,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               Back to choices
             </button>
           </div>
+        </div>
         </div>
       </div>
     </div>

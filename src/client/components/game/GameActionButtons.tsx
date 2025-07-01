@@ -65,7 +65,7 @@ export const GameActionButtons: React.FC<GameActionButtonsProps> = ({
           onClick={onSubmitTurn}
           disabled={isProcessing}
           className={`px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-            hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.accent} ${styles.text}` : ''}`}
+            hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
           style={{
             backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
             color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -83,7 +83,7 @@ export const GameActionButtons: React.FC<GameActionButtonsProps> = ({
           onClick={onStartGame}
           disabled={isProcessing}
           className={`px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-            hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.accent} ${styles.text}` : ''}`}
+            hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
           style={{
             backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
             color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -101,7 +101,7 @@ export const GameActionButtons: React.FC<GameActionButtonsProps> = ({
           onClick={onStartNextTurn}
           disabled={isProcessing}
           className={`px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-            hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.accent} ${styles.text}` : ''}`}
+            hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
           style={{
             backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
             color: theme === 'matrix' ? '#00ff41' : undefined,
