@@ -41,45 +41,64 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
 
     return (
         <div className="flex flex-col items-center mt-6">
-            <div className={`rounded-3xl p-8 w-full text-center`}
+            <div className={`rounded-3xl p-8 w-full text-center ${
+                theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
+                theme !== 'matrix' ? styles.card : ''
+            }`}
                  style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
                      backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
                  }}>
-                <div className="flex items-center justify-center gap-2 mb-6">
-                    <Users size={20} className={theme !== 'matrix' ? styles.text : ''}
-                           style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
-                    <strong className={`text-lg ${theme !== 'matrix' ? styles.text : ''}`}
-                            style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                        Choose Character Actions
-                    </strong>
-                </div>
+                <div className={theme === 'light' ? 'magical-scroll-content' : ''}>
+                    <div className="flex items-center justify-center gap-2 mb-6">
+                        <Users size={20} className={theme !== 'matrix' ? styles.text : ''}
+                               style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
+                        <strong className={`text-lg ${
+                            theme === 'light' ? 'spell-title' : 
+                            theme !== 'matrix' ? styles.text : ''
+                        }`}
+                                style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                            {theme === 'light' ? '⚔️ Choose Character Actions ⚔️' : 'Choose Character Actions'}
+                        </strong>
+                    </div>
 
                 <div className="space-y-6">
                     {currentTurn.options.map((charOption: GameCharacterOption) => (
                         <div key={charOption.name}
-                             className={`p-4 rounded-lg w-11/12 mx-auto`}
+                             className={`p-4 rounded-lg w-11/12 mx-auto ${
+                                theme === 'light' ? 'magical-scroll' : 
+                                theme !== 'matrix' ? styles.border : ''
+                             }`}
                              style={{
-                                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
-                                 border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : '1px solid #b3e0ff'
+                                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                                 border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined
                              }}>
                             <div className="mb-4">
-                                <strong className={`text-base ${theme !== 'matrix' ? styles.text : ''}`}
+                                <strong className={`text-base ${
+                                    theme === 'light' ? 'spell-text' : 
+                                    theme !== 'matrix' ? styles.text : ''
+                                }`}
                                         style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                                    {charOption.name}
+                                    {theme === 'light' ? `⚔️ ${charOption.name} ⚔️` : charOption.name}
                                 </strong>
                             </div>
 
                             <div className="space-y-3 mb-4">
                                 {charOption.descriptions.map((optionDesc: string, index: number) => (
                                     <label key={index}
-                                           className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all duration-200 w-11/12 mx-auto ${theme !== 'matrix' ? styles.text : ''}`}
+                                           className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all duration-200 w-11/12 mx-auto ${
+                                               theme === 'light' ? 'spell-writing-area' : 
+                                               theme !== 'matrix' ? styles.text : ''
+                                           }`}
                                            style={{
                                                backgroundColor: selectedOptions[charOption.name] === optionDesc ? 
-                                                   (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : '#e6f2ff') : 
-                                                   (theme === 'matrix' ? 'rgba(0, 0, 0, 0.3)' : '#ffffff'),
-                                               border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : '1px solid #ddd',
+                                                   (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : 
+                                                    theme === 'light' ? 'rgba(212, 175, 55, 0.3)' : '#e6f2ff') : 
+                                                   (theme === 'matrix' ? 'rgba(0, 0, 0, 0.3)' : 
+                                                    theme === 'light' ? undefined : '#ffffff'),
+                                               border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : 
+                                                      theme === 'light' ? undefined : '1px solid #ddd',
                                                color: theme === 'matrix' ? '#00ff41' : undefined,
                                                opacity: theme === 'matrix' ? 0.9 : 1
                                            }}>
@@ -92,10 +111,14 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                             disabled={!!freeTextInputs[charOption.name] || isProcessing}
                                             className="mt-1 flex-shrink-0"
                                             style={{
-                                                accentColor: theme === 'matrix' ? '#00ff41' : undefined
+                                                accentColor: theme === 'matrix' ? '#00ff41' : 
+                                                           theme === 'light' ? '#d4af37' : undefined
                                             }}
                                         />
-                                        <span className={`text-sm leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                                        <span className={`text-sm leading-relaxed ${
+                                            theme === 'light' ? 'spell-text' : 
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
                                               style={{
                                                   color: theme === 'matrix' ? '#00ff41' : undefined,
                                                   opacity: theme === 'matrix' ? 0.9 : 0.8
@@ -106,35 +129,51 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                 ))}
                             </div>
 
-                            <div className={`p-3 rounded-md w-11/12 mx-auto`}
+                            <div className={`p-3 rounded-md w-11/12 mx-auto ${
+                                theme === 'light' ? 'magical-scroll' : ''
+                            }`}
                                  style={{
-                                     backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : '#fff4e6',
-                                     border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : '1px solid #ffcc99'
+                                     backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : 
+                                                     theme === 'light' ? undefined : '#fff4e6',
+                                     border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : 
+                                            theme === 'light' ? undefined : '1px solid #ffcc99'
                                  }}>
                                 <div className="flex items-center gap-2 mb-2">
                                     <Edit3 size={16} className={theme !== 'matrix' ? styles.text : ''}
                                            style={{color: theme === 'matrix' ? '#ffa500' : undefined}}/>
-                                    <span className={`text-sm font-medium ${theme !== 'matrix' ? styles.text : ''}`}
+                                    <span className={`text-sm font-medium ${
+                                        theme === 'light' ? 'spell-text' : 
+                                        theme !== 'matrix' ? styles.text : ''
+                                    }`}
                                           style={{color: theme === 'matrix' ? '#ffa500' : undefined}}>
-                                        Custom Action:
+                                        {theme === 'light' ? '✍️ Custom Spell:' : 'Custom Action:'}
                                     </span>
                                 </div>
                                 <input
                                     type="text"
-                                    placeholder="Or type a custom action for this character..."
+                                    placeholder={theme === 'light' ? 
+                                        "Or inscribe thy own mystical action upon this enchanted parchment..." :
+                                        "Or type a custom action for this character..."
+                                    }
                                     value={freeTextInputs[charOption.name] || ''}
                                     onChange={(e) => onFreeTextChange(charOption.name, e.target.value)}
                                     disabled={isProcessing}
-                                    className={`w-full p-3 rounded-md text-sm transition-all duration-300 focus:outline-none focus:ring-2 ${theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''}`}
+                                    className={`w-full p-3 rounded-md text-sm transition-all duration-300 focus:outline-none focus:ring-2 ${
+                                        theme === 'light' ? 'spell-writing-area' :
+                                        theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''
+                                    }`}
                                     style={{
-                                        backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : '#ffffff',
+                                        backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : 
+                                                        theme === 'light' ? undefined : '#ffffff',
                                         color: theme === 'matrix' ? '#ffa500' : undefined,
-                                        border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : '1px solid #ddd'
+                                        border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : 
+                                               theme === 'light' ? undefined : '1px solid #ddd'
                                     }}
                                 />
                             </div>
                         </div>
                     ))}
+                </div>
                 </div>
             </div>
         </div>

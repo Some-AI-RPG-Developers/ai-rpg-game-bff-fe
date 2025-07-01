@@ -103,16 +103,30 @@ export function TTSButton({
 
   const isDisabled = disabled || !tts.isSupported || !text.trim();
 
-  const getButtonStyle = (isActive = false) => ({
-    backgroundColor: theme === 'matrix' ? 
-      (isActive ? 'rgba(0, 255, 65, 0.2)' : 'rgba(0, 0, 0, 0.8)') : 
-      (isActive ? '#e0f2fe' : '#ffffff'),
-    color: theme === 'matrix' ? '#00ff41' : (isActive ? '#0277bd' : '#374151'),
-    border: theme === 'matrix' ? 
-      (isActive ? '2px solid #00ff41' : '1px solid rgba(0, 255, 65, 0.5)') : 
-      (isActive ? '1px solid #0ea5e9' : '1px solid #d1d5db'),
-    boxShadow: theme === 'matrix' && isActive ? '0 0 8px rgba(0, 255, 65, 0.3)' : undefined
-  });
+  const getButtonStyle = (isActive = false) => {
+    if (theme === 'matrix') {
+      return {
+        backgroundColor: isActive ? 'rgba(0, 255, 65, 0.2)' : 'rgba(0, 0, 0, 0.8)',
+        color: '#00ff41',
+        border: isActive ? '2px solid #00ff41' : '1px solid rgba(0, 255, 65, 0.5)',
+        boxShadow: isActive ? '0 0 8px rgba(0, 255, 65, 0.3)' : undefined
+      };
+    }
+    
+    if (theme === 'light') {
+      return {
+        backgroundColor: isActive ? '#f59e0b' : '#f97316',
+        color: 'white'
+      };
+    }
+    
+    // Dark theme
+    return {
+      backgroundColor: isActive ? '#e0f2fe' : '#ffffff',
+      color: isActive ? '#0277bd' : '#374151',
+      border: isActive ? '1px solid #0ea5e9' : '1px solid #d1d5db'
+    };
+  };
 
   const buttonClasses = `
     inline-flex items-center justify-center gap-2 

@@ -105,7 +105,7 @@ export default function PlayPage() {
     };
 
     return (
-        <div className={`min-h-screen ${styles.bg} relative ${theme === 'light' ? 'fantasy-background' : ''}`}>
+        <div className={`min-h-screen ${styles.bg} relative`}>
             {theme === 'matrix' && <MatrixRain />}
             
             <div className="relative z-10 min-h-screen flex flex-col">

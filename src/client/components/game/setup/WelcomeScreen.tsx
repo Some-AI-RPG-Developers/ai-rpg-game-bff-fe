@@ -25,34 +25,42 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <div className={`rounded-3xl p-12 w-2/3 max-w-2xl text-center mx-auto ${
-        theme === 'light' ? 'fantasy-card fantasy-glow' : ''
+        theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
+        theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
              backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
            }}>
-        <h2 className={`text-4xl font-bold mb-6 ${
-          theme === 'light' ? 'fantasy-text-magical' : 
-          theme !== 'matrix' ? styles.text : ''
-        }`}
-            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-          {theme === 'light' ? '🔮 Welcome to AI RPG Adventure ✨' : 'Welcome to AI RPG Adventure'}
-        </h2>
-        <p className={`text-lg mb-8 ${theme !== 'matrix' ? styles.text : ''}`}
-           style={{ 
-             color: theme === 'matrix' ? '#00ff41' : undefined,
-             opacity: theme === 'matrix' ? 0.9 : 0.8
-           }}>
-          Embark on an epic journey where your choices shape the story. 
-          Face mythical creatures, discover ancient treasures, and become a legend!
-        </p>
+        <div className={theme === 'light' ? 'magical-scroll-content' : ''}>
+          <h2 className={`text-4xl font-bold mb-6 ${
+            theme === 'light' ? 'spell-title' : 
+            theme !== 'matrix' ? styles.text : ''
+          }`}
+              style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+            {theme === 'light' ? '📜 Welcome to AI RPG Adventure 📜' : 'Welcome to AI RPG Adventure'}
+          </h2>
+          <p className={`text-lg mb-8 ${
+            theme === 'light' ? 'spell-text' : 
+            theme !== 'matrix' ? styles.text : ''
+          }`}
+             style={{ 
+               color: theme === 'matrix' ? '#00ff41' : undefined,
+               opacity: theme === 'matrix' ? 0.9 : 0.8
+             }}>
+            {theme === 'light' ? 
+              'Embark upon a most wondrous quest where thy choices shall weave the very fabric of destiny. Face mystical creatures, uncover ancient treasures, and ascend to legendary status!' :
+              'Embark on an epic journey where your choices shape the story. Face mythical creatures, discover ancient treasures, and become a legend!'
+            }
+          </p>
+        </div>
         <div className="flex gap-4 justify-center">
           <button
             onClick={() => onViewModeChange('create')}
             disabled={isProcessing}
             className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-              hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.accent} ${styles.text}` : ''}`}
+              hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
             style={{
               backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,

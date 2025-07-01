@@ -142,17 +142,22 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
   return (
     <div className="flex flex-col items-center mt-8">
       <div className={`rounded-3xl p-8 w-2/3 max-w-2xl mb-8 text-center mx-auto ${
-        theme === 'light' ? 'fantasy-card fantasy-border fantasy-glow' : ''
+        theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
+        theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
              backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
            }}>
-        <h4 className={`text-2xl font-bold mb-6 text-center ${theme !== 'matrix' ? styles.text : ''}`}
-            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-          Game Details
-        </h4>
+        <div className={theme === 'light' ? 'magical-scroll-content' : ''}>
+          <h4 className={`text-2xl font-bold mb-6 text-center ${
+            theme === 'light' ? 'spell-title' : 
+            theme !== 'matrix' ? styles.text : ''
+          }`}
+              style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+            {theme === 'light' ? '⚔️ Quest Chronicle ⚔️' : 'Game Details'}
+          </h4>
         <p className={`mb-8 text-lg text-center ${theme !== 'matrix' ? styles.text : ''}`}
            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
           <strong>ID:</strong> {game.gameId}
@@ -161,14 +166,20 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         {/* Characters Section */}
         {game.characters && game.characters.length > 0 && (
           <div className="mb-8">
-            <div className={`rounded-xl p-6 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+            <div className={`rounded-xl p-6 w-11/12 mx-auto ${
+              theme === 'light' ? 'magical-scroll' : 
+              theme !== 'matrix' ? styles.border : ''
+            }`}
                  style={{
                    backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.08)' : undefined,
                    border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.3)' : undefined
                  }}>
-              <h5 className={`text-xl font-bold mb-4 text-center ${theme !== 'matrix' ? styles.text : ''}`}
+              <h5 className={`text-xl font-bold mb-4 text-center ${
+                theme === 'light' ? 'spell-title' : 
+                theme !== 'matrix' ? styles.text : ''
+              }`}
                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-                Characters
+                {theme === 'light' ? '👥 Heroes of the Realm 👥' : 'Characters'}
               </h5>
               <div className="space-y-2">
                 {game.characters.map((character, index) => {
@@ -460,21 +471,32 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         {/* Game Conclusion Section */}
         {game.conclusion && (
           <div className="mb-8">
-            <div className={`rounded-xl p-6 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+            <div className={`rounded-xl p-6 w-11/12 mx-auto ${
+              theme === 'light' ? 'magical-scroll' : 
+              theme !== 'matrix' ? styles.border : ''
+            }`}
                  style={{
                    backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.08)' : undefined,
                    border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.3)' : undefined
                  }}>
-              <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+              <div className={`rounded-lg p-4 ${
+                theme === 'light' ? 'magical-scroll' : 
+                theme !== 'matrix' ? styles.border : ''
+              }`}
                    style={{
-                     backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
-                     border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #b3e0ff'
+                     backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : 
+                                     theme === 'light' ? undefined : '#e6f7ff',
+                     border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : 
+                            theme === 'light' ? undefined : '1px solid #b3e0ff'
                    }}>
                 <div className="flex items-center justify-center gap-3 mb-6">
                   <span className="text-3xl">🏆</span>
-                  <h5 className={`text-xl font-bold text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                  <h5 className={`text-xl font-bold text-center ${
+                    theme === 'light' ? 'spell-title' : 
+                    theme !== 'matrix' ? styles.text : ''
+                  }`}
                       style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-                    Game Over!
+                    {theme === 'light' ? '🎭 Quest Complete! 🎭' : 'Game Over!'}
                   </h5>
                   <span className="text-3xl">🏆</span>
                 </div>
@@ -484,13 +506,19 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                     buttonPosition="inline-end"
                     title="Read game conclusion aloud"
                   >
-                    <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                    <h6 className={`text-lg font-bold ${
+                      theme === 'light' ? 'spell-text' : 
+                      theme !== 'matrix' ? styles.text : ''
+                    }`}
                         style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                      Game Conclusion
+                      {theme === 'light' ? '📜 Tale\'s End' : 'Game Conclusion'}
                     </h6>
                   </TTSWrapper>
                 </div>
-                <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                <p className={`text-base leading-relaxed text-center ${
+                  theme === 'light' ? 'spell-text' : 
+                  theme !== 'matrix' ? styles.text : ''
+                }`}
                    style={{
                      color: theme === 'matrix' ? '#00ff41' : undefined,
                      opacity: theme === 'matrix' ? 0.9 : 0.8
@@ -513,6 +541,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
             onStartGame={onStartGame}
             onStartNextTurn={onStartNextTurn}
           />
+        </div>
         </div>
       </div>
     </div>

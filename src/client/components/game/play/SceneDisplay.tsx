@@ -31,7 +31,10 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
 
     return (
         <div className="flex flex-col items-center mt-8">
-            <div className={`rounded-2xl w-11/12 mx-auto text-center`}
+            <div className={`rounded-2xl w-11/12 mx-auto text-center ${
+                theme === 'light' ? 'magical-scroll' : 
+                theme !== 'matrix' ? styles.card : ''
+            }`}
                  style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.5)' : undefined,
                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined,
@@ -44,9 +47,15 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                     <MapPin size={24} className={theme !== 'matrix' ? styles.text : ''}
                             style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
                     <div className="flex items-center gap-3 flex-1 justify-center">
-                        <strong className={`text-xl ${theme !== 'matrix' ? styles.text : ''}`}
+                        <strong className={`text-xl ${
+                            theme === 'light' ? 'spell-title' : 
+                            theme !== 'matrix' ? styles.text : ''
+                        }`}
                                 style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                            Scene {sceneNumber || currentScene.sceneNumber || 'Unknown'}: {currentScene.sceneId}
+                            {theme === 'light' ? 
+                                `🏰 Chapter ${sceneNumber || currentScene.sceneNumber || 'Unknown'} 🏰` : 
+                                `Scene ${sceneNumber || currentScene.sceneNumber || 'Unknown'}: ${currentScene.sceneId}`
+                            }
                         </strong>
                     </div>
                     <button
@@ -78,7 +87,10 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                     <div className="p-6">
                         {/* Scene Description */}
                         <div className="mb-6">
-                            <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                            <div className={`rounded-lg p-4 ${
+                                theme === 'light' ? 'magical-scroll' : 
+                                theme !== 'matrix' ? styles.border : ''
+                            }`}
                                  style={{
                                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
@@ -91,13 +103,19 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                         buttonPosition="inline-end"
                                         title="Read scene description aloud"
                                     >
-                                        <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                                        <h6 className={`text-lg font-bold ${
+                                            theme === 'light' ? 'spell-text' : 
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
                                             style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                                            Scene Description
+                                            {theme === 'light' ? '📖 Chapter Description' : 'Scene Description'}
                                         </h6>
                                     </TTSWrapper>
                                 </div>
-                                <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                                <p className={`text-base leading-relaxed text-center ${
+                                    theme === 'light' ? 'spell-text' : 
+                                    theme !== 'matrix' ? styles.text : ''
+                                }`}
                                    style={{
                                        color: theme === 'matrix' ? '#00ff41' : undefined,
                                        opacity: theme === 'matrix' ? 0.9 : 0.8
@@ -113,10 +131,15 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                         {/* Scene Conclusion: Show if scene has consequences */}
                         {currentScene.consequences && (
                             <div className="mt-6">
-                                <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                                <div className={`rounded-lg p-4 ${
+                                    theme === 'light' ? 'magical-scroll' : 
+                                    theme !== 'matrix' ? styles.border : ''
+                                }`}
                                      style={{
-                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
-                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #b3e0ff'
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : 
+                                                         theme === 'light' ? undefined : '#e6f7ff',
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : 
+                                                theme === 'light' ? undefined : '1px solid #b3e0ff'
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <TTSWrapper
@@ -124,13 +147,19 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                             buttonPosition="inline-end"
                                             title="Read scene conclusion aloud"
                                         >
-                                            <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                                            <h6 className={`text-lg font-bold ${
+                                                theme === 'light' ? 'spell-text' : 
+                                                theme !== 'matrix' ? styles.text : ''
+                                            }`}
                                                 style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
-                                                Scene Conclusion
+                                                {theme === 'light' ? '🎬 Chapter\'s End' : 'Scene Conclusion'}
                                             </h6>
                                         </TTSWrapper>
                                     </div>
-                                    <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                                    <p className={`text-base leading-relaxed text-center ${
+                                        theme === 'light' ? 'spell-text' : 
+                                        theme !== 'matrix' ? styles.text : ''
+                                    }`}
                                        style={{
                                            color: theme === 'matrix' ? '#00ff41' : undefined,
                                            opacity: theme === 'matrix' ? 0.9 : 0.8
