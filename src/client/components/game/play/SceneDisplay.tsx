@@ -140,9 +140,11 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                 }`}
                                      style={{
                                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : 
-                                                         theme === 'light' ? undefined : '#e6f7ff',
+                                                         theme === 'light' ? undefined : 
+                                                         theme === 'dark' ? undefined : '#e6f7ff',
                                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : 
-                                                theme === 'light' ? undefined : '1px solid #b3e0ff'
+                                                theme === 'light' ? undefined : 
+                                                theme === 'dark' ? undefined : '1px solid #b3e0ff'
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <TTSWrapper

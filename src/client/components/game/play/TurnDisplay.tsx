@@ -229,8 +229,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                   theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
-                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : '#e6ffed',
-                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.6)' : '1px solid #b2fab4'
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : 
+                                                         theme === 'dark' ? undefined : '#e6ffed',
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.6)' : 
+                                                theme === 'dark' ? undefined : '1px solid #b2fab4'
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <CheckCircle size={18} className={theme !== 'matrix' ? styles.text : ''}
