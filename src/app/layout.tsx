@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/client/context/ThemeContext';
 import React from "react";
 import '../styles/globals.css';
 import '../client/styles/fantasy-animations.css';
+import '../client/styles/dark-fantasy-theme.css';
 
 const inter = Inter({ subsets: ['latin'] });
 const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-cinzel' });

@@ -193,7 +193,10 @@ export default function PlayPage() {
                 </main>
 
                 {/* Footer */}
-                <footer className={`${theme !== 'matrix' ? styles.card + ' ' + styles.border : ''} border-t ${
+                <footer className={`${
+                  theme === 'dark' ? 'dark-fantasy-footer' :
+                  theme !== 'matrix' ? styles.card + ' ' + styles.border : ''
+                } border-t ${
                   theme === 'light' ? 'fantasy-card' : ''
                 }`}
                         style={{
@@ -202,7 +205,10 @@ export default function PlayPage() {
                           backdropFilter: theme === 'matrix' ? 'blur(5px)' : undefined
                         }}>
                     <div className="container mx-auto px-4 py-6">
-                        <p className={`text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                        <p className={`text-center ${
+                          theme === 'dark' ? 'dark-fantasy-text-light' :
+                          theme !== 'matrix' ? styles.text : ''
+                        }`}
                            style={{
                              color: theme === 'matrix' ? '#00ff41' : undefined,
                              opacity: theme === 'matrix' ? 0.8 : 0.7

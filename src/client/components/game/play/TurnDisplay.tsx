@@ -89,7 +89,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         {/* Turn Description */}
                         {currentTurn.description && (
                             <div className="mb-6">
-                                <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                                <div className={`rounded-lg p-4 ${
+                                  theme === 'dark' ? 'dark-fantasy-turn-description' :
+                                  theme !== 'matrix' ? styles.border : ''
+                                }`}
                                      style={{
                                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
@@ -108,7 +111,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                             </h6>
                                         </TTSWrapper>
                                     </div>
-                                    <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                                    <p className={`text-base leading-relaxed text-center ${
+                                      theme === 'dark' ? 'dark-fantasy-text-light' :
+                                      theme !== 'matrix' ? styles.text : ''
+                                    }`}
                                        style={{
                                            color: theme === 'matrix' ? '#00ff41' : undefined,
                                            opacity: theme === 'matrix' ? 0.9 : 0.8
@@ -212,7 +218,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         {/* Turn Resolution */}
                         {currentTurn.consequences && (
                             <div className="mb-6">
-                                <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                                <div className={`rounded-lg p-4 ${
+                                  theme === 'dark' ? 'dark-fantasy-turn-conclusion' :
+                                  theme !== 'matrix' ? styles.border : ''
+                                }`}
                                      style={{
                                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : '#e6ffed',
                                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.6)' : '1px solid #b2fab4'
@@ -231,7 +240,10 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                             </h6>
                                         </TTSWrapper>
                                     </div>
-                                    <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                                    <p className={`text-base leading-relaxed text-center ${
+                                      theme === 'dark' ? 'dark-fantasy-text-light' :
+                                      theme !== 'matrix' ? styles.text : ''
+                                    }`}
                                        style={{
                                            color: theme === 'matrix' ? '#00ff41' : undefined,
                                            opacity: theme === 'matrix' ? 0.9 : 0.8

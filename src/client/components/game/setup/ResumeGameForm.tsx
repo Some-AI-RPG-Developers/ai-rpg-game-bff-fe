@@ -38,6 +38,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <div className={`rounded-3xl p-12 w-2/3 max-w-2xl mx-auto ${
         theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
+        theme === 'dark' ? 'dark-fantasy-card dark-fantasy-holo-corners dark-fantasy-circuit' :
         theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
@@ -45,13 +46,19 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
              backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
            }}>
-        <div className={theme === 'light' ? 'magical-scroll-content' : ''}>
+        <div className={
+          theme === 'light' ? 'magical-scroll-content' : 
+          theme === 'dark' ? 'dark-fantasy-data-stream' : ''
+        }>
           <h3 className={`text-3xl font-bold mb-8 text-center ${
             theme === 'light' ? 'spell-title' : 
+            theme === 'dark' ? 'dark-fantasy-text-neon' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-            {theme === 'light' ? '🗝️ Resume Adventure 🗝️' : 'Resume Game'}
+            {theme === 'light' ? '🗝️ Resume Adventure 🗝️' : 
+             theme === 'dark' ? '🏰 RETURN TO CASTLE 🏰' :
+             'Resume Game'}
           </h3>
         
         <div className="space-y-6">
@@ -60,11 +67,14 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               htmlFor="resumeGameId" 
               className={`block text-lg font-medium mb-3 ${
                 theme === 'light' ? 'spell-text' : 
+                theme === 'dark' ? 'dark-fantasy-text' :
                 theme !== 'matrix' ? styles.text : ''
               }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
             >
-              {theme === 'light' ? '🔮 Enter Quest Identifier:' : 'Enter Game ID:'}
+              {theme === 'light' ? '🔮 Enter Quest Identifier:' : 
+               theme === 'dark' ? '🏰 CASTLE KEY:' :
+               'Enter Game ID:'}
             </label>
             <input
               type="text"
@@ -75,6 +85,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               className={`w-full max-w-md mx-auto p-4 rounded-lg text-lg font-medium transition-all duration-300 
                 focus:outline-none focus:ring-2 ${
                   theme === 'light' ? 'spell-writing-area' :
+                  theme === 'dark' ? 'dark-fantasy-input' :
                   theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''
                 }`}
               style={{
@@ -84,6 +95,8 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               }}
               placeholder={theme === 'light' ? 
                 "Inscribe thy quest's sacred identifier upon this mystical scroll..." :
+                theme === 'dark' ?
+                ">> ENTER CASTLE ENTRANCE KEY..." :
                 "Enter your game ID here..."
               }
             />
@@ -103,7 +116,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               }}
             >
               <Download size={24} />
-              Load Game
+              {theme === 'dark' ? 'ENTER CASTLE' : 'Load Game'}
             </button>
             
             <button 

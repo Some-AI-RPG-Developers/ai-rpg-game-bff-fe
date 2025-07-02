@@ -91,11 +91,12 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
 
   return (
     <nav className={`sticky top-0 border-b ${
-      theme === 'light' ? 'fantasy-border' : ''
+      theme === 'light' ? 'fantasy-border' : 
+      theme === 'dark' ? 'dark-fantasy-header' : ''
     }`}
          style={{
-           backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? '#1a1a1a' : '#ffffff'),
-           borderColor: theme === 'matrix' ? '#00ff41' : undefined,
+           backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? 'transparent' : '#ffffff'),
+           borderColor: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? 'transparent' : undefined),
            position: 'sticky',
            top: 0,
            zIndex: 9999,
@@ -109,6 +110,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <div className="flex items-center gap-6">
           <h1 className={`text-xl font-bold ${
             theme === 'light' ? 'fantasy-text-magical' : 
+            theme === 'dark' ? 'dark-fantasy-text-neon' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ 
@@ -120,7 +122,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 borderRadius: '4px'
               }}>
             <Sword className="transform rotate-45" size={32} />
-            {theme === 'light' ? '⚔️ AI RPG Adventure 🛡️' : 'AI RPG Adventure'}
+            {theme === 'light' ? '⚔️ AI RPG Adventure 🛡️' : 
+             theme === 'dark' ? '🏰 DARK REALM CHRONICLES 🏰' :
+             'AI RPG Adventure'}
             <Shield size={32} />
           </h1>
           
@@ -228,9 +232,9 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
       {error && (
         <div className={`mt-3 p-3 rounded-lg ${styles.border} border`}
              style={{
-               backgroundColor: theme === 'matrix' ? '#330000' : '#f8d7da',
-               borderColor: theme === 'matrix' ? '#ff4444' : '#f5c6cb',
-               color: theme === 'matrix' ? '#ff6666' : '#721c24'
+               backgroundColor: theme === 'matrix' ? '#330000' : (theme === 'dark' ? '#330000' : '#f8d7da'),
+               borderColor: theme === 'matrix' ? '#ff4444' : (theme === 'dark' ? '#cc4444' : '#f5c6cb'),
+               color: theme === 'matrix' ? '#ff6666' : (theme === 'dark' ? '#cc4444' : '#721c24')
              }}>
           Error: {error}
         </div>
@@ -241,8 +245,8 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <div style={{
           marginTop: '15px',
           padding: '20px',
-          backgroundColor: theme === 'matrix' ? '#000000' : 'white',
-          border: `1px solid ${theme === 'matrix' ? '#00ff41' : '#dee2e6'}`,
+          backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? '#1a0000' : 'white'),
+          border: `1px solid ${theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#8b0000' : '#dee2e6')}`,
           borderRadius: '8px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
@@ -252,7 +256,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             alignItems: 'center',
             marginBottom: '15px'
           }}>
-            <h3 style={{ margin: 0, fontSize: '16px', color: theme === 'matrix' ? '#00ff41' : '#333' }}>
+            <h3 style={{ margin: 0, fontSize: '16px', color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#333') }}>
               Text-to-Speech Settings
             </h3>
             <button
@@ -262,7 +266,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 border: 'none',
                 fontSize: '18px',
                 cursor: 'pointer',
-                color: theme === 'matrix' ? '#00ff41' : '#666'
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#666')
               }}
               title="Close"
             >
@@ -280,7 +284,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                   fontSize: '14px',
                   fontWeight: 'bold',
                   marginBottom: '5px',
-                  color: theme === 'matrix' ? '#00ff41' : '#333'
+                  color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#333')
                 }}>
                   Voice
                 </label>
@@ -290,11 +294,11 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                   style={{
                     width: '100%',
                     padding: '8px',
-                    border: `1px solid ${theme === 'matrix' ? '#00ff41' : '#ccc'}`,
+                    border: `1px solid ${theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#8b0000' : '#ccc')}`,
                     borderRadius: '4px',
                     fontSize: '14px',
-                    backgroundColor: theme === 'matrix' ? '#000000' : 'white',
-                    color: theme === 'matrix' ? '#00ff41' : 'black'
+                    backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? '#1a0000' : 'white'),
+                    color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : 'black')
                   }}
                 >
                   <option value="">Select a voice</option>
@@ -314,7 +318,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 fontSize: '14px',
                 fontWeight: 'bold',
                 marginBottom: '5px',
-                color: theme === 'matrix' ? '#00ff41' : '#333'
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#333')
               }}>
                 Speed: {pendingSettings.rate}x
               </label>
@@ -331,7 +335,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 fontSize: '12px',
-                color: theme === 'matrix' ? '#00ff41' : '#666',
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#aa3333' : '#666'),
                 marginTop: '2px'
               }}>
                 <span>0.5x</span>
@@ -347,7 +351,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 fontSize: '14px',
                 fontWeight: 'bold',
                 marginBottom: '5px',
-                color: theme === 'matrix' ? '#00ff41' : '#333'
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#333')
               }}>
                 Pitch: {pendingSettings.pitch}
               </label>
@@ -364,7 +368,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 fontSize: '12px',
-                color: theme === 'matrix' ? '#00ff41' : '#666',
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#aa3333' : '#666'),
                 marginTop: '2px'
               }}>
                 <span>Low</span>
@@ -380,7 +384,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 fontSize: '14px',
                 fontWeight: 'bold',
                 marginBottom: '5px',
-                color: theme === 'matrix' ? '#00ff41' : '#333'
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#333')
               }}>
                 Volume: {Math.round(pendingSettings.volume * 100)}%
               </label>
@@ -397,7 +401,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
                 display: 'flex',
                 justifyContent: 'space-between',
                 fontSize: '12px',
-                color: theme === 'matrix' ? '#00ff41' : '#666',
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#aa3333' : '#666'),
                 marginTop: '2px'
               }}>
                 <span>0%</span>
@@ -444,8 +448,8 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
               onClick={() => setShowTTSSettings(false)}
               style={{
                 padding: '8px 16px',
-                backgroundColor: theme === 'matrix' ? '#333333' : (theme === 'light' ? '#f59e0b' : '#6c757d'),
-                color: theme === 'matrix' ? '#00ff41' : 'white',
+                backgroundColor: theme === 'matrix' ? '#333333' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? '#550000' : '#6c757d')),
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : 'white'),
                 border: theme === 'matrix' ? '1px solid #00ff41' : 'none',
                 borderRadius: '4px',
                 cursor: 'pointer'
@@ -457,8 +461,8 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
               onClick={handleConfirmSettings}
               style={{
                 padding: '8px 16px',
-                backgroundColor: theme === 'matrix' ? '#004d00' : (theme === 'light' ? '#f59e0b' : '#28a745'),
-                color: theme === 'matrix' ? '#00ff41' : 'white',
+                backgroundColor: theme === 'matrix' ? '#004d00' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? '#8b0000' : '#28a745')),
+                color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : 'white'),
                 border: theme === 'matrix' ? '1px solid #00ff41' : 'none',
                 borderRadius: '4px',
                 cursor: 'pointer'

@@ -89,6 +89,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                         <div className="mb-6">
                             <div className={`rounded-lg p-4 ${
                                 theme === 'light' ? 'magical-scroll' : 
+                                theme === 'dark' ? 'dark-fantasy-scene-description' :
                                 theme !== 'matrix' ? styles.border : ''
                             }`}
                                  style={{
@@ -114,6 +115,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                 </div>
                                 <p className={`text-base leading-relaxed text-center ${
                                     theme === 'light' ? 'spell-text' : 
+                                    theme === 'dark' ? 'dark-fantasy-text-light' :
                                     theme !== 'matrix' ? styles.text : ''
                                 }`}
                                    style={{
@@ -133,6 +135,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                             <div className="mt-6">
                                 <div className={`rounded-lg p-4 ${
                                     theme === 'light' ? 'magical-scroll' : 
+                                    theme === 'dark' ? 'dark-fantasy-scene-conclusion' :
                                     theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
@@ -158,6 +161,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                     </div>
                                     <p className={`text-base leading-relaxed text-center ${
                                         theme === 'light' ? 'spell-text' : 
+                                        theme === 'dark' ? 'dark-fantasy-text-light' :
                                         theme !== 'matrix' ? styles.text : ''
                                     }`}
                                        style={{

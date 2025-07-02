@@ -326,21 +326,25 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             <div className="text-center">
               <h3 
                 className={`text-xl font-bold mb-4 ${
-                  theme === 'light' ? 'spell-text' : ''
+                  theme === 'light' ? 'spell-text' : 
+                  theme === 'dark' ? 'dark-fantasy-text' : ''
                 }`}
-                style={{ color: theme === 'light' ? undefined : themeColors.text.primary }}
+                style={{ color: theme === 'light' ? undefined : (theme === 'dark' ? undefined : themeColors.text.primary) }}
               >
-                {theme === 'light' ? '🆔 Game Identifier' : 'Game ID'}
+                {theme === 'light' ? '🆔 Game Identifier' : 
+                 theme === 'dark' ? '💻 SESSION ID' :
+                 'Game ID'}
               </h3>
               <div className="flex items-center gap-3">
                 <p 
                   className={`text-lg font-mono p-4 rounded-lg ${
-                    theme === 'light' ? 'spell-writing-area' : ''
+                    theme === 'light' ? 'spell-writing-area' : 
+                    theme === 'dark' ? 'dark-fantasy-input' : ''
                   }`}
                   style={{ 
-                    color: theme === 'light' ? undefined : themeColors.text.primary,
-                    background: theme === 'light' ? undefined : componentStyles.card.base,
-                    border: theme === 'light' ? undefined : `1px solid ${themeColors.border.primary}`
+                    color: theme === 'light' ? undefined : (theme === 'dark' ? undefined : themeColors.text.primary),
+                    background: theme === 'light' ? undefined : (theme === 'dark' ? undefined : componentStyles.card.base),
+                    border: theme === 'light' ? undefined : (theme === 'dark' ? undefined : `1px solid ${themeColors.border.primary}`)
                   }}
                 >
                   {game?.gameId ?? 'No game loaded'}

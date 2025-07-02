@@ -44,7 +44,9 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-6">
-      <div className={`rounded-3xl p-6 w-2/3 max-w-2xl text-center mx-auto`}
+      <div className={`rounded-3xl p-6 w-2/3 max-w-2xl text-center mx-auto ${
+        theme === 'dark' ? (isError ? 'dark-fantasy-card-dark-blue' : 'dark-fantasy-card-dark-blue') : ''
+      }`}
            style={{
              backgroundColor: theme === 'matrix' ? 
                (isError ? 'rgba(51, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.7)') : undefined,
@@ -60,13 +62,19 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
             <Loader2 size={24} className={`animate-spin ${theme !== 'matrix' ? styles.text : ''}`}
                      style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
           )}
-          <h4 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+          <h4 className={`text-lg font-bold ${
+            theme === 'dark' ? 'dark-fantasy-text-accent' :
+            theme !== 'matrix' ? styles.text : ''
+          }`}
               style={{ color: theme === 'matrix' ? (isError ? '#ff6666' : '#00ff41') : undefined }}>
             {isError ? 'Status Update' : 'Processing'}
           </h4>
         </div>
         {statusMessage && (
-          <p className={`text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+          <p className={`text-lg ${
+            theme === 'dark' ? 'dark-fantasy-text-light' :
+            theme !== 'matrix' ? styles.text : ''
+          }`}
              style={{ 
                color: theme === 'matrix' ? (isError ? '#ff6666' : '#00ff41') : undefined,
                opacity: theme === 'matrix' ? 0.9 : 0.8
@@ -75,7 +83,10 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
           </p>
         )}
         {gameStatus === 'error_GameSetupFailed' && !error && (
-          <p className={`mt-3 text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+          <p className={`mt-3 text-lg ${
+            theme === 'dark' ? 'dark-fantasy-text-light' :
+            theme !== 'matrix' ? styles.text : ''
+          }`}
              style={{ 
                color: theme === 'matrix' ? '#ff6666' : 'orange',
                opacity: theme === 'matrix' ? 0.9 : 0.8

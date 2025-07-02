@@ -27,7 +27,9 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
 
   return (
     <div className="flex flex-col items-center mt-8">
-      <div className={`rounded-3xl p-8 w-2/3 max-w-2xl text-center mx-auto`}
+      <div className={`rounded-3xl p-8 w-2/3 max-w-2xl text-center mx-auto ${
+        theme === 'dark' ? 'dark-fantasy-game-conclusion' : ''
+      }`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
@@ -44,7 +46,10 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
         </div>
         <div className="mt-6">
-          <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+          <div className={`rounded-lg p-4 ${
+            theme === 'dark' ? 'dark-fantasy-game-conclusion' :
+            theme !== 'matrix' ? styles.border : ''
+          }`}
                style={{
                  backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
                  border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #b3e0ff'
@@ -61,7 +66,10 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
                 </h6>
               </TTSWrapper>
             </div>
-            <p className={`text-base leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+            <p className={`text-base leading-relaxed text-center ${
+              theme === 'dark' ? 'dark-fantasy-text-light' :
+              theme !== 'matrix' ? styles.text : ''
+            }`}
                style={{
                  color: theme === 'matrix' ? '#00ff41' : undefined,
                  opacity: theme === 'matrix' ? 0.9 : 0.8

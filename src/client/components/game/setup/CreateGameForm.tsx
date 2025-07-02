@@ -59,6 +59,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
     <div className="flex flex-col items-center justify-center min-h-[80vh] py-8">
       <div className={`rounded-3xl p-12 w-2/3 max-w-4xl mx-auto overflow-hidden ${
         theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
+        theme === 'dark' ? 'dark-fantasy-card dark-fantasy-holo-corners dark-fantasy-circuit' :
         theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
@@ -66,13 +67,19 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
              border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
              backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined
            }}>
-        <div className={`text-center mb-8 ${theme === 'light' ? 'magical-scroll-content' : ''}`}>
+        <div className={`text-center mb-8 ${
+          theme === 'light' ? 'magical-scroll-content' : 
+          theme === 'dark' ? 'dark-fantasy-data-stream' : ''
+        }`}>
           <h3 className={`text-4xl font-bold mb-4 ${
             theme === 'light' ? 'spell-title' : 
+            theme === 'dark' ? 'dark-fantasy-text-neon' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-            {theme === 'light' ? '📜 Craft New Adventure ⚡' : 'Create New Game'}
+            {theme === 'light' ? '📜 Craft New Adventure ⚡' : 
+             theme === 'dark' ? '🏰 FORGE NEW CASTLE QUEST 🏰' :
+             'Create New Game'}
           </h3>
           <div className="flex justify-center">
             <button 
@@ -98,10 +105,13 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
             <FileText size={24} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
             <h4 className={`text-2xl font-bold ${
               theme === 'light' ? 'spell-text' : 
+              theme === 'dark' ? 'dark-fantasy-text' :
               theme !== 'matrix' ? styles.text : ''
             }`}
                    style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
-              {theme === 'light' ? '📜 Adventure Scroll' : 'Game Prompt'}
+              {theme === 'light' ? '📜 Adventure Scroll' : 
+               theme === 'dark' ? '🏰 QUEST PARAMETERS' :
+               'Game Prompt'}
             </h4>
           </div>
           <div className="w-11/12 mx-auto">
@@ -112,6 +122,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               rows={5}
               className={`w-full p-6 rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 resize-none ${
                 theme === 'light' ? 'spell-writing-area' :
+                theme === 'dark' ? 'dark-fantasy-input' :
                 theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
               }`}
               style={{
@@ -122,6 +133,8 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               disabled={isProcessing}
               placeholder={theme === 'light' ? 
                 "Inscribe thy grand adventure upon this enchanted parchment... What mystical realm shall thy heroes explore?" :
+                theme === 'dark' ?
+                ">> ENTER QUEST PARAMETERS... WHAT DARK CASTLE REALM WILL YOUR HEROES EXPLORE?" :
                 "Describe your adventure setting... What world will your characters explore?"
               }
             />
@@ -130,8 +143,13 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
         <div className="mb-8 w-11/12 mx-auto">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Hash size={24} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
-            <h4 className={`text-2xl font-bold ${theme !== 'matrix' ? styles.text : ''}`}
-                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>Max Scenes</h4>
+            <h4 className={`text-2xl font-bold ${
+              theme === 'dark' ? 'dark-fantasy-text' :
+              theme !== 'matrix' ? styles.text : ''
+            }`}
+                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+              {theme === 'dark' ? 'QUEST CHAPTERS' : 'Max Scenes'}
+            </h4>
           </div>
           <div className="flex justify-center">
             <input
@@ -139,7 +157,10 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               id="maxScenes"
               value={maxScenesInput}
               onChange={(e) => onMaxScenesChange(parseInt(e.target.value, 10))}
-              className={`w-32 p-4 rounded-xl font-bold text-center text-xl transition-all duration-300 focus:outline-none focus:ring-2 ${theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''}`}
+              className={`w-32 p-4 rounded-xl font-bold text-center text-xl transition-all duration-300 focus:outline-none focus:ring-2 ${
+                theme === 'dark' ? 'dark-fantasy-input' :
+                theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
+              }`}
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -154,8 +175,13 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
         <div className="mb-8 w-11/12 mx-auto">
           <div className="flex items-center justify-center gap-3 mb-6">
             <Users size={28} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
-            <h4 className={`text-3xl font-bold ${theme !== 'matrix' ? styles.text : ''}`}
-                style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>Characters</h4>
+            <h4 className={`text-3xl font-bold ${
+              theme === 'dark' ? 'dark-fantasy-text' :
+              theme !== 'matrix' ? styles.text : ''
+            }`}
+                style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+              {theme === 'dark' ? 'HEROES' : 'Characters'}
+            </h4>
           </div>
           <div className="flex justify-center mb-6">
             <button
@@ -171,56 +197,79 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               disabled={isProcessing}
             >
               <Plus size={20} />
-              Add New Character
+              {theme === 'dark' ? 'RECRUIT HERO' : 'Add New Character'}
             </button>
           </div>
           <div className="space-y-6 w-11/12 mx-auto">
             {charactersInput.map((char, index) => (
-              <div key={index} className={`rounded-xl p-8 w-11/12 mx-auto transform transition-all duration-300 hover:scale-[1.02]`}
+              <div key={index} className={`rounded-xl p-8 w-11/12 mx-auto transform transition-all duration-300 hover:scale-[1.02] ${
+                theme === 'dark' ? 'dark-fantasy-card dark-fantasy-glow' : ''
+              }`}
                    style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : undefined,
                      border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.5)' : undefined,
                      boxShadow: theme === 'matrix' ? '0 4px 20px rgba(0, 255, 65, 0.2)' : undefined
                    }}>
                 <div className="text-center mb-6">
-                  <h5 className={`text-xl font-bold mb-6 ${theme !== 'matrix' ? styles.text : ''}`}
-                      style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>Character #{index + 1}</h5>
+                  <h5 className={`text-xl font-bold mb-6 ${
+                    theme === 'dark' ? 'dark-fantasy-text' :
+                    theme !== 'matrix' ? styles.text : ''
+                  }`}
+                      style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                    {theme === 'dark' ? `HERO #${index + 1}` : `Character #${index + 1}`}
+                  </h5>
                 </div>
                 <div className="space-y-6 w-11/12 mx-auto">
                   <div>
-                    <label htmlFor={`charName-${index}`} className={`block text-center mb-3 font-bold text-lg ${theme !== 'matrix' ? styles.text : ''}`}
-                           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>Name</label>
+                    <label htmlFor={`charName-${index}`} className={`block text-center mb-3 font-bold text-lg ${
+                      theme === 'dark' ? 'dark-fantasy-text' :
+                      theme !== 'matrix' ? styles.text : ''
+                    }`}
+                           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                      {theme === 'dark' ? 'HERO NAME' : 'Name'}
+                    </label>
                     <input
                       type="text"
                       id={`charName-${index}`}
                       value={char.name}
                       onChange={(e) => onCharacterInputChange(index, 'name', e.target.value)}
-                      className={`w-full p-4 rounded-xl font-bold text-center text-lg transition-all duration-300 focus:outline-none focus:ring-2 ${theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''}`}
+                      className={`w-full p-4 rounded-xl font-bold text-center text-lg transition-all duration-300 focus:outline-none focus:ring-2 ${
+                        theme === 'dark' ? 'dark-fantasy-input' :
+                        theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
+                      }`}
                       style={{
                         backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                         color: theme === 'matrix' ? '#00ff41' : undefined,
                         border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined
                       }}
                       disabled={isProcessing}
-                      placeholder="Enter character name..."
+                      placeholder={theme === 'dark' ? ">> ENTER HERO NAME..." : "Enter character name..."}
                     />
                   </div>
                   <div>
-                    <label htmlFor={`charPrompt-${index}`} className={`block text-center mb-3 font-bold text-lg ${theme !== 'matrix' ? styles.text : ''}`}
-                           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>Description</label>
+                    <label htmlFor={`charPrompt-${index}`} className={`block text-center mb-3 font-bold text-lg ${
+                      theme === 'dark' ? 'dark-fantasy-text' :
+                      theme !== 'matrix' ? styles.text : ''
+                    }`}
+                           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                      {theme === 'dark' ? 'HERO CHRONICLE' : 'Description'}
+                    </label>
                     <textarea
                       id={`charPrompt-${index}`}
                       value={char.characterPrompt}
                       onChange={(e) => onCharacterInputChange(index, 'characterPrompt', e.target.value)}
                       rows={4}
-                      className={`w-full p-4 rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 resize-none ${theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''}`}
+                      className={`w-full p-4 rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 resize-none ${
+                        theme === 'dark' ? 'dark-fantasy-input' :
+                        theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
+                      }`}
                       style={{
                         backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
                         color: theme === 'matrix' ? '#00ff41' : undefined,
                         border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined
                       }}
                       disabled={isProcessing}
-                      placeholder="Describe this character's background, abilities, and personality..."
+                      placeholder={theme === 'dark' ? ">> HERO CHRONICLE: BACKGROUND, MAGICAL ABILITIES, ANCIENT BLOODLINES..." : "Describe this character's background, abilities, and personality..."}
                     />
                   </div>
                 </div>
@@ -238,7 +287,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                     disabled={isProcessing}
                   >
                     <Trash2 size={18} />
-                    Remove Character
+                    {theme === 'dark' ? 'DISMISS HERO' : 'Remove Character'}
                   </button>
                 </div>
               </div>
@@ -258,7 +307,10 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
             }}
           >
             <Play size={32} />
-            {gameStatus === 'creatingGame_InProgress' ? 'Creating Adventure...' : 'Create Game'}
+            {gameStatus === 'creatingGame_InProgress' ? 
+              (theme === 'dark' ? 'OPENING CASTLE GATES...' : 'Creating Adventure...') : 
+              (theme === 'dark' ? 'BEGIN QUEST' : 'Create Game')
+            }
           </button>
         </div>
       </div>

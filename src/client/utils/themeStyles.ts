@@ -10,12 +10,12 @@ export const getThemeStyles = (theme: string) => {
       secondary: 'bg-gradient-to-r from-amber-500 to-yellow-600 hover:from-amber-600 hover:to-yellow-700'
     },
     dark: {
-      bg: 'bg-gradient-to-br from-gray-900 to-black',
-      card: 'bg-gray-800/90 backdrop-blur-md shadow-2xl',
-      text: 'text-gray-100',
-      border: 'border-gray-700',
-      accent: 'bg-purple-600 hover:bg-purple-700',
-      secondary: 'bg-pink-600 hover:bg-pink-700'
+      bg: 'dark-fantasy-bg',
+      card: 'dark-fantasy-card dark-fantasy-glow',
+      text: 'dark-fantasy-text',
+      border: 'dark-fantasy-border',
+      accent: 'dark-fantasy-button-primary dark-fantasy-glitch',
+      secondary: 'dark-fantasy-button-secondary dark-fantasy-pulse'
     },
     matrix: {
       bg: 'bg-black',
