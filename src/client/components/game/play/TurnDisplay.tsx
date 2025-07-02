@@ -63,20 +63,20 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         className={`transition-all duration-200 hover:opacity-80 p-1`}
                         style={{ 
                           color: theme === 'matrix' ? '#00ff41' : 
-                                 theme === 'dark' ? '#f3f4f6' : 
+                                 theme === 'dark' ? '#cc4444' : 
                                  '#374151'
                         }}
                     >
                         {isTurnExpanded ? (
                             <ChevronDown size={20} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
-                                     theme === 'dark' ? '#f3f4f6' : 
+                                     theme === 'dark' ? '#cc4444' : 
                                      '#374151'
                             }} />
                         ) : (
                             <ChevronRight size={20} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
-                                     theme === 'dark' ? '#f3f4f6' : 
+                                     theme === 'dark' ? '#cc4444' : 
                                      '#374151'
                             }} />
                         )}
@@ -128,10 +128,13 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         {/* Chosen Options: Show if actions exist (player choices were made) */}
                         {currentTurn.actions && currentTurn.actions.length > 0 && (
                             <div className="mb-8">
-                                <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                                <div className={`rounded-lg p-4 ${
+                                  theme === 'dark' ? 'dark-fantasy-option-select' :
+                                  theme !== 'matrix' ? styles.border : ''
+                                }`}
                                      style={{
-                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#fff4e6',
-                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #ffcc99'
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'dark' ? undefined : '#fff4e6'),
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : (theme === 'dark' ? undefined : '1px solid #ffcc99')
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <Users size={18} className={theme !== 'matrix' ? styles.text : ''}
@@ -148,10 +151,13 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                             
                                             return (
                                                 <div key={characterId} 
-                                                     className={`rounded-lg w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+                                                     className={`rounded-lg w-11/12 mx-auto ${
+                                                       theme === 'dark' ? 'dark-fantasy-character' :
+                                                       theme !== 'matrix' ? styles.border : ''
+                                                     }`}
                                                      style={{
-                                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : '#fefcf5',
-                                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : '1px solid #fed7aa'
+                                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : (theme === 'dark' ? undefined : '#fefcf5'),
+                                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : (theme === 'dark' ? undefined : '1px solid #fed7aa')
                                                      }}>
                                                     {/* Character Name - Clickable Header with TTS */}
                                                     <div className="p-4 flex items-center justify-between">
@@ -172,20 +178,20 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                                             className={`transition-all duration-200 hover:opacity-80 p-1`}
                                                             style={{ 
                                                               color: theme === 'matrix' ? '#00ff41' : 
-                                                                     theme === 'dark' ? '#f3f4f6' : 
+                                                                     theme === 'dark' ? '#cc4444' : 
                                                                      '#374151'
                                                             }}
                                                         >
                                                             {isExpanded ? (
                                                                 <ChevronDown size={20} style={{ 
                                                                   color: theme === 'matrix' ? '#00ff41' : 
-                                                                         theme === 'dark' ? '#f3f4f6' : 
+                                                                         theme === 'dark' ? '#cc4444' : 
                                                                          '#374151'
                                                                 }} />
                                                             ) : (
                                                                 <ChevronRight size={20} style={{ 
                                                                   color: theme === 'matrix' ? '#00ff41' : 
-                                                                         theme === 'dark' ? '#f3f4f6' : 
+                                                                         theme === 'dark' ? '#cc4444' : 
                                                                          '#374151'
                                                                 }} />
                                                             )}

@@ -277,12 +277,14 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                   <button
                     type="button"
                     onClick={() => onRemoveCharacterInput(index)}
-                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-[1.02] transform`}
+                    className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-[1.02] transform ${
+                      theme === 'dark' ? 'dark-fantasy-button-secondary' : ''
+                    }`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(51, 0, 0, 0.8)' : '#dc3545',
-                      color: theme === 'matrix' ? '#ff6666' : 'white',
-                      border: theme === 'matrix' ? '2px solid #ff4444' : undefined,
-                      boxShadow: theme === 'matrix' ? '0 4px 15px rgba(255, 68, 68, 0.3)' : undefined
+                      backgroundColor: theme === 'matrix' ? 'rgba(51, 0, 0, 0.8)' : (theme === 'dark' ? undefined : '#dc3545'),
+                      color: theme === 'matrix' ? '#ff6666' : (theme === 'dark' ? undefined : 'white'),
+                      border: theme === 'matrix' ? '2px solid #ff4444' : (theme === 'dark' ? undefined : undefined),
+                      boxShadow: theme === 'matrix' ? '0 4px 15px rgba(255, 68, 68, 0.3)' : (theme === 'dark' ? undefined : undefined)
                     }}
                     disabled={isProcessing}
                   >

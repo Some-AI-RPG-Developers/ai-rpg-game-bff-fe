@@ -97,11 +97,14 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                            style={{
                                                backgroundColor: selectedOptions[charOption.name] === optionDesc ? 
                                                    (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : 
-                                                    theme === 'light' ? 'rgba(212, 175, 55, 0.3)' : '#e6f2ff') : 
+                                                    theme === 'light' ? 'rgba(212, 175, 55, 0.3)' : 
+                                                    theme === 'dark' ? undefined : '#e6f2ff') : 
                                                    (theme === 'matrix' ? 'rgba(0, 0, 0, 0.3)' : 
-                                                    theme === 'light' ? undefined : '#ffffff'),
+                                                    theme === 'light' ? undefined : 
+                                                    theme === 'dark' ? undefined : '#ffffff'),
                                                border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : 
-                                                      theme === 'light' ? undefined : '1px solid #ddd',
+                                                      theme === 'light' ? undefined : 
+                                                      theme === 'dark' ? undefined : '1px solid #ddd',
                                                color: theme === 'matrix' ? '#00ff41' : undefined,
                                                opacity: theme === 'matrix' ? 0.9 : 1
                                            }}>
@@ -134,29 +137,37 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                             </div>
 
                             <div className={`p-3 rounded-md w-11/12 mx-auto ${
-                                theme === 'light' ? 'magical-scroll' : ''
+                                theme === 'light' ? 'magical-scroll' : 
+                                theme === 'dark' ? 'dark-fantasy-character' : ''
                             }`}
                                  style={{
                                      backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : 
-                                                     theme === 'light' ? undefined : '#fff4e6',
+                                                     theme === 'light' ? undefined : 
+                                                     theme === 'dark' ? undefined : '#fff4e6',
                                      border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : 
-                                            theme === 'light' ? undefined : '1px solid #ffcc99'
+                                            theme === 'light' ? undefined : 
+                                            theme === 'dark' ? undefined : '1px solid #ffcc99'
                                  }}>
                                 <div className="flex items-center gap-2 mb-2">
                                     <Edit3 size={16} className={theme !== 'matrix' ? styles.text : ''}
                                            style={{color: theme === 'matrix' ? '#ffa500' : undefined}}/>
                                     <span className={`text-sm font-medium ${
                                         theme === 'light' ? 'spell-text' : 
+                                        theme === 'dark' ? 'dark-fantasy-text-accent' :
                                         theme !== 'matrix' ? styles.text : ''
                                     }`}
                                           style={{color: theme === 'matrix' ? '#ffa500' : undefined}}>
-                                        {theme === 'light' ? '✍️ Custom Spell:' : 'Custom Action:'}
+                                        {theme === 'light' ? '✍️ Custom Spell:' : 
+                                         theme === 'dark' ? '🗡️ CUSTOM HERO ACTION:' :
+                                         'Custom Action:'}
                                     </span>
                                 </div>
                                 <input
                                     type="text"
                                     placeholder={theme === 'light' ? 
                                         "Or inscribe thy own mystical action upon this enchanted parchment..." :
+                                        theme === 'dark' ?
+                                        ">> FORGE CUSTOM HERO ACTION..." :
                                         "Or type a custom action for this character..."
                                     }
                                     value={freeTextInputs[charOption.name] || ''}
@@ -164,14 +175,17 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                     disabled={isProcessing}
                                     className={`w-full p-3 rounded-md text-sm transition-all duration-300 focus:outline-none focus:ring-2 ${
                                         theme === 'light' ? 'spell-writing-area' :
+                                        theme === 'dark' ? 'dark-fantasy-input' :
                                         theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''
                                     }`}
                                     style={{
                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : 
-                                                        theme === 'light' ? undefined : '#ffffff',
+                                                        theme === 'light' ? undefined : 
+                                                        theme === 'dark' ? undefined : '#ffffff',
                                         color: theme === 'matrix' ? '#ffa500' : undefined,
                                         border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : 
-                                               theme === 'light' ? undefined : '1px solid #ddd'
+                                               theme === 'light' ? undefined : 
+                                               theme === 'dark' ? undefined : '1px solid #ddd'
                                     }}
                                 />
                             </div>

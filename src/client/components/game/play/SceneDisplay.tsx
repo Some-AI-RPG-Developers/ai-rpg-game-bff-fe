@@ -62,20 +62,20 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                         className={`transition-all duration-200 hover:opacity-80 p-1`}
                         style={{ 
                           color: theme === 'matrix' ? '#00ff41' : 
-                                 theme === 'dark' ? '#f3f4f6' : 
+                                 theme === 'dark' ? '#cc4444' : 
                                  '#374151'
                         }}
                     >
                         {isSceneExpanded ? (
                             <ChevronDown size={24} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
-                                     theme === 'dark' ? '#f3f4f6' : 
+                                     theme === 'dark' ? '#cc4444' : 
                                      '#374151'
                             }} />
                         ) : (
                             <ChevronRight size={24} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
-                                     theme === 'dark' ? '#f3f4f6' : 
+                                     theme === 'dark' ? '#cc4444' : 
                                      '#374151'
                             }} />
                         )}

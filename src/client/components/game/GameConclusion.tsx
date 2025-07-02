@@ -47,12 +47,18 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
         </div>
         <div className="mt-6">
           <div className={`rounded-lg p-4 ${
-            theme === 'dark' ? 'dark-fantasy-game-conclusion' :
+            theme === 'dark' ? 'dark-fantasy-scene-description' :
             theme !== 'matrix' ? styles.border : ''
           }`}
                style={{
-                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#e6f7ff',
-                 border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #b3e0ff'
+                 ...(theme === 'matrix' && {
+                   backgroundColor: 'rgba(0, 255, 65, 0.1)',
+                   border: '1px solid rgba(0, 255, 65, 0.5)'
+                 }),
+                 ...(theme === 'light' && {
+                   backgroundColor: '#e6f7ff',
+                   border: '1px solid #b3e0ff'
+                 })
                }}>
             <div className="flex items-center justify-center gap-2 mb-4">
               <TTSWrapper
