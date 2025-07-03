@@ -45,8 +45,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined,
                      backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined,
-                     borderTop: theme === 'matrix' ? '1px dashed rgba(0, 255, 65, 0.5)' : 
-                               theme === 'light' ? undefined : '1px dashed #ccc'
+                     borderTop: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
                  }}>
                 {/* Turn Main Header - Controls entire turn visibility */}
                 <div className="flex items-center justify-center gap-2 p-3 cursor-pointer border-b"
