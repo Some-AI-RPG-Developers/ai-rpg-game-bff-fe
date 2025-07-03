@@ -320,7 +320,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                     {scene.turns && scene.turns.length > 0 && (
                       <div className="mt-6">
                         <div className={`rounded-lg p-4 ${
-                          theme === 'dark' ? 'dark-fantasy-turn-container' :
+                          theme === 'dark' ? 'dark-fantasy-character' :
                           theme !== 'matrix' ? styles.border : ''
                         }`}
                              style={{

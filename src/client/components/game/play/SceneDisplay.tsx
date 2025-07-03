@@ -33,7 +33,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
         <div className="flex flex-col items-center mt-8">
             <div className={`rounded-2xl w-11/12 mx-auto text-center ${
                 theme === 'light' ? 'magical-scroll' : 
-                theme === 'dark' ? 'dark-fantasy-scene-container' :
+                theme === 'dark' ? 'dark-fantasy-character' :
                 theme !== 'matrix' ? styles.card : ''
             }`}
                  style={{
