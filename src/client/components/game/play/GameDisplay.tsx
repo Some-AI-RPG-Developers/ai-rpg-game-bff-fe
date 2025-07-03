@@ -301,7 +301,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         {/* Game Scenes Section */}
         {game.scenes && game.scenes.length > 0 && (
           <div className="mb-8">
-            <div className={`rounded-xl p-6 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+            <div className={`rounded-xl p-6 w-11/12 mx-auto ${
+              theme === 'light' ? 'magical-scroll' : 
+              theme === 'dark' ? 'dark-fantasy-character' :
+              theme !== 'matrix' ? styles.border : ''
+            }`}
                  style={{
                    backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.08)' : undefined,
                    border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.3)' : undefined
