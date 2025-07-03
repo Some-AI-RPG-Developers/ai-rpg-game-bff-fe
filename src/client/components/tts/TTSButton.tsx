@@ -120,23 +120,28 @@ export function TTSButton({
       };
     }
     
-    // Dark theme
-    return {
-      backgroundColor: isActive ? '#e0f2fe' : '#ffffff',
-      color: isActive ? '#0277bd' : '#374151',
-      border: isActive ? '1px solid #0ea5e9' : '1px solid #d1d5db'
-    };
+    // Dark theme - let dedicated CSS classes handle all styling
+    return {};
   };
 
-  const buttonClasses = `
-    inline-flex items-center justify-center gap-2 
-    rounded-md border
-    disabled:opacity-50 disabled:cursor-not-allowed
-    focus:outline-none focus:ring-2 focus:ring-offset-2
-    transition-all duration-300 hover:scale-105
-    ${getSizeClasses()}
-    ${className}
-  `.trim();
+  const getButtonClasses = (isActive = false) => {
+    const baseClasses = `
+      inline-flex items-center justify-center gap-2 
+      rounded-md
+      disabled:opacity-50 disabled:cursor-not-allowed
+      focus:outline-none focus:ring-2 focus:ring-offset-2
+      transition-all duration-300 hover:scale-105
+      ${getSizeClasses()}
+      ${className}
+    `.trim();
+    
+    if (theme === 'dark') {
+      // Use dedicated TTS button classes with high specificity
+      return `${baseClasses} ${isActive ? 'dark-fantasy-tts-button-active' : 'dark-fantasy-tts-button'}`;
+    }
+    
+    return `${baseClasses} border`;
+  };
 
   const renderTTSIcon = () => <Volume2 size={getIconSize()} />;
   const renderTTSPausedIcon = () => <Pause size={getIconSize()} />;
@@ -148,7 +153,7 @@ export function TTSButton({
       onClick={handlePlayClick}
       disabled={isDisabled}
       title={title || 'Read text aloud'}
-      className={buttonClasses}
+      className={getButtonClasses(false)}
       style={getButtonStyle(false)}
       aria-label={title || 'Read text aloud'}
     >
@@ -169,7 +174,7 @@ export function TTSButton({
         onClick={handlePauseClick}
         disabled={isDisabled}
         title={tts.isPaused ? 'Resume audio' : 'Pause audio'}
-        className={buttonClasses}
+        className={getButtonClasses(true)}
         style={getButtonStyle(true)}
         aria-label={tts.isPaused ? 'Resume audio' : 'Pause audio'}
       >
@@ -180,7 +185,7 @@ export function TTSButton({
         onClick={handleStopClick}
         disabled={isDisabled}
         title="Stop audio"
-        className={buttonClasses}
+        className={getButtonClasses(true)}
         style={getButtonStyle(true)}
         aria-label="Stop audio"
       >
