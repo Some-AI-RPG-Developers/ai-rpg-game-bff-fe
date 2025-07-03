@@ -319,7 +319,10 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                   >
                     {scene.turns && scene.turns.length > 0 && (
                       <div className="mt-6">
-                        <div className={`rounded-lg p-4 ${theme !== 'matrix' ? styles.border : ''}`}
+                        <div className={`rounded-lg p-4 ${
+                          theme === 'dark' ? 'dark-fantasy-turn-container' :
+                          theme !== 'matrix' ? styles.border : ''
+                        }`}
                              style={{
                                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                                border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
@@ -396,10 +399,13 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
 
                 {/* Show Previous Turn Resolution if NOT the first turn */}
                 {!activeTurnInfo.isFirstTurnOfScene && activeTurnInfo.previousTurn?.consequences && (
-                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${
+                    theme === 'dark' ? 'dark-fantasy-turn-conclusion' :
+                    theme !== 'matrix' ? styles.border : ''
+                  }`}
                        style={{
-                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : '#ffeaa7',
-                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : '1px solid #fdcb6e'
+                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
                        }}>
                     <div className="flex items-center justify-center gap-2 mb-4">
                       <CheckCircle size={18} className={theme !== 'matrix' ? styles.text : ''}
@@ -492,13 +498,12 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                  }}>
               <div className={`rounded-lg p-4 ${
                 theme === 'light' ? 'magical-scroll' : 
+                theme === 'dark' ? 'dark-fantasy-game-conclusion-content' :
                 theme !== 'matrix' ? styles.border : ''
               }`}
                    style={{
-                     backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : 
-                                     theme === 'light' ? undefined : '#e6f7ff',
-                     border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : 
-                            theme === 'light' ? undefined : '1px solid #b3e0ff'
+                     backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                     border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
                    }}>
                 <div className="flex items-center justify-center gap-3 mb-6">
                   <span className="text-3xl">🏆</span>

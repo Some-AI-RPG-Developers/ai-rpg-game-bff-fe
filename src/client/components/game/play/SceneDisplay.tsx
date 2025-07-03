@@ -33,6 +33,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
         <div className="flex flex-col items-center mt-8">
             <div className={`rounded-2xl w-11/12 mx-auto text-center ${
                 theme === 'light' ? 'magical-scroll' : 
+                theme === 'dark' ? 'dark-fantasy-scene-container' :
                 theme !== 'matrix' ? styles.card : ''
             }`}
                  style={{
@@ -139,12 +140,8 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                     theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
-                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : 
-                                                         theme === 'light' ? undefined : 
-                                                         theme === 'dark' ? undefined : '#e6f7ff',
-                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : 
-                                                theme === 'light' ? undefined : 
-                                                theme === 'dark' ? undefined : '1px solid #b3e0ff'
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <TTSWrapper

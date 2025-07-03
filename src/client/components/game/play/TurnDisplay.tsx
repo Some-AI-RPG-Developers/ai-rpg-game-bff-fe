@@ -38,6 +38,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
         <div className="flex flex-col items-center mt-4">
             <div className={`rounded-2xl w-11/12 mx-auto text-center ${
                 theme === 'light' ? 'magical-scroll' : 
+                theme === 'dark' ? 'dark-fantasy-turn-container' :
                 theme !== 'matrix' ? styles.card : ''
             }`}
                  style={{
@@ -133,8 +134,8 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                   theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
-                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'dark' ? undefined : '#fff4e6'),
-                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : (theme === 'dark' ? undefined : '1px solid #ffcc99')
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <Users size={18} className={theme !== 'matrix' ? styles.text : ''}
@@ -156,8 +157,8 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                                        theme !== 'matrix' ? styles.border : ''
                                                      }`}
                                                      style={{
-                                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : (theme === 'dark' ? undefined : '#fefcf5'),
-                                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : (theme === 'dark' ? undefined : '1px solid #fed7aa')
+                                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
+                                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
                                                      }}>
                                                     {/* Character Name - Clickable Header with TTS */}
                                                     <div className="p-4 flex items-center justify-between">
@@ -229,10 +230,8 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                   theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
-                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : 
-                                                         theme === 'dark' ? undefined : '#e6ffed',
-                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.6)' : 
-                                                theme === 'dark' ? undefined : '1px solid #b2fab4'
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : undefined,
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.6)' : undefined
                                      }}>
                                     <div className="flex items-center justify-center gap-2 mb-4">
                                         <CheckCircle size={18} className={theme !== 'matrix' ? styles.text : ''}

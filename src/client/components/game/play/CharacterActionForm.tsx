@@ -97,14 +97,9 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                            style={{
                                                backgroundColor: selectedOptions[charOption.name] === optionDesc ? 
                                                    (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : 
-                                                    theme === 'light' ? 'rgba(212, 175, 55, 0.3)' : 
-                                                    theme === 'dark' ? undefined : '#e6f2ff') : 
-                                                   (theme === 'matrix' ? 'rgba(0, 0, 0, 0.3)' : 
-                                                    theme === 'light' ? undefined : 
-                                                    theme === 'dark' ? undefined : '#ffffff'),
-                                               border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : 
-                                                      theme === 'light' ? undefined : 
-                                                      theme === 'dark' ? undefined : '1px solid #ddd',
+                                                    theme === 'light' ? 'rgba(212, 175, 55, 0.3)' : undefined) : 
+                                                   (theme === 'matrix' ? 'rgba(0, 0, 0, 0.3)' : undefined),
+                                               border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : undefined,
                                                color: theme === 'matrix' ? '#00ff41' : undefined,
                                                opacity: theme === 'matrix' ? 0.9 : 1
                                            }}>
@@ -141,12 +136,8 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                 theme === 'dark' ? 'dark-fantasy-character' : ''
                             }`}
                                  style={{
-                                     backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : 
-                                                     theme === 'light' ? undefined : 
-                                                     theme === 'dark' ? undefined : '#fff4e6',
-                                     border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : 
-                                            theme === 'light' ? undefined : 
-                                            theme === 'dark' ? undefined : '1px solid #ffcc99'
+                                     backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : undefined,
+                                     border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : undefined
                                  }}>
                                 <div className="flex items-center gap-2 mb-2">
                                     <Edit3 size={16} className={theme !== 'matrix' ? styles.text : ''}
@@ -179,13 +170,9 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                         theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''
                                     }`}
                                     style={{
-                                        backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : 
-                                                        theme === 'light' ? undefined : 
-                                                        theme === 'dark' ? undefined : '#ffffff',
+                                        backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
                                         color: theme === 'matrix' ? '#ffa500' : undefined,
-                                        border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : 
-                                               theme === 'light' ? undefined : 
-                                               theme === 'dark' ? undefined : '1px solid #ddd'
+                                        border: theme === 'matrix' ? '1px solid rgba(255, 165, 0, 0.5)' : undefined
                                     }}
                                 />
                             </div>
