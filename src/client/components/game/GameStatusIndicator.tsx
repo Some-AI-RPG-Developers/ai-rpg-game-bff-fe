@@ -45,7 +45,8 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
   return (
     <div className="flex flex-col items-center mt-6">
       <div className={`rounded-3xl p-6 w-2/3 max-w-2xl text-center mx-auto ${
-        theme === 'dark' ? (isError ? 'dark-fantasy-card-dark-blue' : 'dark-fantasy-card-dark-blue') : ''
+        theme === 'dark' ? (isError ? 'dark-fantasy-card-dark-blue' : 'dark-fantasy-card-dark-blue') :
+        theme === 'performance' ? 'performance-card' : ''
       }`}
            style={{
              backgroundColor: theme === 'matrix' ? 
@@ -64,6 +65,7 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
           )}
           <h4 className={`text-lg font-bold ${
             theme === 'dark' ? 'dark-fantasy-text-accent' :
+            theme === 'performance' ? 'performance-text' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ color: theme === 'matrix' ? (isError ? '#ff6666' : '#00ff41') : undefined }}>
@@ -73,6 +75,7 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
         {statusMessage && (
           <p className={`text-lg ${
             theme === 'dark' ? 'dark-fantasy-text-light' :
+            theme === 'performance' ? 'performance-text-light' :
             theme !== 'matrix' ? styles.text : ''
           }`}
              style={{ 
@@ -85,6 +88,7 @@ export const GameStatusIndicator: React.FC<GameStatusIndicatorProps> = ({
         {gameStatus === 'error_GameSetupFailed' && !error && (
           <p className={`mt-3 text-lg ${
             theme === 'dark' ? 'dark-fantasy-text-light' :
+            theme === 'performance' ? 'performance-text-light' :
             theme !== 'matrix' ? styles.text : ''
           }`}
              style={{ 

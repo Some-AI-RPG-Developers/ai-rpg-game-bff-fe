@@ -39,6 +39,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
             <div className={`rounded-2xl w-11/12 mx-auto text-center ${
                 theme === 'light' ? 'magical-scroll' : 
                 theme === 'dark' ? 'dark-fantasy-character' :
+                theme === 'performance' ? 'performance-character' :
                 theme !== 'matrix' ? styles.card : ''
             }`}
                  style={{
@@ -64,6 +65,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                         style={{ 
                           color: theme === 'matrix' ? '#00ff41' : 
                                  theme === 'dark' ? '#cc4444' : 
+                                 theme === 'performance' ? '#9ca3af' :
                                  '#374151'
                         }}
                     >
@@ -71,12 +73,14 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                             <ChevronDown size={20} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
                                      theme === 'dark' ? '#cc4444' : 
+                                     theme === 'performance' ? '#9ca3af' :
                                      '#374151'
                             }} />
                         ) : (
                             <ChevronRight size={20} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
                                      theme === 'dark' ? '#cc4444' : 
+                                     theme === 'performance' ? '#9ca3af' :
                                      '#374151'
                             }} />
                         )}
@@ -91,6 +95,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                             <div className="mb-6">
                                 <div className={`rounded-lg p-4 ${
                                   theme === 'dark' ? 'dark-fantasy-turn-description' :
+                                  theme === 'performance' ? 'performance-turn-description' :
                                   theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
@@ -113,6 +118,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                     </div>
                                     <p className={`text-base leading-relaxed text-center ${
                                       theme === 'dark' ? 'dark-fantasy-text-light' :
+                                      theme === 'performance' ? 'performance-text-light' :
                                       theme !== 'matrix' ? styles.text : ''
                                     }`}
                                        style={{
@@ -130,6 +136,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                             <div className="mb-8">
                                 <div className={`rounded-lg p-4 ${
                                   theme === 'dark' ? 'dark-fantasy-option-select' :
+                                  theme === 'performance' ? 'performance-option-select' :
                                   theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
@@ -144,7 +151,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                             Chosen Options
                                         </h6>
                                     </div>
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 flex flex-col items-center">
                                         {currentTurn.actions.map((action, index) => {
                                             const characterId = action.characterId || `action-${index}`;
                                             const isExpanded = expandedCharacters[characterId];
@@ -153,6 +160,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                                 <div key={characterId} 
                                                      className={`rounded-lg w-11/12 mx-auto ${
                                                        theme === 'dark' ? 'dark-fantasy-character' :
+                                                       theme === 'performance' ? 'performance-character' :
                                                        theme !== 'matrix' ? styles.border : ''
                                                      }`}
                                                      style={{
@@ -179,6 +187,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                                             style={{ 
                                                               color: theme === 'matrix' ? '#00ff41' : 
                                                                      theme === 'dark' ? '#cc4444' : 
+                                                                     theme === 'performance' ? '#9ca3af' :
                                                                      '#374151'
                                                             }}
                                                         >
@@ -186,12 +195,14 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                                                 <ChevronDown size={20} style={{ 
                                                                   color: theme === 'matrix' ? '#00ff41' : 
                                                                          theme === 'dark' ? '#cc4444' : 
+                                                                         theme === 'performance' ? '#9ca3af' :
                                                                          '#374151'
                                                                 }} />
                                                             ) : (
                                                                 <ChevronRight size={20} style={{ 
                                                                   color: theme === 'matrix' ? '#00ff41' : 
                                                                          theme === 'dark' ? '#cc4444' : 
+                                                                         theme === 'performance' ? '#9ca3af' :
                                                                          '#374151'
                                                                 }} />
                                                             )}
@@ -226,6 +237,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                             <div className="mb-6">
                                 <div className={`rounded-lg p-4 ${
                                   theme === 'dark' ? 'dark-fantasy-turn-conclusion' :
+                                  theme === 'performance' ? 'performance-turn-conclusion' :
                                   theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{
@@ -248,6 +260,7 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                     </div>
                                     <p className={`text-base leading-relaxed text-center ${
                                       theme === 'dark' ? 'dark-fantasy-text-light' :
+                                      theme === 'performance' ? 'performance-text-light' :
                                       theme !== 'matrix' ? styles.text : ''
                                     }`}
                                        style={{

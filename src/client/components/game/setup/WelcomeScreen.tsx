@@ -27,6 +27,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       <div className={`rounded-3xl p-12 w-2/3 max-w-2xl text-center mx-auto ${
         theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
         theme === 'dark' ? 'dark-fantasy-card dark-fantasy-holo-corners dark-fantasy-circuit' :
+        theme === 'performance' ? 'performance-card' :
         theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
@@ -36,11 +37,13 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
            }}>
         <div className={
           theme === 'light' ? 'magical-scroll-content' : 
-          theme === 'dark' ? 'dark-fantasy-data-stream' : ''
+          theme === 'dark' ? 'dark-fantasy-data-stream' :
+          theme === 'performance' ? 'performance-text' : ''
         }>
           <h2 className={`text-4xl font-bold mb-6 ${
             theme === 'light' ? 'spell-title' : 
             theme === 'dark' ? 'dark-fantasy-text-neon' :
+            theme === 'performance' ? 'performance-text' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -51,6 +54,7 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
           <p className={`text-lg mb-8 ${
             theme === 'light' ? 'spell-text' : 
             theme === 'dark' ? 'dark-fantasy-text' :
+            theme === 'performance' ? 'performance-text-light' :
             theme !== 'matrix' ? styles.text : ''
           }`}
              style={{ 
@@ -70,7 +74,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             onClick={() => onViewModeChange('create')}
             disabled={isProcessing}
             className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-              hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+              hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${
+                theme === 'performance' ? 'performance-button-primary' :
+                theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+              }`}
             style={{
               backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -85,7 +92,10 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
             onClick={() => onViewModeChange('resume')}
             disabled={isProcessing}
             className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-              hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+              hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${
+                theme === 'performance' ? 'performance-button-secondary' :
+                theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+              }`}
             style={{
               backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,

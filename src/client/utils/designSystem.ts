@@ -189,6 +189,44 @@ export const ThemeColors = {
       default: BaseColors.matrix,
     },
   },
+  performance: {
+    // Minimal background colors
+    background: {
+      primary: BaseColors.gray900,
+      secondary: BaseColors.gray800,
+      tertiary: BaseColors.gray700,
+      overlay: 'rgba(0, 0, 0, 0.8)',
+    },
+    // Simple text colors
+    text: {
+      primary: BaseColors.gray100,
+      secondary: BaseColors.gray300,
+      tertiary: BaseColors.gray400,
+      inverse: BaseColors.gray900,
+    },
+    // Basic border colors
+    border: {
+      primary: BaseColors.gray600,
+      secondary: BaseColors.gray500,
+      focus: BaseColors.gray400,
+    },
+    // Simple component colors
+    component: {
+      card: BaseColors.gray800,
+      input: BaseColors.gray800,
+      button: BaseColors.gray700,
+      buttonHover: BaseColors.gray600,
+    },
+    // Simple syntax colors
+    syntax: {
+      key: BaseColors.gray300,
+      string: BaseColors.gray200,
+      number: BaseColors.gray200,
+      boolean: BaseColors.gray300,
+      null: BaseColors.gray400,
+      default: BaseColors.gray100,
+    },
+  },
 } as const;
 
 // Type definitions
@@ -262,7 +300,7 @@ export class DesignSystem implements IDesignSystem {
     
     const baseStyles: ComponentStyles = {
       modal: {
-        backdrop: (colors.background as Record<string, string>).modalBackdrop || colors.background.overlay,
+        backdrop: 'modalBackdrop' in colors.background ? colors.background.modalBackdrop : colors.background.overlay,
         container: colors.component.card,
         header: colors.background.secondary,
         content: colors.background.primary,

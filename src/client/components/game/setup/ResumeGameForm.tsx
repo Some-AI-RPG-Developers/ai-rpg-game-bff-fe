@@ -39,6 +39,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
       <div className={`rounded-3xl p-12 w-2/3 max-w-2xl mx-auto ${
         theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
         theme === 'dark' ? 'dark-fantasy-card dark-fantasy-holo-corners dark-fantasy-circuit' :
+        theme === 'performance' ? 'performance-card' :
         theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
@@ -48,11 +49,13 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
            }}>
         <div className={
           theme === 'light' ? 'magical-scroll-content' : 
-          theme === 'dark' ? 'dark-fantasy-data-stream' : ''
+          theme === 'dark' ? 'dark-fantasy-data-stream' :
+          theme === 'performance' ? 'performance-text' : ''
         }>
           <h3 className={`text-3xl font-bold mb-8 text-center ${
             theme === 'light' ? 'spell-title' : 
             theme === 'dark' ? 'dark-fantasy-text-neon' :
+            theme === 'performance' ? 'performance-text' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -68,6 +71,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               className={`block text-lg font-medium mb-3 ${
                 theme === 'light' ? 'spell-text' : 
                 theme === 'dark' ? 'dark-fantasy-text' :
+                theme === 'performance' ? 'performance-text' :
                 theme !== 'matrix' ? styles.text : ''
               }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}
@@ -86,6 +90,7 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
                 focus:outline-none focus:ring-2 ${
                   theme === 'light' ? 'spell-writing-area' :
                   theme === 'dark' ? 'dark-fantasy-input' :
+                  theme === 'performance' ? 'performance-input' :
                   theme !== 'matrix' ? `${styles.bg} ${styles.text} ${styles.border}` : ''
                 }`}
               style={{
@@ -107,7 +112,10 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               onClick={onLoadGameById}
               disabled={isProcessing || !resumeGameIdInput.trim()}
               className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${
+                  theme === 'performance' ? 'performance-button-primary' :
+                  theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+                }`}
               style={{
                 backgroundColor: theme === 'matrix' ? '#004d00' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -126,7 +134,10 @@ export const ResumeGameForm: React.FC<ResumeGameFormProps> = ({
               }} 
               disabled={isProcessing}
               className={`px-8 py-3 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
-                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+                hover:shadow-2xl flex items-center gap-2 disabled:opacity-50 ${
+                  theme === 'performance' ? 'performance-button-secondary' :
+                  theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+                }`}
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,

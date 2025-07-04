@@ -44,6 +44,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
             <div className={`rounded-3xl p-8 w-full text-center ${
                 theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
                 theme === 'dark' ? 'dark-fantasy-option-select' :
+                theme === 'performance' ? 'performance-option-select' :
                 theme !== 'matrix' ? styles.card : ''
             }`}
                  style={{
@@ -70,6 +71,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                              className={`p-4 rounded-lg w-11/12 mx-auto ${
                                 theme === 'light' ? 'magical-scroll' : 
                                 theme === 'dark' ? 'dark-fantasy-option-select' :
+                                theme === 'performance' ? 'performance-option-select' :
                                 theme !== 'matrix' ? styles.border : ''
                              }`}
                              style={{
@@ -92,6 +94,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                            className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all duration-200 w-11/12 mx-auto ${
                                                theme === 'light' ? 'spell-writing-area' : 
                                                theme === 'dark' ? 'dark-fantasy-option-select' :
+                                               theme === 'performance' ? 'performance-option-select' :
                                                theme !== 'matrix' ? styles.text : ''
                                            }`}
                                            style={{
@@ -119,6 +122,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                         <span className={`text-sm leading-relaxed ${
                                             theme === 'light' ? 'spell-text' : 
                                             theme === 'dark' ? 'dark-fantasy-text-light' :
+                                            theme === 'performance' ? 'performance-text-light' :
                                             theme !== 'matrix' ? styles.text : ''
                                         }`}
                                               style={{
@@ -133,7 +137,8 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
 
                             <div className={`p-3 rounded-md w-11/12 mx-auto ${
                                 theme === 'light' ? 'magical-scroll' : 
-                                theme === 'dark' ? 'dark-fantasy-character' : ''
+                                theme === 'dark' ? 'dark-fantasy-character' :
+                                theme === 'performance' ? 'performance-character' : ''
                             }`}
                                  style={{
                                      backgroundColor: theme === 'matrix' ? 'rgba(255, 165, 0, 0.1)' : undefined,

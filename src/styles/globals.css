@@ -63,3 +63,10 @@ html, body {
   --color-primary: #10B981;
   --color-secondary: #059669;
 }
+
+[data-theme="performance"] {
+  --color-primary: #6B7280;
+  --color-secondary: #4B5563;
+  --bg-primary: #111827;
+  --bg-secondary: #1F2937;
+}

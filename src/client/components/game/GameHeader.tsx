@@ -4,6 +4,7 @@ import { useTextToSpeech } from '@/client/hooks/useTextToSpeech';
 import { useTheme } from '@/client/context/ThemeContext';
 import { getThemeStyles } from '@/client/utils/themeStyles';
 import { Shield, Sword, Bug } from 'lucide-react';
+import { ThemeSwitcher } from '@/client/components/ui/ThemeSwitcher';
 
 interface GameHeaderProps {
   /** Current game object */
@@ -92,16 +93,17 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
   return (
     <nav className={`sticky top-0 border-b ${
       theme === 'light' ? 'fantasy-border' : 
-      theme === 'dark' ? 'dark-fantasy-header' : ''
+      theme === 'dark' ? 'dark-fantasy-header' :
+      theme === 'performance' ? 'performance-card' : ''
     }`}
          style={{
-           backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? 'transparent' : '#ffffff'),
-           borderColor: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? 'transparent' : undefined),
+           backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? 'transparent' : (theme === 'performance' ? '#1F2937' : '#ffffff')),
+           borderColor: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? 'transparent' : (theme === 'performance' ? '#3b82f6' : undefined)),
            position: 'sticky',
            top: 0,
            zIndex: 9999,
            width: '100%',
-           borderBottomWidth: '1px',
+           borderBottomWidth: theme === 'performance' ? '2px' : '1px',
            borderBottomStyle: 'solid'
          }}>
       {/* Main Navbar */}
@@ -111,6 +113,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           <h1 className={`text-xl font-bold ${
             theme === 'light' ? 'fantasy-text-magical' : 
             theme === 'dark' ? 'dark-fantasy-text-neon' :
+            theme === 'performance' ? 'performance-text' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ 
@@ -129,10 +132,17 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
           </h1>
           
           {/* Game ID Badge */}
-          <div className={`px-3 py-1 rounded text-sm ${theme !== 'matrix' ? styles.text : ''}`}
+          <div className={`px-3 py-1 rounded text-sm ${
+            theme === 'performance' ? 'performance-text' :
+            theme !== 'matrix' ? styles.text : ''
+          }`}
                style={{
-                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-                 border: theme === 'matrix' ? '1px solid #00ff41' : '1px solid #dee2e6',
+                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (
+                   theme === 'performance' ? '#374151' : undefined
+                 ),
+                 border: theme === 'matrix' ? '1px solid #00ff41' : (
+                   theme === 'performance' ? '1px solid #3b82f6' : '1px solid #dee2e6'
+                 ),
                  color: theme === 'matrix' ? '#00ff41' : undefined
                }}>
           </div>
@@ -141,52 +151,12 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         {/* Right Side - Controls */}
         <div className="flex items-center gap-3">
           {/* Theme Controls */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setTheme(theme === 'matrix' ? 'light' : 'matrix')}
-              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
-              title="Toggle Matrix Theme"
-              style={{
-                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-                border: theme === 'matrix' ? '1px solid #00ff41' : undefined,
-                color: theme === 'matrix' ? '#00ff41' : undefined
-              }}
-            >
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M3 3h2v2H3V3zm4 0h2v2H7V3zm4 0h2v2h-2V3zm4 0h2v2h-2V3zm4 0h2v2h-2V3zM3 7h2v2H3V7zm4 0h2v2H7V7zm8 0h2v2h-2V7zm4 0h2v2h-2V7zM3 11h2v2H3v-2zm8 0h2v2h-2v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zM3 15h2v2H3v-2zm4 0h2v2H7v-2zm4 0h2v2h-2v-2zm8 0h2v2h-2v-2zM3 19h2v2H3v-2zm4 0h2v2H7v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2zm4 0h2v2h-2v-2z"/>
-              </svg>
-            </button>
-            
-            <button
-              onClick={() => setTheme('light')}
-              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
-              title="Light Theme"
-              style={{
-                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-                border: theme === 'matrix' ? '1px solid #00ff41' : undefined,
-                color: theme === 'matrix' ? '#00ff41' : undefined
-              }}
-            >
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 18C8.69 18 6 15.31 6 12S8.69 6 12 6S18 8.69 18 12S15.31 18 12 18M12 2A1 1 0 0 0 11 3V5A1 1 0 0 0 13 5V3A1 1 0 0 0 12 2M17.64 4.64A1 1 0 0 0 16.23 6.05L17.64 7.46A1 1 0 0 0 19.05 6.05L17.64 4.64M20 11A1 1 0 0 0 19 12A1 1 0 0 0 20 13H22A1 1 0 0 0 22 11H20M17.64 17.64A1 1 0 0 0 19.05 17.64L17.64 16.23A1 1 0 0 0 16.23 17.64L17.64 17.64M12 20A1 1 0 0 0 13 21V23A1 1 0 0 0 11 23V21A1 1 0 0 0 12 20M7.46 17.64L6.05 19.05A1 1 0 0 0 7.46 17.64L6.05 16.23A1 1 0 0 0 4.64 17.64L7.46 17.64M6 13A1 1 0 0 0 5 12A1 1 0 0 0 4 13H2A1 1 0 0 0 2 11H4A1 1 0 0 0 5 12A1 1 0 0 0 6 13M6.05 6.05L7.46 7.46A1 1 0 0 0 6.05 4.64L4.64 6.05A1 1 0 0 0 6.05 6.05Z"/>
-              </svg>
-            </button>
-            
-            <button
-              onClick={() => setTheme('dark')}
-              className={`p-2 rounded transition-all duration-300 hover:scale-105 ${styles.secondary}`}
-              title="Dark Theme"
-              style={{
-                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
-                border: theme === 'matrix' ? '1px solid #00ff41' : undefined,
-                color: theme === 'matrix' ? '#00ff41' : undefined
-              }}
-            >
-              <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M17.75 4.09L15.22 6.03L16.13 9.09L13.5 7.28L10.87 9.09L11.78 6.03L9.25 4.09L12.44 4L13.5 1L14.56 4L17.75 4.09M21.25 11L19.61 12.25L20.2 14.23L18.5 13.06L16.8 14.23L17.39 12.25L15.75 11L17.81 10.95L18.5 9L19.19 10.95L21.25 11M18.97 15.95C19.8 15.87 20.69 17.05 20.16 17.8C19.84 18.25 19.5 18.67 19.08 19.07C15.17 23 8.84 23 4.94 19.07C1.03 15.17 1.03 8.83 4.94 4.93C5.34 4.53 5.76 4.17 6.21 3.85C6.96 3.32 8.14 4.21 8.06 5.04C7.79 7.9 8.75 10.87 10.95 13.06C13.14 15.26 16.1 16.22 18.97 15.95Z"/>
-              </svg>
-            </button>
-          </div>
+          <ThemeSwitcher />
+          
+          {/* Invisible button spacer */}
+          <button className="p-2 opacity-0 pointer-events-none" disabled>
+            <div className="w-4 h-4"></div>
+          </button>
 
           {/* Debug Modal Button */}
           {onToggleDebug && (
@@ -230,11 +200,25 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
 
       {/* Error Display */}
       {error && (
-        <div className={`mt-3 p-3 rounded-lg ${styles.border} border`}
+        <div className={`mt-3 p-3 rounded-lg ${
+          theme === 'performance' ? 'performance-border' : styles.border
+        } border`}
              style={{
-               backgroundColor: theme === 'matrix' ? '#330000' : (theme === 'dark' ? '#330000' : '#f8d7da'),
-               borderColor: theme === 'matrix' ? '#ff4444' : (theme === 'dark' ? '#cc4444' : '#f5c6cb'),
-               color: theme === 'matrix' ? '#ff6666' : (theme === 'dark' ? '#cc4444' : '#721c24')
+               backgroundColor: theme === 'matrix' ? '#330000' : (
+                 theme === 'dark' ? '#330000' : (
+                   theme === 'performance' ? '#374151' : '#f8d7da'
+                 )
+               ),
+               borderColor: theme === 'matrix' ? '#ff4444' : (
+                 theme === 'dark' ? '#cc4444' : (
+                   theme === 'performance' ? '#dc2626' : '#f5c6cb'
+                 )
+               ),
+               color: theme === 'matrix' ? '#ff6666' : (
+                 theme === 'dark' ? '#cc4444' : (
+                   theme === 'performance' ? '#f3f4f6' : '#721c24'
+                 )
+               )
              }}>
           Error: {error}
         </div>
@@ -245,8 +229,8 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
         <div style={{
           marginTop: '15px',
           padding: '20px',
-          backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? '#1a0000' : 'white'),
-          border: `1px solid ${theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#8b0000' : '#dee2e6')}`,
+          backgroundColor: theme === 'matrix' ? '#000000' : (theme === 'dark' ? '#1a0000' : (theme === 'performance' ? '#1f2937' : 'white')),
+          border: `${theme === 'performance' ? '2px' : '1px'} solid ${theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#8b0000' : (theme === 'performance' ? '#3b82f6' : '#dee2e6'))}`,
           borderRadius: '8px',
           boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
         }}>
@@ -256,7 +240,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
             alignItems: 'center',
             marginBottom: '15px'
           }}>
-            <h3 style={{ margin: 0, fontSize: '16px', color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : '#333') }}>
+            <h3 style={{ margin: 0, fontSize: '16px', color: theme === 'matrix' ? '#00ff41' : (theme === 'dark' ? '#cc4444' : (theme === 'performance' ? '#f3f4f6' : '#333')) }}>
               Text-to-Speech Settings
             </h3>
             <button

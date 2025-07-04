@@ -67,6 +67,7 @@ export const GameActionButtons: React.FC<GameActionButtonsProps> = ({
           className={`px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
             hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${
               theme === 'dark' ? 'dark-fantasy-button-primary' :
+              theme === 'performance' ? 'performance-button-primary' :
               theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
             }`}
           style={{
@@ -88,6 +89,7 @@ export const GameActionButtons: React.FC<GameActionButtonsProps> = ({
           className={`px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
             hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${
               theme === 'dark' ? 'dark-fantasy-button-primary' :
+              theme === 'performance' ? 'performance-button-primary' :
               theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
             }`}
           style={{
@@ -109,6 +111,7 @@ export const GameActionButtons: React.FC<GameActionButtonsProps> = ({
           className={`px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300 transform hover:scale-110 
             hover:shadow-2xl flex items-center gap-3 disabled:opacity-50 ${
               theme === 'dark' ? 'dark-fantasy-button-primary' :
+              theme === 'performance' ? 'performance-button-primary' :
               theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
             }`}
           style={{

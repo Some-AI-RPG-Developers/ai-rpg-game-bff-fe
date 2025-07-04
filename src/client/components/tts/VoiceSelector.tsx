@@ -7,6 +7,7 @@
 
 import React from 'react';
 import { useTextToSpeech } from '@/client/hooks/useTextToSpeech';
+import { useTheme } from '@/client/context/ThemeContext';
 
 export interface VoiceSelectorProps {
   className?: string;
@@ -23,6 +24,7 @@ export function VoiceSelector({
   onVoiceChange
 }: VoiceSelectorProps) {
   const tts = useTextToSpeech();
+  const { theme } = useTheme();
 
   const handleVoiceChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const voiceURI = event.target.value;
@@ -48,7 +50,10 @@ export function VoiceSelector({
 
   if (!tts.isSupported) {
     return (
-      <div className={`text-sm text-gray-500 ${className}`}>
+      <div className={`text-sm ${
+        theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+      } ${className}`}
+           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
         Text-to-speech is not supported in this browser.
       </div>
     );
@@ -56,7 +61,10 @@ export function VoiceSelector({
 
   if (tts.isLoading) {
     return (
-      <div className={`text-sm text-gray-500 ${className}`}>
+      <div className={`text-sm ${
+        theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+      } ${className}`}
+           style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
         Loading voices...
       </div>
     );
@@ -75,14 +83,24 @@ export function VoiceSelector({
     <div className={`space-y-4 ${className}`}>
       {/* Voice Selection */}
       <div>
-        <label htmlFor="voice-select" className="block text-sm font-medium text-gray-700 mb-1">
+        <label htmlFor="voice-select" className={`block text-sm font-medium mb-1 ${
+          theme === 'performance' ? 'performance-text' : 'text-gray-700'
+        }`}
+               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
           Voice
         </label>
         <select
           id="voice-select"
           value={tts.selectedVoice?.voiceURI || ''}
           onChange={handleVoiceChange}
-          className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+          className={`block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${
+            theme === 'performance' ? 'performance-input' : 'border-gray-300'
+          }`}
+          style={{
+            backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
+            color: theme === 'matrix' ? '#00ff41' : undefined,
+            border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined
+          }}
         >
           <option value="">Select a voice</option>
           {Object.entries(groupedVoices).map(([lang, voices]) => (
@@ -102,8 +120,14 @@ export function VoiceSelector({
         <>
           {/* Rate Control */}
           <div>
-            <label htmlFor="rate-control" className="block text-sm font-medium text-gray-700 mb-1">
-              Speed: <span className="font-normal text-gray-500">0.5x - 2x</span>
+            <label htmlFor="rate-control" className={`block text-sm font-medium mb-1 ${
+              theme === 'performance' ? 'performance-text' : 'text-gray-700'
+            }`}
+                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+              Speed: <span className={`font-normal ${
+                theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+              }`}
+                          style={{ color: theme === 'matrix' ? '#00ff41' : undefined, opacity: 0.8 }}>0.5x - 2x</span>
             </label>
             <input
               id="rate-control"
@@ -113,9 +137,17 @@ export function VoiceSelector({
               step="0.1"
               defaultValue="1"
               onChange={handleRateChange}
-              className="block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className={`block w-full h-2 rounded-lg appearance-none cursor-pointer ${
+                theme === 'performance' ? 'performance-input' : 'bg-gray-200'
+              }`}
+              style={{
+                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : undefined
+              }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className={`flex justify-between text-xs mt-1 ${
+              theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+            }`}
+                 style={{ color: theme === 'matrix' ? '#00ff41' : undefined, opacity: 0.8 }}>
               <span>0.5x</span>
               <span>1x</span>
               <span>2x</span>
@@ -124,8 +156,14 @@ export function VoiceSelector({
 
           {/* Pitch Control */}
           <div>
-            <label htmlFor="pitch-control" className="block text-sm font-medium text-gray-700 mb-1">
-              Pitch: <span className="font-normal text-gray-500">0 - 2</span>
+            <label htmlFor="pitch-control" className={`block text-sm font-medium mb-1 ${
+              theme === 'performance' ? 'performance-text' : 'text-gray-700'
+            }`}
+                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+              Pitch: <span className={`font-normal ${
+                theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+              }`}
+                          style={{ color: theme === 'matrix' ? '#00ff41' : undefined, opacity: 0.8 }}>0 - 2</span>
             </label>
             <input
               id="pitch-control"
@@ -135,9 +173,17 @@ export function VoiceSelector({
               step="0.1"
               defaultValue="1"
               onChange={handlePitchChange}
-              className="block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className={`block w-full h-2 rounded-lg appearance-none cursor-pointer ${
+                theme === 'performance' ? 'performance-input' : 'bg-gray-200'
+              }`}
+              style={{
+                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : undefined
+              }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className={`flex justify-between text-xs mt-1 ${
+              theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+            }`}
+                 style={{ color: theme === 'matrix' ? '#00ff41' : undefined, opacity: 0.8 }}>
               <span>Low</span>
               <span>Normal</span>
               <span>High</span>
@@ -146,8 +192,14 @@ export function VoiceSelector({
 
           {/* Volume Control */}
           <div>
-            <label htmlFor="volume-control" className="block text-sm font-medium text-gray-700 mb-1">
-              Volume: <span className="font-normal text-gray-500">0% - 100%</span>
+            <label htmlFor="volume-control" className={`block text-sm font-medium mb-1 ${
+              theme === 'performance' ? 'performance-text' : 'text-gray-700'
+            }`}
+                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+              Volume: <span className={`font-normal ${
+                theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+              }`}
+                           style={{ color: theme === 'matrix' ? '#00ff41' : undefined, opacity: 0.8 }}>0% - 100%</span>
             </label>
             <input
               id="volume-control"
@@ -157,9 +209,17 @@ export function VoiceSelector({
               step="0.1"
               defaultValue="1"
               onChange={handleVolumeChange}
-              className="block w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+              className={`block w-full h-2 rounded-lg appearance-none cursor-pointer ${
+                theme === 'performance' ? 'performance-input' : 'bg-gray-200'
+              }`}
+              style={{
+                backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : undefined
+              }}
             />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
+            <div className={`flex justify-between text-xs mt-1 ${
+              theme === 'performance' ? 'performance-text-light' : 'text-gray-500'
+            }`}
+                 style={{ color: theme === 'matrix' ? '#00ff41' : undefined, opacity: 0.8 }}>
               <span>0%</span>
               <span>50%</span>
               <span>100%</span>

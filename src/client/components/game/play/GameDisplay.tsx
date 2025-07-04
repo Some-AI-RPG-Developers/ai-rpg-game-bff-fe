@@ -165,10 +165,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         
         {/* Characters Section */}
         {game.characters && game.characters.length > 0 && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <div className={`rounded-xl p-6 w-11/12 mx-auto ${
               theme === 'light' ? 'magical-scroll' : 
               theme === 'dark' ? 'dark-fantasy-character' :
+              theme === 'performance' ? 'performance-character' :
               theme !== 'matrix' ? styles.border : ''
             }`}
                  style={{
@@ -189,8 +190,9 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                   
                   return (
                     <div key={characterId} 
-                         className={`rounded-lg w-11/12 mx-auto ${
+                         className={`rounded-lg ${
                            theme === 'dark' ? 'dark-fantasy-character' :
+                           theme === 'performance' ? 'performance-character' :
                            theme !== 'matrix' ? styles.border : ''
                          }`}
                          style={{
@@ -217,6 +219,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                           style={{ 
                             color: theme === 'matrix' ? '#00ff41' : 
                                    theme === 'dark' ? '#f3f4f6' : 
+                                   theme === 'performance' ? '#9ca3af' :
                                    '#374151'
                           }}
                         >
@@ -224,12 +227,14 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                             <ChevronDown size={20} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
                                      theme === 'dark' ? '#f3f4f6' : 
+                                     theme === 'performance' ? '#9ca3af' :
                                      '#374151'
                             }} />
                           ) : (
                             <ChevronRight size={20} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
                                      theme === 'dark' ? '#f3f4f6' : 
+                                     theme === 'performance' ? '#9ca3af' :
                                      '#374151'
                             }} />
                           )}
@@ -261,9 +266,10 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         
         {/* Synopsis Section */}
         {game.synopsis && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <div className={`rounded-xl p-6 w-11/12 mx-auto ${
               theme === 'dark' ? 'dark-fantasy-synopsis' :
+              theme === 'performance' ? 'performance-synopsis' :
               theme !== 'matrix' ? styles.border : ''
             }`}
                  style={{
@@ -300,10 +306,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
 
         {/* Game Scenes Section */}
         {game.scenes && game.scenes.length > 0 && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <div className={`rounded-xl p-6 w-11/12 mx-auto ${
               theme === 'light' ? 'magical-scroll' : 
               theme === 'dark' ? 'dark-fantasy-character' :
+              theme === 'performance' ? 'performance-synopsis' :
               theme !== 'matrix' ? styles.border : ''
             }`}
                  style={{
@@ -490,10 +497,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
 
         {/* Game Conclusion Section */}
         {game.conclusion && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <div className={`rounded-xl p-6 w-11/12 mx-auto ${
               theme === 'light' ? 'magical-scroll' : 
               theme === 'dark' ? 'dark-fantasy-game-conclusion' :
+              theme === 'performance' ? 'performance-game-conclusion' :
               theme !== 'matrix' ? styles.border : ''
             }`}
                  style={{

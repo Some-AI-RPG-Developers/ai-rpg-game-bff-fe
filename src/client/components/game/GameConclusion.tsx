@@ -28,7 +28,8 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
   return (
     <div className="flex flex-col items-center mt-8">
       <div className={`rounded-3xl p-8 w-2/3 max-w-2xl text-center mx-auto ${
-        theme === 'dark' ? 'dark-fantasy-game-conclusion' : ''
+        theme === 'dark' ? 'dark-fantasy-game-conclusion' :
+        theme === 'performance' ? 'performance-game-conclusion' : ''
       }`}
            style={{
              backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
@@ -49,6 +50,7 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
           <div className={`rounded-lg p-4 ${
             theme === 'light' ? 'magical-scroll' :
             theme === 'dark' ? 'dark-fantasy-game-conclusion-content' :
+            theme === 'performance' ? 'performance-game-conclusion' :
             theme !== 'matrix' ? styles.border : ''
           }`}
                style={{
@@ -71,6 +73,7 @@ export const GameConclusion: React.FC<GameConclusionProps> = ({
             </div>
             <p className={`text-base leading-relaxed text-center ${
               theme === 'dark' ? 'dark-fantasy-text-light' :
+              theme === 'performance' ? 'performance-text-light' :
               theme !== 'matrix' ? styles.text : ''
             }`}
                style={{

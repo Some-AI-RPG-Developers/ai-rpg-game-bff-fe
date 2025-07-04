@@ -264,7 +264,8 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
       <div 
         className={`relative w-full max-w-4xl max-h-[90vh] overflow-hidden rounded-2xl ${
           theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
-          theme === 'dark' ? 'dark-fantasy-card dark-fantasy-glow' : ''
+          theme === 'dark' ? 'dark-fantasy-card dark-fantasy-glow' : 
+          theme === 'performance' ? 'performance-card' : ''
         }`}
         style={{
           background: theme === 'light' ? undefined : (theme === 'dark' ? undefined : componentStyles.modal.container),
@@ -306,7 +307,8 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
           <button
             onClick={onClose}
             className={`p-2 rounded-lg transition-all duration-200 hover:scale-110 ${
-              theme === 'dark' ? 'dark-fantasy-button-secondary' : ''
+              theme === 'dark' ? 'dark-fantasy-button-secondary' : 
+              theme === 'performance' ? 'performance-button-secondary' : ''
             }`}
             style={{
               backgroundColor: theme === 'dark' ? undefined : componentStyles.button.ghost,
@@ -347,7 +349,8 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                 <p 
                   className={`text-lg font-mono p-4 rounded-lg ${
                     theme === 'light' ? 'spell-writing-area' : 
-                    theme === 'dark' ? 'dark-fantasy-input' : ''
+                    theme === 'dark' ? 'dark-fantasy-input' : 
+                    theme === 'performance' ? 'performance-input' : ''
                   }`}
                   style={{ 
                     color: theme === 'light' ? undefined : (theme === 'dark' ? undefined : themeColors.text.primary),
@@ -361,12 +364,14 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                   <button
                     onClick={copyGameId}
                     className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
-                      theme === 'dark' ? 'dark-fantasy-button-primary' : (theme !== 'matrix' ? 'hover:bg-gray-200' : '')
+                      theme === 'dark' ? 'dark-fantasy-button-primary' : 
+                      theme === 'performance' ? 'performance-button-primary' :
+                      (theme !== 'matrix' ? 'hover:bg-gray-200' : '')
                     }`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? undefined : '#f3f4f6')),
-                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : (theme === 'dark' ? undefined : '#374151')),
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : '1px solid #d1d5db'))
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#f3f4f6'))),
+                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#374151'))),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '1px solid #d1d5db')))
                     }}
                     title="Copy Game ID"
                   >
@@ -403,6 +408,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     className={`text-sm font-mono p-3 rounded-lg ${
                       theme === 'light' ? 'spell-writing-area' : 
                       theme === 'dark' ? 'dark-fantasy-input' : 
+                      theme === 'performance' ? 'performance-input' :
                       (theme !== 'matrix' ? 'bg-gray-100' : '')
                     }`}
                     style={{ 
@@ -416,12 +422,14 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                   <button
                     onClick={copySSEUrl}
                     className={`p-3 rounded-lg transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
-                      theme === 'dark' ? 'dark-fantasy-button-primary' : (theme !== 'matrix' ? 'hover:bg-gray-200' : '')
+                      theme === 'dark' ? 'dark-fantasy-button-primary' : 
+                      theme === 'performance' ? 'performance-button-primary' :
+                      (theme !== 'matrix' ? 'hover:bg-gray-200' : '')
                     }`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? undefined : '#f3f4f6')),
-                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : (theme === 'dark' ? undefined : '#374151')),
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : '1px solid #d1d5db'))
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#f3f4f6'))),
+                      color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#374151'))),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '1px solid #d1d5db')))
                     }}
                     title="Copy SSE URL"
                   >
@@ -462,16 +470,17 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       debugFormat === 'json' ? 'scale-105' : 'hover:scale-105'
                     } ${
-                      theme === 'dark' ? (debugFormat === 'json' ? 'dark-fantasy-button-primary' : 'dark-fantasy-button-secondary') : ''
+                      theme === 'dark' ? (debugFormat === 'json' ? 'dark-fantasy-button-primary' : 'dark-fantasy-button-secondary') : 
+                      theme === 'performance' ? (debugFormat === 'json' ? 'performance-button-primary' : 'performance-button-secondary') : ''
                     }`}
                     style={{
-                      backgroundColor: theme === 'dark' ? undefined : (debugFormat === 'json' 
+                      backgroundColor: theme === 'dark' || theme === 'performance' ? undefined : (debugFormat === 'json' 
                         ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : (theme === 'light' ? '#f59e0b' : '#3b82f6'))
                         : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f97316' : '#f3f4f6'))),
-                      color: theme === 'dark' ? undefined : (debugFormat === 'json'
+                      color: theme === 'dark' || theme === 'performance' ? undefined : (debugFormat === 'json'
                         ? (theme === 'matrix' ? '#00ff41' : '#ffffff')
                         : (theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151'))),
-                      border: theme === 'dark' ? undefined : (theme === 'matrix' 
+                      border: theme === 'dark' || theme === 'performance' ? undefined : (theme === 'matrix' 
                         ? `1px solid ${debugFormat === 'json' ? 'rgba(0, 255, 65, 0.5)' : 'rgba(0, 255, 65, 0.3)'}` 
                         : `1px solid ${debugFormat === 'json' ? '#3b82f6' : '#d1d5db'}`)
                     }}
@@ -483,16 +492,17 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                       debugFormat === 'yaml' ? 'scale-105' : 'hover:scale-105'
                     } ${
-                      theme === 'dark' ? (debugFormat === 'yaml' ? 'dark-fantasy-button-primary' : 'dark-fantasy-button-secondary') : ''
+                      theme === 'dark' ? (debugFormat === 'yaml' ? 'dark-fantasy-button-primary' : 'dark-fantasy-button-secondary') : 
+                      theme === 'performance' ? (debugFormat === 'yaml' ? 'performance-button-primary' : 'performance-button-secondary') : ''
                     }`}
                     style={{
-                      backgroundColor: theme === 'dark' ? undefined : (debugFormat === 'yaml' 
+                      backgroundColor: theme === 'dark' || theme === 'performance' ? undefined : (debugFormat === 'yaml' 
                         ? (theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : (theme === 'light' ? '#f59e0b' : '#3b82f6'))
                         : (theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f97316' : '#f3f4f6'))),
-                      color: theme === 'dark' ? undefined : (debugFormat === 'yaml'
+                      color: theme === 'dark' || theme === 'performance' ? undefined : (debugFormat === 'yaml'
                         ? (theme === 'matrix' ? '#00ff41' : '#ffffff')
                         : (theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : '#374151'))),
-                      border: theme === 'dark' ? undefined : (theme === 'matrix' 
+                      border: theme === 'dark' || theme === 'performance' ? undefined : (theme === 'matrix' 
                         ? `1px solid ${debugFormat === 'yaml' ? 'rgba(0, 255, 65, 0.5)' : 'rgba(0, 255, 65, 0.3)'}` 
                         : `1px solid ${debugFormat === 'yaml' ? '#3b82f6' : '#d1d5db'}`)
                     }}
@@ -507,12 +517,13 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                     <button
                       onClick={copyDebugData}
                       className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105 flex items-center gap-2 ${
-                        theme === 'dark' ? 'dark-fantasy-button-secondary' : ''
+                        theme === 'dark' ? 'dark-fantasy-button-secondary' : 
+                        theme === 'performance' ? 'performance-button-secondary' : ''
                       }`}
                       style={{
-                        backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? undefined : '#f3f4f6')),
-                        color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : (theme === 'dark' ? undefined : '#374151')),
-                        border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : '1px solid #d1d5db'))
+                        backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : (theme === 'light' ? '#f59e0b' : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#f3f4f6'))),
+                        color: theme === 'matrix' ? '#00ff41' : (theme === 'light' ? 'white' : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#374151'))),
+                        border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '1px solid #d1d5db')))
                       }}
                       title="Copy debug data"
                     >
@@ -524,11 +535,12 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
                   <div 
                     className={`rounded-lg max-h-96 overflow-y-auto ${
                       theme === 'light' ? 'spell-writing-area' : 
-                      theme === 'dark' ? 'dark-fantasy-card dark-fantasy-data-stream' : ''
+                      theme === 'dark' ? 'dark-fantasy-card dark-fantasy-data-stream' : 
+                      theme === 'performance' ? 'performance-card' : ''
                     }`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : '#f8f9fa')),
-                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : '1px solid #e5e7eb'))
+                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '#f8f9fa'))),
+                      border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.3)' : (theme === 'light' ? undefined : (theme === 'dark' ? undefined : (theme === 'performance' ? undefined : '1px solid #e5e7eb')))
                     }}
                   >
                     {debugFormat === 'json' ? (

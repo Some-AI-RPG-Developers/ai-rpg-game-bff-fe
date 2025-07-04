@@ -60,6 +60,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
       <div className={`rounded-3xl p-12 w-2/3 max-w-4xl mx-auto overflow-hidden ${
         theme === 'light' ? 'magical-scroll magical-scroll-corners' : 
         theme === 'dark' ? 'dark-fantasy-card dark-fantasy-holo-corners dark-fantasy-circuit' :
+        theme === 'performance' ? 'performance-card' :
         theme !== 'matrix' ? styles.card : ''
       }`}
            style={{
@@ -69,11 +70,13 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
            }}>
         <div className={`text-center mb-8 ${
           theme === 'light' ? 'magical-scroll-content' : 
-          theme === 'dark' ? 'dark-fantasy-data-stream' : ''
+          theme === 'dark' ? 'dark-fantasy-data-stream' :
+          theme === 'performance' ? 'performance-text' : ''
         }`}>
           <h3 className={`text-4xl font-bold mb-4 ${
             theme === 'light' ? 'spell-title' : 
             theme === 'dark' ? 'dark-fantasy-text-neon' :
+            theme === 'performance' ? 'performance-text' :
             theme !== 'matrix' ? styles.text : ''
           }`}
               style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -87,7 +90,10 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               onViewModeChange('choice'); 
               onErrorClear(); 
             }} 
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-bold transition-all duration-300 hover:scale-[1.02] ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-[1.02] transform ${
+              theme === 'performance' ? 'performance-button-secondary' :
+              theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+            }`}
             style={{
               backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -106,6 +112,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
             <h4 className={`text-2xl font-bold ${
               theme === 'light' ? 'spell-text' : 
               theme === 'dark' ? 'dark-fantasy-text' :
+              theme === 'performance' ? 'performance-text' :
               theme !== 'matrix' ? styles.text : ''
             }`}
                    style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -123,6 +130,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               className={`w-full p-6 rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 resize-none ${
                 theme === 'light' ? 'spell-writing-area' :
                 theme === 'dark' ? 'dark-fantasy-input' :
+                theme === 'performance' ? 'performance-input' :
                 theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
               }`}
               style={{
@@ -145,6 +153,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
             <Hash size={24} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
             <h4 className={`text-2xl font-bold ${
               theme === 'dark' ? 'dark-fantasy-text' :
+              theme === 'performance' ? 'performance-text' :
               theme !== 'matrix' ? styles.text : ''
             }`}
                    style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -159,6 +168,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               onChange={(e) => onMaxScenesChange(parseInt(e.target.value, 10))}
               className={`w-32 p-4 rounded-xl font-bold text-center text-xl transition-all duration-300 focus:outline-none focus:ring-2 ${
                 theme === 'dark' ? 'dark-fantasy-input' :
+                theme === 'performance' ? 'performance-input' :
                 theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
               }`}
               style={{
@@ -177,6 +187,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
             <Users size={28} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
             <h4 className={`text-3xl font-bold ${
               theme === 'dark' ? 'dark-fantasy-text' :
+              theme === 'performance' ? 'performance-text' :
               theme !== 'matrix' ? styles.text : ''
             }`}
                 style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -187,7 +198,10 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
             <button
               type="button"
               onClick={onAddCharacterInput}
-              className={`flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-[1.02] transform ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+              className={`flex items-center gap-3 px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 hover:scale-[1.02] transform ${
+                theme === 'performance' ? 'performance-button-primary' :
+                theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+              }`}
               style={{
                 backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : undefined,
                 color: theme === 'matrix' ? '#00ff41' : undefined,
@@ -200,10 +214,11 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               {theme === 'dark' ? 'RECRUIT HERO' : 'Add New Character'}
             </button>
           </div>
-          <div className="space-y-6 w-11/12 mx-auto">
+          <div className="space-y-6 flex flex-col items-center">
             {charactersInput.map((char, index) => (
-              <div key={index} className={`rounded-xl p-8 w-11/12 mx-auto transform transition-all duration-300 hover:scale-[1.02] ${
-                theme === 'dark' ? 'dark-fantasy-card dark-fantasy-glow' : ''
+              <div key={index} className={`rounded-xl p-8 w-full max-w-lg transform transition-all duration-300 hover:scale-[1.02] ${
+                theme === 'dark' ? 'dark-fantasy-card dark-fantasy-glow' :
+                theme === 'performance' ? 'performance-character' : ''
               }`}
                    style={{
                      backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.8)' : undefined,
@@ -213,16 +228,18 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                 <div className="text-center mb-6">
                   <h5 className={`text-xl font-bold mb-6 ${
                     theme === 'dark' ? 'dark-fantasy-text' :
+                    theme === 'performance' ? 'performance-text' :
                     theme !== 'matrix' ? styles.text : ''
                   }`}
                       style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
                     {theme === 'dark' ? `HERO #${index + 1}` : `Character #${index + 1}`}
                   </h5>
                 </div>
-                <div className="space-y-6 w-11/12 mx-auto">
-                  <div>
+                <div className="space-y-6 flex flex-col items-center w-full">
+                  <div className="w-full max-w-md">
                     <label htmlFor={`charName-${index}`} className={`block text-center mb-3 font-bold text-lg ${
                       theme === 'dark' ? 'dark-fantasy-text' :
+                      theme === 'performance' ? 'performance-text' :
                       theme !== 'matrix' ? styles.text : ''
                     }`}
                            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -235,6 +252,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                       onChange={(e) => onCharacterInputChange(index, 'name', e.target.value)}
                       className={`w-full p-4 rounded-xl font-bold text-center text-lg transition-all duration-300 focus:outline-none focus:ring-2 ${
                         theme === 'dark' ? 'dark-fantasy-input' :
+                        theme === 'performance' ? 'performance-input' :
                         theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
                       }`}
                       style={{
@@ -246,9 +264,10 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                       placeholder={theme === 'dark' ? ">> ENTER HERO NAME..." : "Enter character name..."}
                     />
                   </div>
-                  <div>
+                  <div className="w-full max-w-md">
                     <label htmlFor={`charPrompt-${index}`} className={`block text-center mb-3 font-bold text-lg ${
                       theme === 'dark' ? 'dark-fantasy-text' :
+                      theme === 'performance' ? 'performance-text' :
                       theme !== 'matrix' ? styles.text : ''
                     }`}
                            style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
@@ -261,6 +280,7 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                       rows={4}
                       className={`w-full p-4 rounded-xl font-medium transition-all duration-300 focus:outline-none focus:ring-2 resize-none ${
                         theme === 'dark' ? 'dark-fantasy-input' :
+                        theme === 'performance' ? 'performance-input' :
                         theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
                       }`}
                       style={{
@@ -278,13 +298,26 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
                     type="button"
                     onClick={() => onRemoveCharacterInput(index)}
                     className={`flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-[1.02] transform ${
-                      theme === 'dark' ? 'dark-fantasy-button-secondary' : ''
+                      theme === 'dark' ? 'dark-fantasy-button-secondary' :
+                      theme === 'performance' ? 'performance-button-secondary' : ''
                     }`}
                     style={{
-                      backgroundColor: theme === 'matrix' ? 'rgba(51, 0, 0, 0.8)' : (theme === 'dark' ? undefined : '#dc3545'),
-                      color: theme === 'matrix' ? '#ff6666' : (theme === 'dark' ? undefined : 'white'),
-                      border: theme === 'matrix' ? '2px solid #ff4444' : (theme === 'dark' ? undefined : undefined),
-                      boxShadow: theme === 'matrix' ? '0 4px 15px rgba(255, 68, 68, 0.3)' : (theme === 'dark' ? undefined : undefined)
+                      backgroundColor: theme === 'matrix' ? 'rgba(51, 0, 0, 0.8)' : (
+                        theme === 'performance' ? '#374151' : (
+                          theme === 'dark' ? undefined : '#dc3545'
+                        )
+                      ),
+                      color: theme === 'matrix' ? '#ff6666' : (
+                        theme === 'performance' ? '#f3f4f6' : (
+                          theme === 'dark' ? undefined : 'white'
+                        )
+                      ),
+                      border: theme === 'matrix' ? '2px solid #ff4444' : (
+                        theme === 'performance' ? '2px solid #dc2626' : (
+                          theme === 'dark' ? undefined : '2px solid #dc2626'
+                        )
+                      ),
+                      boxShadow: theme === 'matrix' ? '0 4px 15px rgba(255, 68, 68, 0.3)' : undefined
                     }}
                     disabled={isProcessing}
                   >
@@ -300,7 +333,10 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
           <button
             onClick={onCreateGame}
             disabled={isProcessing}
-            className={`px-12 py-6 rounded-2xl font-bold text-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl flex items-center gap-4 disabled:opacity-50 ${theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''}`}
+            className={`px-12 py-6 rounded-2xl font-bold text-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl flex items-center gap-4 disabled:opacity-50 ${
+              theme === 'performance' ? 'performance-button-primary' :
+              theme !== 'matrix' ? `${styles.secondary} ${styles.text}` : ''
+            }`}
             style={{
               backgroundColor: theme === 'matrix' ? 'rgba(0, 77, 0, 0.9)' : undefined,
               color: theme === 'matrix' ? '#00ff41' : undefined,

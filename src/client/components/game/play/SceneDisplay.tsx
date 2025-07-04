@@ -34,6 +34,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
             <div className={`rounded-2xl w-11/12 mx-auto text-center ${
                 theme === 'light' ? 'magical-scroll' : 
                 theme === 'dark' ? 'dark-fantasy-character' :
+                theme === 'performance' ? 'performance-character' :
                 theme !== 'matrix' ? styles.card : ''
             }`}
                  style={{
@@ -64,6 +65,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                         style={{ 
                           color: theme === 'matrix' ? '#00ff41' : 
                                  theme === 'dark' ? '#cc4444' : 
+                                 theme === 'performance' ? '#9ca3af' :
                                  '#374151'
                         }}
                     >
@@ -71,12 +73,14 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                             <ChevronDown size={24} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
                                      theme === 'dark' ? '#cc4444' : 
+                                     theme === 'performance' ? '#9ca3af' :
                                      '#374151'
                             }} />
                         ) : (
                             <ChevronRight size={24} style={{ 
                               color: theme === 'matrix' ? '#00ff41' : 
                                      theme === 'dark' ? '#cc4444' : 
+                                     theme === 'performance' ? '#9ca3af' :
                                      '#374151'
                             }} />
                         )}
@@ -91,6 +95,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                             <div className={`rounded-lg p-4 ${
                                 theme === 'light' ? 'magical-scroll' : 
                                 theme === 'dark' ? 'dark-fantasy-scene-description' :
+                                theme === 'performance' ? 'performance-scene-description' :
                                 theme !== 'matrix' ? styles.border : ''
                             }`}
                                  style={{
@@ -117,6 +122,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                 <p className={`text-base leading-relaxed text-center ${
                                     theme === 'light' ? 'spell-text' : 
                                     theme === 'dark' ? 'dark-fantasy-text-light' :
+                                    theme === 'performance' ? 'performance-text-light' :
                                     theme !== 'matrix' ? styles.text : ''
                                 }`}
                                    style={{
@@ -137,6 +143,7 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                 <div className={`rounded-lg p-4 ${
                                     theme === 'light' ? 'magical-scroll' : 
                                     theme === 'dark' ? 'dark-fantasy-scene-conclusion' :
+                                    theme === 'performance' ? 'performance-scene-conclusion' :
                                     theme !== 'matrix' ? styles.border : ''
                                 }`}
                                      style={{

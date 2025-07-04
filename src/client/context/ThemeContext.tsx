@@ -12,13 +12,21 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 // Theme Provider Component
 export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState('performance');
 
   // Load theme from localStorage on client side
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedTheme = localStorage.getItem('theme') || 'light';
-      setTheme(savedTheme);
+      const savedTheme = localStorage.getItem('theme');
+      const validThemes = ['performance', 'light', 'dark', 'matrix'];
+      
+      // Use saved theme only if it's valid, otherwise default to performance
+      if (savedTheme && validThemes.includes(savedTheme)) {
+        setTheme(savedTheme);
+      } else {
+        setTheme('performance');
+        localStorage.setItem('theme', 'performance');
+      }
     }
   }, []);
 
