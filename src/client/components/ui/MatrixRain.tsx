@@ -13,13 +13,20 @@ export const MatrixRain = () => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
     const matrix = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
     const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(1);
+    let columns: number;
+    let drops: number[];
+
+    const initializeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      columns = canvas.width / fontSize;
+      drops = Array(Math.floor(columns)).fill(1);
+    };
+
+    // Initialize canvas dimensions and drops array
+    initializeCanvas();
 
     const draw = () => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
@@ -42,8 +49,8 @@ export const MatrixRain = () => {
     const interval = setInterval(draw, 35);
 
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      // Reinitialize canvas and drops array on resize
+      initializeCanvas();
     };
 
     window.addEventListener('resize', handleResize);
