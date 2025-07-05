@@ -5,6 +5,7 @@ import { TurnDisplay } from './TurnDisplay';
 import { CharacterActionForm } from './CharacterActionForm';
 import { GameActionButtons } from '../GameActionButtons';
 import { TTSWrapper } from '@/client/components/tts';
+import { TruncatedTextWithState } from '@/client/components/ui/TruncatedText';
 import { useTheme } from '@/client/context/ThemeContext';
 import { getThemeStyles } from '@/client/utils/themeStyles';
 import { ChevronDown, ChevronRight, FileText, CheckCircle } from 'lucide-react';
@@ -246,13 +247,18 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                         <div className="px-4 pb-4 border-t"
                              style={{ borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : undefined }}>
                           <div className="mt-3">
-                            <p className={`text-sm leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
-                               style={{ 
-                                 color: theme === 'matrix' ? '#00ff41' : undefined,
-                                 opacity: theme === 'matrix' ? 0.9 : 0.8
-                               }}>
-                              {character.description}
-                            </p>
+                            <TruncatedTextWithState
+                              text={character.description}
+                              textId={`character-${characterId}`}
+                              expandedTexts={expandedTexts}
+                              toggleText={toggleText}
+                              className={`text-sm leading-relaxed ${theme !== 'matrix' ? styles.text : ''}`}
+                              style={{ 
+                                color: theme === 'matrix' ? '#00ff41' : undefined,
+                                opacity: theme === 'matrix' ? 0.9 : 0.8
+                              }}
+                              as="p"
+                            />
                           </div>
                         </div>
                       )}
@@ -543,17 +549,22 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                     </h6>
                   </TTSWrapper>
                 </div>
-                <p className={`text-base leading-relaxed text-center ${
-                  theme === 'light' ? 'spell-text' : 
-                  theme === 'dark' ? 'dark-fantasy-text-light' :
-                  theme !== 'matrix' ? styles.text : ''
-                }`}
-                   style={{
-                     color: theme === 'matrix' ? '#00ff41' : undefined,
-                     opacity: theme === 'matrix' ? 0.9 : 0.8
-                   }}>
-                  {game.conclusion}
-                </p>
+                <TruncatedTextWithState
+                  text={game.conclusion}
+                  textId="gameConclusion"
+                  expandedTexts={expandedTexts}
+                  toggleText={toggleText}
+                  className={`text-base leading-relaxed text-center ${
+                    theme === 'light' ? 'spell-text' : 
+                    theme === 'dark' ? 'dark-fantasy-text-light' :
+                    theme !== 'matrix' ? styles.text : ''
+                  }`}
+                  style={{
+                    color: theme === 'matrix' ? '#00ff41' : undefined,
+                    opacity: theme === 'matrix' ? 0.9 : 0.8
+                  }}
+                  as="p"
+                />
               </div>
             </div>
           </div>

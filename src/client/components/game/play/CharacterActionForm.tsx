@@ -1,6 +1,7 @@
 import React from 'react';
 import {PlayPageTurn} from '@/client/types/game.types';
 import {CharacterOptions as GameCharacterOption} from '@/server/types/rest/api.alias.types';
+import {TruncatedText} from '@/client/components/ui/TruncatedText';
 import {useTheme} from '@/client/context/ThemeContext';
 import {getThemeStyles} from '@/client/utils/themeStyles';
 import {Users, Edit3} from 'lucide-react';
@@ -119,18 +120,21 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
                                                            theme === 'light' ? '#d4af37' : undefined
                                             }}
                                         />
-                                        <span className={`text-sm leading-relaxed ${
-                                            theme === 'light' ? 'spell-text' : 
-                                            theme === 'dark' ? 'dark-fantasy-text-light' :
-                                            theme === 'performance' ? 'performance-text-light' :
-                                            theme !== 'matrix' ? styles.text : ''
-                                        }`}
-                                              style={{
-                                                  color: theme === 'matrix' ? '#00ff41' : undefined,
-                                                  opacity: theme === 'matrix' ? 0.9 : 0.8
-                                              }}>
-                                            {optionDesc}
-                                        </span>
+                                        <TruncatedText
+                                            text={optionDesc}
+                                            textId={`option-${charOption.name}-${index}`}
+                                            className={`text-sm leading-relaxed ${
+                                                theme === 'light' ? 'spell-text' : 
+                                                theme === 'dark' ? 'dark-fantasy-text-light' :
+                                                theme === 'performance' ? 'performance-text-light' :
+                                                theme !== 'matrix' ? styles.text : ''
+                                            }`}
+                                            style={{
+                                                color: theme === 'matrix' ? '#00ff41' : undefined,
+                                                opacity: theme === 'matrix' ? 0.9 : 0.8
+                                            }}
+                                            as="span"
+                                        />
                                     </label>
                                 ))}
                             </div>

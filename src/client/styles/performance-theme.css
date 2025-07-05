@@ -1,0 +1,211 @@
+/* 🔋 PERFORMANCE THEME - MINIMAL DARK MODE FOR OLD HARDWARE 🔋 */
+
+/* Core Background - Simple Dark */
+.performance-bg {
+    background-color: #111827;
+    color: #f3f4f6;
+}
+
+/* Performance Cards - Basic Styling */
+.performance-card {
+    background-color: #1f2937;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+.performance-card:hover {
+    border-color: #60a5fa;
+}
+
+/* Performance Text Styling */
+.performance-text {
+    color: #f3f4f6;
+}
+
+/* Performance Border Styling */
+.performance-border {
+    border-color: #3b82f6;
+}
+
+/* Character Component Styling */
+.performance-character {
+    background-color: #1f2937;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    margin: 8px 0;
+}
+
+/* Synopsis Component Styling */
+.performance-synopsis {
+    background-color: #1f2937;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    margin: 8px 0;
+}
+
+/* Scene Description Styling */
+.performance-scene-description {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    margin: 8px 0;
+}
+
+/* Scene Conclusion Styling */
+.performance-scene-conclusion {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    margin: 8px 0;
+}
+
+/* Turn Description Styling */
+.performance-turn-description {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    margin: 8px 0;
+}
+
+/* Turn Conclusion Styling */
+.performance-turn-conclusion {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 10px;
+    margin: 8px 0;
+}
+
+/* Game Conclusion Styling */
+.performance-game-conclusion {
+    background-color: #1f2937;
+    border: 2px solid #3b82f6;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    margin: 8px 0;
+}
+
+/* Option Select Component Styling */
+.performance-option-select {
+    background-color: #1f2937;
+    border: 2px solid #3b82f6;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 8px;
+    margin: 4px 0;
+    cursor: pointer;
+}
+
+.performance-option-select:hover {
+    background-color: #374151;
+    border-color: #60a5fa;
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Text styling for performance components */
+.performance-text-light {
+    color: #d1d5db;
+}
+
+.performance-text-accent {
+    color: #f3f4f6;
+}
+
+/* Button Styling */
+.performance-button-primary {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    color: #f3f4f6;
+    border-radius: 6px;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.performance-button-primary:hover {
+    background-color: #4b5563;
+    border-color: #60a5fa;
+}
+
+.performance-button-secondary {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    color: #f3f4f6;
+    border-radius: 6px;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.performance-button-secondary:hover {
+    background-color: #4b5563;
+    border-color: #60a5fa;
+}
+
+/* Input Field Styling */
+.performance-input {
+    background-color: #374151;
+    border: 2px solid #3b82f6;
+    color: #f3f4f6;
+    border-radius: 6px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+}
+
+.performance-input:focus {
+    border-color: #60a5fa;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
+}
+
+/* TTS Button specific styling */
+.performance-tts-button {
+    background-color: #374151 !important;
+    border: 2px solid #3b82f6 !important;
+    color: #f3f4f6 !important;
+    border-radius: 4px !important;
+    padding: 6px 10px !important;
+    margin: 2px !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.performance-tts-button:hover {
+    background-color: #4b5563 !important;
+    border-color: #60a5fa !important;
+}
+
+.performance-tts-button-active {
+    background-color: #1e40af !important;
+    border-color: #3b82f6 !important;
+}
+
+/* Global performance overrides - Remove animations */
+[data-theme="performance"] * {
+    animation: none !important;
+    transition-duration: 0.2s !important;
+}
+
+/* Override any complex backgrounds for performance */
+[data-theme="performance"] {
+    background: #111827 !important;
+}
+
+[data-theme="performance"] body {
+    background: #111827 !important;
+    color: #f3f4f6 !important;
+}

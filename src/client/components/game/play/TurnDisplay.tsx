@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {PlayPageTurn} from '@/client/types/game.types';
 import {TTSWrapper} from '@/client/components/tts';
+import {TruncatedText} from '@/client/components/ui/TruncatedText';
 import {useTheme} from '@/client/context/ThemeContext';
 import {getThemeStyles} from '@/client/utils/themeStyles';
 import {Clock, Users, CheckCircle, ChevronDown, ChevronRight, FileText} from 'lucide-react';
@@ -116,17 +117,20 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                             </h6>
                                         </TTSWrapper>
                                     </div>
-                                    <p className={`text-base leading-relaxed text-center ${
-                                      theme === 'dark' ? 'dark-fantasy-text-light' :
-                                      theme === 'performance' ? 'performance-text-light' :
-                                      theme !== 'matrix' ? styles.text : ''
-                                    }`}
-                                       style={{
-                                           color: theme === 'matrix' ? '#00ff41' : undefined,
-                                           opacity: theme === 'matrix' ? 0.9 : 0.8
-                                       }}>
-                                        {currentTurn.description}
-                                    </p>
+                                    <TruncatedText
+                                        text={currentTurn.description}
+                                        textId={`turn-description-${currentTurn.turnId || turnNumber}`}
+                                        className={`text-base leading-relaxed text-center ${
+                                            theme === 'dark' ? 'dark-fantasy-text-light' :
+                                            theme === 'performance' ? 'performance-text-light' :
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
+                                        style={{
+                                            color: theme === 'matrix' ? '#00ff41' : undefined,
+                                            opacity: theme === 'matrix' ? 0.9 : 0.8
+                                        }}
+                                        as="p"
+                                    />
                                 </div>
                             </div>
                         )}
@@ -214,13 +218,16 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                                         <div className="px-4 pb-4 border-t"
                                                              style={{ borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : undefined }}>
                                                             <div className="mt-3">
-                                                                <p className={`text-sm leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
-                                                                   style={{ 
-                                                                     color: theme === 'matrix' ? '#00ff41' : undefined,
-                                                                     opacity: theme === 'matrix' ? 0.9 : 0.8
-                                                                   }}>
-                                                                    {action.message}
-                                                                </p>
+                                                                <TruncatedText
+                                                                    text={action.message}
+                                                                    textId={`action-message-${characterId}`}
+                                                                    className={`text-sm leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                                                                    style={{ 
+                                                                        color: theme === 'matrix' ? '#00ff41' : undefined,
+                                                                        opacity: theme === 'matrix' ? 0.9 : 0.8
+                                                                    }}
+                                                                    as="p"
+                                                                />
                                                             </div>
                                                         </div>
                                                     )}
@@ -258,17 +265,20 @@ export const TurnDisplay: React.FC<TurnDisplayProps> = ({
                                             </h6>
                                         </TTSWrapper>
                                     </div>
-                                    <p className={`text-base leading-relaxed text-center ${
-                                      theme === 'dark' ? 'dark-fantasy-text-light' :
-                                      theme === 'performance' ? 'performance-text-light' :
-                                      theme !== 'matrix' ? styles.text : ''
-                                    }`}
-                                       style={{
-                                           color: theme === 'matrix' ? '#00ff41' : undefined,
-                                           opacity: theme === 'matrix' ? 0.9 : 0.8
-                                       }}>
-                                        {currentTurn.consequences}
-                                    </p>
+                                    <TruncatedText
+                                        text={currentTurn.consequences}
+                                        textId={`turn-consequences-${currentTurn.turnId || turnNumber}`}
+                                        className={`text-base leading-relaxed text-center ${
+                                            theme === 'dark' ? 'dark-fantasy-text-light' :
+                                            theme === 'performance' ? 'performance-text-light' :
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
+                                        style={{
+                                            color: theme === 'matrix' ? '#00ff41' : undefined,
+                                            opacity: theme === 'matrix' ? 0.9 : 0.8
+                                        }}
+                                        as="p"
+                                    />
                                 </div>
                             </div>
                         )}

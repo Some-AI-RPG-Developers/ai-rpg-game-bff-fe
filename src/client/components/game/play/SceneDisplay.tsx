@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {PlayPageScene} from '@/client/types/game.types';
 import {TTSWrapper} from '@/client/components/tts';
+import {TruncatedText} from '@/client/components/ui/TruncatedText';
 import {useTheme} from '@/client/context/ThemeContext';
 import {getThemeStyles} from '@/client/utils/themeStyles';
 import {MapPin, ChevronDown, ChevronRight, FileText} from 'lucide-react';
@@ -119,18 +120,21 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                         </h6>
                                     </TTSWrapper>
                                 </div>
-                                <p className={`text-base leading-relaxed text-center ${
-                                    theme === 'light' ? 'spell-text' : 
-                                    theme === 'dark' ? 'dark-fantasy-text-light' :
-                                    theme === 'performance' ? 'performance-text-light' :
-                                    theme !== 'matrix' ? styles.text : ''
-                                }`}
-                                   style={{
-                                       color: theme === 'matrix' ? '#00ff41' : undefined,
-                                       opacity: theme === 'matrix' ? 0.9 : 0.8
-                                   }}>
-                                    {currentScene.description}
-                                </p>
+                                <TruncatedText
+                                    text={currentScene.description}
+                                    textId={`scene-description-${currentScene.sceneId || sceneNumber}`}
+                                    className={`text-base leading-relaxed text-center ${
+                                        theme === 'light' ? 'spell-text' : 
+                                        theme === 'dark' ? 'dark-fantasy-text-light' :
+                                        theme === 'performance' ? 'performance-text-light' :
+                                        theme !== 'matrix' ? styles.text : ''
+                                    }`}
+                                    style={{
+                                        color: theme === 'matrix' ? '#00ff41' : undefined,
+                                        opacity: theme === 'matrix' ? 0.9 : 0.8
+                                    }}
+                                    as="p"
+                                />
                             </div>
                         </div>
 
@@ -165,17 +169,20 @@ export const SceneDisplay: React.FC<SceneDisplayProps> = ({
                                             </h6>
                                         </TTSWrapper>
                                     </div>
-                                    <p className={`text-base leading-relaxed text-center ${
-                                        theme === 'light' ? 'spell-text' : 
-                                        theme === 'dark' ? 'dark-fantasy-text-light' :
-                                        theme !== 'matrix' ? styles.text : ''
-                                    }`}
-                                       style={{
-                                           color: theme === 'matrix' ? '#00ff41' : undefined,
-                                           opacity: theme === 'matrix' ? 0.9 : 0.8
-                                       }}>
-                                        {currentScene.consequences}
-                                    </p>
+                                    <TruncatedText
+                                        text={currentScene.consequences}
+                                        textId={`scene-consequences-${currentScene.sceneId || sceneNumber}`}
+                                        className={`text-base leading-relaxed text-center ${
+                                            theme === 'light' ? 'spell-text' : 
+                                            theme === 'dark' ? 'dark-fantasy-text-light' :
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
+                                        style={{
+                                            color: theme === 'matrix' ? '#00ff41' : undefined,
+                                            opacity: theme === 'matrix' ? 0.9 : 0.8
+                                        }}
+                                        as="p"
+                                    />
                                 </div>
                             </div>
                         )}
