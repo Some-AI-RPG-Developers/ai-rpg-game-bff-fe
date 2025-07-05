@@ -68,7 +68,7 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
 
                 <div className="space-y-6">
                     {currentTurn.options.map((charOption: GameCharacterOption) => (
-                        <div key={charOption.name}
+                        <div key={charOption.characterId}
                              className={`p-4 rounded-lg w-11/12 mx-auto ${
                                 theme === 'light' ? 'magical-scroll' : 
                                 theme === 'dark' ? 'dark-fantasy-option-select' :

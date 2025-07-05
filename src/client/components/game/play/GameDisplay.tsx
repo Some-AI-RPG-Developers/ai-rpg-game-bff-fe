@@ -370,12 +370,20 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
         {/* Current Context Section - Show contextual information for active turn */}
         {activeTurnInfo && (
           <div className="mb-8">
-            <div className={`rounded-xl p-6 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+            <div className={`rounded-xl p-6 w-11/12 mx-auto ${
+              theme === 'light' ? 'magical-scroll' : 
+              theme === 'dark' ? 'dark-fantasy-character' :
+              theme === 'performance' ? 'performance-character' :
+              theme !== 'matrix' ? styles.border : ''
+            }`}
                  style={{
                    backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.08)' : undefined,
                    border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.3)' : undefined
                  }}>
-              <h5 className={`text-xl font-bold mb-4 text-center ${theme !== 'matrix' ? styles.text : ''}`}
+              <h5 className={`text-xl font-bold mb-4 text-center ${
+                theme === 'light' ? 'spell-title' : 
+                theme !== 'matrix' ? styles.text : ''
+              }`}
                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
                 Current Context
               </h5>
@@ -383,7 +391,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
               <div className="space-y-4">
                 {/* Show Scene Description if this is the first turn of the scene */}
                 {activeTurnInfo.isFirstTurnOfScene && activeTurnInfo.scene.description && (
-                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${
+                    theme === 'dark' ? 'dark-fantasy-character' :
+                    theme === 'performance' ? 'performance-character' :
+                    theme !== 'matrix' ? styles.border : ''
+                  }`}
                        style={{
                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
@@ -452,7 +464,11 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
 
                 {/* Always show current turn description if it exists */}
                 {activeTurnInfo.turn.description && (
-                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${theme !== 'matrix' ? styles.border : ''}`}
+                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${
+                    theme === 'dark' ? 'dark-fantasy-character' :
+                    theme === 'performance' ? 'performance-character' :
+                    theme !== 'matrix' ? styles.border : ''
+                  }`}
                        style={{
                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
