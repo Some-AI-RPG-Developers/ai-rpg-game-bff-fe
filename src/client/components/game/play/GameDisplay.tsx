@@ -369,7 +369,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
 
         {/* Current Context Section - Show contextual information for active turn */}
         {activeTurnInfo && (
-          <div className="mb-8">
+          <div className="mb-8 flex justify-center">
             <div className={`rounded-xl p-6 w-11/12 mx-auto ${
               theme === 'light' ? 'magical-scroll' : 
               theme === 'dark' ? 'dark-fantasy-character' :
@@ -391,11 +391,12 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
               <div className="space-y-4">
                 {/* Show Scene Description if this is the first turn of the scene */}
                 {activeTurnInfo.isFirstTurnOfScene && activeTurnInfo.scene.description && (
-                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${
-                    theme === 'dark' ? 'dark-fantasy-character' :
-                    theme === 'performance' ? 'performance-character' :
-                    theme !== 'matrix' ? styles.border : ''
-                  }`}
+                  <div className="flex justify-center">
+                    <div className={`rounded-lg p-4 w-11/12 mx-auto ${
+                      theme === 'dark' ? 'dark-fantasy-character' :
+                      theme === 'performance' ? 'performance-character' :
+                      theme !== 'matrix' ? styles.border : ''
+                    }`}
                        style={{
                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
@@ -423,15 +424,18 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                         opacity: theme === 'matrix' ? 0.9 : 0.8
                       }}
                     />
+                    </div>
                   </div>
                 )}
 
                 {/* Show Previous Turn Resolution if NOT the first turn */}
                 {!activeTurnInfo.isFirstTurnOfScene && activeTurnInfo.previousTurn?.consequences && (
-                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${
-                    theme === 'dark' ? 'dark-fantasy-turn-conclusion' :
-                    theme !== 'matrix' ? styles.border : ''
-                  }`}
+                  <div className="flex justify-center">
+                    <div className={`rounded-lg p-4 w-11/12 mx-auto ${
+                      theme === 'dark' ? 'dark-fantasy-turn-conclusion' :
+                      theme === 'performance' ? 'performance-turn-conclusion' :
+                      theme !== 'matrix' ? styles.border : ''
+                    }`}
                        style={{
                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
@@ -459,16 +463,18 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                         opacity: theme === 'matrix' ? 0.9 : 0.8
                       }}
                     />
+                    </div>
                   </div>
                 )}
 
                 {/* Always show current turn description if it exists */}
                 {activeTurnInfo.turn.description && (
-                  <div className={`rounded-lg p-4 w-11/12 mx-auto ${
-                    theme === 'dark' ? 'dark-fantasy-character' :
-                    theme === 'performance' ? 'performance-character' :
-                    theme !== 'matrix' ? styles.border : ''
-                  }`}
+                  <div className="flex justify-center">
+                    <div className={`rounded-lg p-4 w-11/12 mx-auto ${
+                      theme === 'dark' ? 'dark-fantasy-character' :
+                      theme === 'performance' ? 'performance-character' :
+                      theme !== 'matrix' ? styles.border : ''
+                    }`}
                        style={{
                          backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
                          border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
@@ -496,6 +502,7 @@ export const GameDisplay: React.FC<GameDisplayProps> = ({
                         opacity: theme === 'matrix' ? 0.9 : 0.8
                       }}
                     />
+                    </div>
                   </div>
                 )}
 
