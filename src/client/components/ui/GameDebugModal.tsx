@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { createPortal } from 'react-dom';
-import { useTheme } from '@/client/context/ThemeContext';
-import { getThemeColors, getSyntaxColors, getComponentStyles, ThemeName } from '@/client/utils/designSystem';
-import { X, Bug, Copy, Check } from 'lucide-react';
-import { PlayPageGame, GameStatus } from '@/client/types/game.types';
-import { JsonViewer } from '@textea/json-viewer';
-import { stringify as yamlStringify } from 'yaml';
+import React, {useState} from 'react';
+import {createPortal} from 'react-dom';
+import {useTheme} from '@/client/context/ThemeContext';
+import {getComponentStyles, getSyntaxColors, getThemeColors, ThemeName} from '@/client/utils/designSystem';
+import {Bug, Check, Copy, X} from 'lucide-react';
+import {GameStatus, PlayPageGame} from '@/client/types/game.types';
+import {JsonViewer} from '@textea/json-viewer';
+import {stringify as yamlStringify} from 'yaml';
 import '@/client/styles/dark-fantasy-theme.css';
 
 // Component to render colorized YAML
@@ -269,7 +269,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
         }`}
         style={{
           background: theme === 'light' ? undefined : (theme === 'dark' ? undefined : componentStyles.modal.container),
-          border: theme === 'light' ? undefined : (theme === 'dark' ? undefined : `2px solid ${themeColors.border.primary}`),
+          border: theme === 'light' ? undefined : (theme === 'dark' ? undefined : (theme === 'performance' ? '2px solid #9ca3af' : `2px solid ${themeColors.border.primary}`)),
           boxShadow: theme === 'matrix' ? '0 0 30px rgba(0, 255, 65, 0.3)' : 
                     theme === 'light' ? undefined : 
                     (theme === 'dark' ? undefined : '0 25px 50px -12px rgba(0, 0, 0, 0.25)')
@@ -283,7 +283,7 @@ export const GameDebugModal: React.FC<GameDebugModalProps> = ({
             theme === 'dark' ? 'dark-fantasy-header' : ''
           }`}
           style={{
-            borderColor: theme === 'light' ? '#d4af37' : (theme === 'dark' ? 'transparent' : themeColors.border.primary),
+            borderColor: theme === 'light' ? '#d4af37' : (theme === 'dark' ? 'transparent' : (theme === 'performance' ? '#9ca3af' : themeColors.border.primary)),
             backgroundColor: theme === 'light' ? undefined : (theme === 'dark' ? 'transparent' : componentStyles.modal.header)
           }}
         >

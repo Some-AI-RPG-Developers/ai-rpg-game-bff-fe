@@ -1,15 +1,17 @@
 import React from 'react';
-import { CharacterInput, GameStatus } from '@/client/types/game.types';
-import { ViewMode } from '@/client/types/ui.types';
-import { useTheme } from '@/client/context/ThemeContext';
-import { getThemeStyles } from '@/client/utils/themeStyles';
-import { ArrowLeft, Plus, Trash2, Play, FileText, Users, Hash } from 'lucide-react';
+import {CharacterInput, GameStatus} from '@/client/types/game.types';
+import {ViewMode} from '@/client/types/ui.types';
+import {useTheme} from '@/client/context/ThemeContext';
+import {getThemeStyles} from '@/client/utils/themeStyles';
+import {ArrowLeft, FileText, Globe, Hash, Play, Plus, Trash2, Users} from 'lucide-react';
 
 interface CreateGameFormProps {
   /** Current game prompt input value */
   gamePromptInput: string;
   /** Current max scenes input value */
   maxScenesInput: number;
+  /** Current language input value */
+  languageInput?: string;
   /** Current characters input array */
   charactersInput: CharacterInput[];
   /** Current game status */
@@ -18,6 +20,8 @@ interface CreateGameFormProps {
   onGamePromptChange: (value: string) => void;
   /** Handler for max scenes changes */
   onMaxScenesChange: (value: number) => void;
+  /** Handler for language changes */
+  onLanguageChange: (value: string) => void;
   /** Handler for character input changes */
   onCharacterInputChange: (index: number, field: 'name' | 'characterPrompt', value: string) => void;
   /** Handler for adding a new character */
@@ -41,10 +45,12 @@ interface CreateGameFormProps {
 export const CreateGameForm: React.FC<CreateGameFormProps> = ({
   gamePromptInput,
   maxScenesInput,
+  languageInput,
   charactersInput,
   gameStatus,
   onGamePromptChange,
   onMaxScenesChange,
+  onLanguageChange,
   onCharacterInputChange,
   onAddCharacterInput,
   onRemoveCharacterInput,
@@ -180,6 +186,61 @@ export const CreateGameForm: React.FC<CreateGameFormProps> = ({
               min="1"
               max="20"
             />
+          </div>
+        </div>
+        <div className="mb-8 w-11/12 mx-auto">
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Globe size={24} style={{ color: theme === 'matrix' ? '#00ff41' : undefined }} />
+            <h4 className={`text-2xl font-bold ${
+              theme === 'light' ? 'spell-text' : 
+              theme === 'dark' ? 'dark-fantasy-text' :
+              theme === 'performance' ? 'performance-text' :
+              theme !== 'matrix' ? styles.text : ''
+            }`}
+                   style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+              {theme === 'light' ? '🌍 Adventure Language' : 
+               theme === 'dark' ? '🌍 REALM TONGUE' :
+               'Language'}
+            </h4>
+          </div>
+          <div className="flex justify-center">
+            <select
+              id="language"
+              value={languageInput || 'en'}
+              onChange={(e) => onLanguageChange(e.target.value)}
+              className={`w-64 p-4 rounded-xl font-bold text-center text-lg transition-all duration-300 focus:outline-none focus:ring-2 ${
+                theme === 'light' ? 'spell-writing-area' :
+                theme === 'dark' ? 'dark-fantasy-input' :
+                theme === 'performance' ? 'performance-input' :
+                theme !== 'matrix' ? `${styles.card} ${styles.text} ${styles.border}` : ''
+              }`}
+              style={{
+                backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.9)' : undefined,
+                color: theme === 'matrix' ? '#00ff41' : undefined,
+                border: theme === 'matrix' ? '2px solid rgba(0, 255, 65, 0.7)' : undefined
+              }}
+              disabled={isProcessing}
+            >
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="fr">🇫🇷 Français</option>
+              <option value="de">🇩🇪 Deutsch</option>
+              <option value="it">🇮🇹 Italiano</option>
+              <option value="pt">🇵🇹 Português</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="ja">🇯🇵 日本語</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="ko">🇰🇷 한국어</option>
+              <option value="ar">🇸🇦 العربية</option>
+              <option value="nl">🇳🇱 Nederlands</option>
+              <option value="sv">🇸🇪 Svenska</option>
+              <option value="no">🇳🇴 Norsk</option>
+              <option value="da">🇩🇰 Dansk</option>
+              <option value="fi">🇫🇮 Suomi</option>
+              <option value="pl">🇵🇱 Polski</option>
+              <option value="tr">🇹🇷 Türkçe</option>
+              <option value="hi">🇮🇳 हिन्दी</option>
+            </select>
           </div>
         </div>
         <div className="mb-8 w-11/12 mx-auto">

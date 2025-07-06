@@ -3,8 +3,8 @@
  * Manages game creation form state, validation, and character input operations
  */
 
-import { useState, useCallback } from 'react';
-import { CharacterInput, GameCreationData } from '@/client/types/game.types';
+import {useCallback, useState} from 'react';
+import {CharacterInput, GameCreationData} from '@/client/types/game.types';
 
 /**
  * Game form state interface
@@ -12,6 +12,7 @@ import { CharacterInput, GameCreationData } from '@/client/types/game.types';
 export interface GameFormState {
   gamePromptInput: string;
   maxScenesInput: number;
+  languageInput: string;
   charactersInput: CharacterInput[];
   resumeGameIdInput: string;
 }
@@ -30,6 +31,7 @@ export interface FormValidationResult {
 export interface GameFormActions {
   setGamePromptInput: (value: string) => void;
   setMaxScenesInput: (value: number) => void;
+  setLanguageInput: (value: string) => void;
   setCharactersInput: (characters: CharacterInput[]) => void;
   setResumeGameIdInput: (value: string) => void;
   handleCharacterInputChange: (index: number, field: 'name' | 'characterPrompt', value: string) => void;
@@ -47,6 +49,7 @@ export interface GameFormActions {
 const initialFormState: GameFormState = {
   gamePromptInput: 'A fantasy adventure in a dark forest.',
   maxScenesInput: 5,
+  languageInput: 'en',
   charactersInput: [
     { name: 'Sir Roland', characterPrompt: 'A noble knight who values honor and courage above all else' },
     { name: 'Lady Elara', characterPrompt: 'A wise mage seeking to protect the realm with her magical powers' },
@@ -60,6 +63,7 @@ const initialFormState: GameFormState = {
 export function useGameForm(): GameFormState & GameFormActions {
   const [gamePromptInput, setGamePromptInputInternal] = useState<string>(initialFormState.gamePromptInput);
   const [maxScenesInput, setMaxScenesInputInternal] = useState<number>(initialFormState.maxScenesInput);
+  const [languageInput, setLanguageInputInternal] = useState<string>(initialFormState.languageInput);
   const [charactersInput, setCharactersInputInternal] = useState<CharacterInput[]>(initialFormState.charactersInput);
   const [resumeGameIdInput, setResumeGameIdInputInternal] = useState<string>(initialFormState.resumeGameIdInput);
 
@@ -75,6 +79,13 @@ export function useGameForm(): GameFormState & GameFormActions {
    */
   const setMaxScenesInput = useCallback((value: number) => {
     setMaxScenesInputInternal(value);
+  }, []);
+
+  /**
+   * Sets the language input
+   */
+  const setLanguageInput = useCallback((value: string) => {
+    setLanguageInputInternal(value);
   }, []);
 
   /**
@@ -184,9 +195,10 @@ export function useGameForm(): GameFormState & GameFormActions {
     return {
       gamePrompt: gamePromptInput,
       maxScenesNumber: maxScenesInput,
+      language: languageInput || 'en',
       characters: charactersInput
     };
-  }, [gamePromptInput, maxScenesInput, charactersInput]);
+  }, [gamePromptInput, maxScenesInput, languageInput, charactersInput]);
 
   /**
    * Resets the form to initial state
@@ -194,6 +206,7 @@ export function useGameForm(): GameFormState & GameFormActions {
   const resetForm = useCallback(() => {
     setGamePromptInputInternal(initialFormState.gamePromptInput);
     setMaxScenesInputInternal(initialFormState.maxScenesInput);
+    setLanguageInputInternal(initialFormState.languageInput);
     setCharactersInputInternal(initialFormState.charactersInput);
     setResumeGameIdInputInternal(initialFormState.resumeGameIdInput);
   }, []);
@@ -202,12 +215,14 @@ export function useGameForm(): GameFormState & GameFormActions {
     // State
     gamePromptInput,
     maxScenesInput,
+    languageInput,
     charactersInput,
     resumeGameIdInput,
     
     // Actions
     setGamePromptInput,
     setMaxScenesInput,
+    setLanguageInput,
     setCharactersInput,
     setResumeGameIdInput,
     handleCharacterInputChange,

@@ -1,8 +1,14 @@
 import * as grpc from '@grpc/grpc-js';
 import * as retry from 'retry';
+import {RetryOperation} from 'retry';
 import {NewGame, NewTurn} from '@/server/types/rest/api.alias.types';
-import {GameServiceClient} from '@/server/types/proto/game_service';
-import {RetryOperation} from "retry";
+import {
+  CreateGameRequest,
+  CreateTurnRequest,
+  GameServiceClient,
+  StartGameRequest,
+  SubmitTurnRequest
+} from '@/server/types/proto/game_service';
 
 export interface GRPCClientConfig {
   serverAddress: string;
@@ -31,15 +37,17 @@ export class GRPCGameClientImpl implements GRPCGameClient {
   }
 
   async createGame(gameId: string, newGame: NewGame): Promise<void> {
-    const request = {
+    const request: CreateGameRequest = {
       gameId: gameId,
       gamePrompt: newGame.gamePrompt,
       maxScenesNumber: newGame.maxScenesNumber,
+      language: newGame.language,
       characters: newGame.characters.map(character => ({
         name: character.name,
         characterPrompt: character.characterPrompt,
       })),
     };
+    console.log('🌍 gRPC Client - Full request:', JSON.stringify(request, null, 2));
     return this.retryGrpcCall(
       'Create game',
       callback  => this.client.createGame(request, callback)
@@ -47,7 +55,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
   }
 
   async startGame(gameId: string): Promise<void> {
-    const request = {
+    const request: StartGameRequest = {
       gameId: gameId,
     };
     return this.retryGrpcCall(
@@ -57,7 +65,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
   }
 
   async submitTurn(gameId: string, newTurn: NewTurn): Promise<void> {
-    const request = {
+    const request: SubmitTurnRequest = {
       gameId: gameId,
       characterActions: newTurn.characterActions.map(action => ({
         characterName: action.characterName,
@@ -71,7 +79,7 @@ export class GRPCGameClientImpl implements GRPCGameClient {
   }
 
   async createTurn(gameId: string): Promise<void> {
-    const request = {
+    const request: CreateTurnRequest = {
       gameId: gameId,
     };
     return this.retryGrpcCall(

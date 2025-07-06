@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import {GameDisplay} from "@/client/components/game/play/GameDisplay";
 import {CreateGameForm} from "@/client/components/game/setup/CreateGameForm";
 import {ResumeGameForm} from "@/client/components/game/setup/ResumeGameForm";
@@ -55,6 +55,7 @@ export default function PlayPage() {
         // Form state
         gamePromptInput,
         maxScenesInput,
+        languageInput,
         charactersInput,
         resumeGameIdInput,
 
@@ -73,6 +74,7 @@ export default function PlayPage() {
         // Form operations
         setGamePromptInput,
         setMaxScenesInput,
+        setLanguageInput,
         handleCharacterInputChange,
         handleAddCharacterInput,
         handleRemoveCharacterInput,
@@ -152,10 +154,12 @@ export default function PlayPage() {
                     <CreateGameForm
                         gamePromptInput={gamePromptInput}
                         maxScenesInput={maxScenesInput}
+                        languageInput={languageInput}
                         charactersInput={charactersInput}
                         gameStatus={gameStatus}
                         onGamePromptChange={setGamePromptInput}
                         onMaxScenesChange={setMaxScenesInput}
+                        onLanguageChange={setLanguageInput}
                         onCharacterInputChange={handleCharacterInputChange}
                         onAddCharacterInput={handleAddCharacterInput}
                         onRemoveCharacterInput={handleRemoveCharacterInput}

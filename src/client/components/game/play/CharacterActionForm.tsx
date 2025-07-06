@@ -4,7 +4,7 @@ import {CharacterOptions as GameCharacterOption} from '@/server/types/rest/api.a
 import {TruncatedText} from '@/client/components/ui/TruncatedText';
 import {useTheme} from '@/client/context/ThemeContext';
 import {getThemeStyles} from '@/client/utils/themeStyles';
-import {Users, Edit3} from 'lucide-react';
+import {Edit3, Users} from 'lucide-react';
 
 interface CharacterActionFormProps {
     /** Current turn with options */
@@ -68,9 +68,9 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
 
                 <div className="space-y-6">
                     {currentTurn.options.map((charOption: GameCharacterOption) => (
-                        <div className="flex justify-center">
+                        <div key={charOption.characterId} className="flex justify-center">
                             <div key={charOption.characterId}
-                                 className={`p-4 rounded-lg w-11/12 mx-auto ${
+                                className={`p-4 rounded-lg w-11/12 mx-auto ${
                                 theme === 'light' ? 'magical-scroll' : 
                                 theme === 'dark' ? 'dark-fantasy-option-select' :
                                 theme === 'performance' ? 'performance-option-select' :
@@ -92,8 +92,8 @@ export const CharacterActionForm: React.FC<CharacterActionFormProps> = ({
 
                             <div className="space-y-3 mb-4">
                                 {charOption.descriptions.map((optionDesc: string, index: number) => (
-                                    <div className="flex justify-center">
-                                        <label key={index}
+                                    <div key={index} className="flex justify-center">
+                                        <label
                                            className={`flex items-start gap-3 p-3 rounded-md cursor-pointer transition-all duration-200 w-11/12 mx-auto ${
                                                theme === 'light' ? 'spell-writing-area' : 
                                                theme === 'dark' ? 'dark-fantasy-option-select' :

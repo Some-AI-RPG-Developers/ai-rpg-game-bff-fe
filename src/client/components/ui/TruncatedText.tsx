@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 
 interface TruncatedTextProps {
   text: string;
@@ -57,10 +57,6 @@ export const TruncatedText: React.FC<TruncatedTextProps> = ({
     </Component>
   );
 };
-
-interface TruncatedTextProviderProps {
-  children: React.ReactNode;
-}
 
 /**
  * Context provider for managing expanded text state across multiple components

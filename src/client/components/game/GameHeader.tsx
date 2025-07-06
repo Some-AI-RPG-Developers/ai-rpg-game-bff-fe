@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { PlayPageGame, GameStatus } from '@/client/types/game.types';
-import { useTextToSpeech } from '@/client/hooks/useTextToSpeech';
-import { useTheme } from '@/client/context/ThemeContext';
-import { getThemeStyles } from '@/client/utils/themeStyles';
-import { Shield, Sword, Bug } from 'lucide-react';
-import { ThemeSwitcher } from '@/client/components/ui/ThemeSwitcher';
+import React, {useState} from 'react';
+import {GameStatus, PlayPageGame} from '@/client/types/game.types';
+import {useTextToSpeech} from '@/client/hooks/useTextToSpeech';
+import {useTheme} from '@/client/context/ThemeContext';
+import {getThemeStyles} from '@/client/utils/themeStyles';
+import {Bug, Shield, Sword} from 'lucide-react';
+import {ThemeSwitcher} from '@/client/components/ui/ThemeSwitcher';
 
 interface GameHeaderProps {
   /** Current game object */
@@ -34,7 +34,7 @@ export const GameHeader: React.FC<GameHeaderProps> = ({
 }) => {
   const [showTTSSettings, setShowTTSSettings] = useState(false);
   const tts = useTextToSpeech();
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   const styles = getThemeStyles(theme);
   
   const [pendingSettings, setPendingSettings] = useState({

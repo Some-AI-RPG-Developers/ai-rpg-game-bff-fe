@@ -85,6 +85,7 @@ export interface CharacterInput {
 export interface GameCreationData {
   gamePrompt: string;
   maxScenesNumber: number;
+  language: string;
   characters: CharacterInput[];
 }
 

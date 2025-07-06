@@ -368,10 +368,10 @@ export function useGameState(config?: GameServiceConfig): GameState & GameStateA
           game.characters.length > 0) {
         
         console.log(`Recreation Trigger: Game ${game.gameId} incomplete (no synopsis), status ${gameStatus}. Triggering recreation.`);
-
         const newGamePayload: NewGame = {
           gamePrompt: game.gamePrompt,
           maxScenesNumber: game.maxScenesNumber,
+          language: game.language,
           characters: game.characters.map(c => ({
             name: c.name,
             characterPrompt: c.prompt || `Default prompt for ${c.name}`,
@@ -529,7 +529,7 @@ export function getStatusMessage(status: GameStatus, gameId?: string | null): st
     case 'creatingGame_WaitingForCharacters':
       return 'Generating characters...';
     case 'creatingGame_WaitingForSynopsis':
-      return 'Generating game synopsis and objectives...';
+      return 'Generating game synopsis...';
     case 'recreatingGame_WaitingForData':
       return 'Re-initialization triggered. Waiting for updated game data...';
     case 'contentGen_Characters_WaitingForData':
