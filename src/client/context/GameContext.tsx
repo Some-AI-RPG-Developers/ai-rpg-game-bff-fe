@@ -34,6 +34,7 @@ export interface GameContextValue {
   // Form state
   gamePromptInput: string;
   maxScenesInput: number;
+  languageInput: string;
   charactersInput: Array<{ name: string; characterPrompt: string }>;
   resumeGameIdInput: string;
   
@@ -52,6 +53,7 @@ export interface GameContextValue {
   // Form operations
   setGamePromptInput: (value: string) => void;
   setMaxScenesInput: (value: number) => void;
+  setLanguageInput: (value: string) => void;
   handleCharacterInputChange: (index: number, field: 'name' | 'characterPrompt', value: string) => void;
   handleAddCharacterInput: () => void;
   handleRemoveCharacterInput: (index: number) => void;
@@ -238,6 +240,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     // Form state
     gamePromptInput: gameForm.gamePromptInput,
     maxScenesInput: gameForm.maxScenesInput,
+    languageInput: gameForm.languageInput,
     charactersInput: gameForm.charactersInput,
     resumeGameIdInput: gameForm.resumeGameIdInput,
     
@@ -256,6 +259,7 @@ export function GameContextProvider({ children }: Readonly<GameContextProviderPr
     // Form operations
     setGamePromptInput: gameForm.setGamePromptInput,
     setMaxScenesInput: gameForm.setMaxScenesInput,
+    setLanguageInput: gameForm.setLanguageInput,
     handleCharacterInputChange: gameForm.handleCharacterInputChange,
     handleAddCharacterInput: gameForm.handleAddCharacterInput,
     handleRemoveCharacterInput: gameForm.handleRemoveCharacterInput,

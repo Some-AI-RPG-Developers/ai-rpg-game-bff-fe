@@ -7,6 +7,7 @@ export { TTSButton } from './TTSButton';
 export { VoiceSelector } from './VoiceSelector';
 export { TTSWrapper, withTTS, useTTSWrapper } from './TTSWrapper';
 export { TTSSettings } from './TTSSettings';
+export { TTSModal } from './TTSModal';
 export type { TTSButtonProps } from './TTSButton';
 export type { VoiceSelectorProps } from './VoiceSelector';
 export type { TTSWrapperProps } from './TTSWrapper';

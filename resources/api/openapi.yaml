@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
   title: RPG Game BFF API
   version: 1.0.0
@@ -90,6 +90,7 @@ components:
             $ref: '#/components/schemas/NewGame'
           example:
             gamePrompt: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+            language: "en"
             maxScenesNumber: 5
             characters:
               - name: "Sir Roland"
@@ -159,25 +160,25 @@ components:
               - description: "Reach the dragon's lair without being detected"
                 requiredSteps:
                   - stepId: "step_1"
-                    completed: false
+                    status: "ACTIVE"
                     description: "Find the secret entrance"
                   - stepId: "step_2"
-                    completed: true
+                    status: "COMPLETED"
                     description: "Avoid the guard dragons"
                   - stepId: "step_3"
-                    completed: false
+                    status: "ACTIVE"
                     description: "Disable the magical barriers"
             finalObjective:
               description: "Defeat the dragon and save the kingdom"
               requiredSteps:
                 - stepId: "final_step_1"
-                  completed: false
+                  status: "ACTIVE"
                   description: "Weaken the dragon's defenses"
                 - stepId: "final_step_2"
-                  completed: false
+                  status: "ACTIVE"
                   description: "Coordinate team attack"
                 - stepId: "final_step_3"
-                  completed: false
+                  status: "ACTIVE"
                   description: "Land the final blow"
     202_GameCreationAccepted:
       description: Game creation accepted
@@ -233,6 +234,8 @@ components:
       required:
         - gameId
         - gamePrompt
+        - maxScenesNumber
+        - language
         - characters
         - scenes
         - objectives
@@ -253,6 +256,10 @@ components:
         maxScenesNumber:
           type: integer
           example: 5
+        language:
+          type: string
+          example: "en"
+          description: "Language code for generated content (e.g., 'en', 'es', 'fr', 'de'). If not specified, defaults to English."
         characters:
           type: array
           items:
@@ -283,7 +290,7 @@ components:
         name:
           type: string
           example: "Sir Roland"
-          description: "Display name of the character (used in UI)"
+          description: "Display name of the character"
         description:
           type: string
           example: "A brave knight with shining armor and unwavering loyalty"
@@ -390,10 +397,8 @@ components:
           type: string
           example: "step_1"
         status:
-          type: string
-          enum: ["ACTIVE", "COMPLETED", "FAILED"]
+          $ref: '#/components/schemas/ObjectiveStepStatus'
           example: "ACTIVE"
-          description: "Current status of the objective step"
         description:
           type: string
           example: "Find the secret entrance"
@@ -411,13 +416,13 @@ components:
             $ref: '#/components/schemas/ObjectiveStep'
           example:
             - stepId: "step_1"
-              completed: false
+              status: "ACTIVE"
               description: "Find the secret entrance"
             - stepId: "step_2"
-              completed: false
+              status: "ACTIVE"
               description: "Avoid the guard dragons"
             - stepId: "step_3"
-              completed: false
+              status: "ACTIVE"
               description: "Disable the magical barriers"
     GameId:
       type: object
@@ -432,14 +437,20 @@ components:
       required:
         - gamePrompt
         - maxScenesNumber
+        - language
         - characters
       properties:
         gamePrompt:
           type: string
           example: "Create a medieval fantasy adventure where a group of heroes must save their kingdom from a dragon"
+        language:
+          type: string
+          example: "en"
+          description: "Language code for generated content. Supported languages include 'en' (English), 'es' (Spanish), 'fr' (French), 'de' (German), 'it' (Italian), 'pt' (Portuguese), 'ru' (Russian), 'ja' (Japanese), 'zh' (Chinese), 'ko' (Korean), 'ar' (Arabic), 'nl' (Dutch), 'sv' (Swedish), 'no' (Norwegian), 'da' (Danish), 'fi' (Finnish), 'pl' (Polish), 'tr' (Turkish), 'hi' (Hindi). Defaults to English if not specified."
         maxScenesNumber:
           type: integer
           example: 5
+          description: "Maximum number of scenes for the game"
         characters:
           type: array
           items:
@@ -475,11 +486,14 @@ components:
         characterName:
           type: string
           example: "Sir Roland"
-          description: "Display name of the character"
+          description: "Name of the character making the action (frontend sends name, BFF converts to ID)"
         chosenOption:
           type: string
           example: "Try to sneak past the sleeping dragon"
-          description: "The action chosen by the player for this character"
+    ObjectiveStepStatus:
+      type: string
+      enum: ["ACTIVE", "COMPLETED", "FAILED"]
+      description: "Status of an objective step"
     ErrorResponse:
       type: object
       properties:

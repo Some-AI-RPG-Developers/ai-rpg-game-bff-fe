@@ -1,27 +1,16 @@
-import React from 'react';
-import { PlayPageTurn, GameStatus } from '@/client/types/game.types';
-import { TTSWrapper } from '@/client/components/tts';
-import { CharacterActionForm } from './CharacterActionForm';
+import React, { useState } from 'react';
+import {PlayPageTurn} from '@/client/types/game.types';
+import {TTSWrapper} from '@/client/components/tts';
+import {TruncatedText} from '@/client/components/ui/TruncatedText';
+import {useTheme} from '@/client/context/ThemeContext';
+import {getThemeStyles} from '@/client/utils/themeStyles';
+import {Clock, Users, CheckCircle, ChevronDown, ChevronRight, FileText} from 'lucide-react';
 
 interface TurnDisplayProps {
-  /** Current turn object */
-  currentTurn: PlayPageTurn;
-  /** Current game status */
-  gameStatus: GameStatus;
-  /** Whether the game has concluded */
-  isGameConcluded: boolean;
-  /** Turn number (1-based) */
-  turnNumber?: number;
-  /** Currently selected options for each character */
-  selectedOptions: Record<string, string>;
-  /** Current free text inputs for each character */
-  freeTextInputs: Record<string, string>;
-  /** Handler for option changes */
-  onOptionChange: (characterName: string, optionValue: string) => void;
-  /** Handler for free text changes */
-  onFreeTextChange: (characterName: string, text: string) => void;
-  /** Whether any processing is currently happening */
-  isProcessing: boolean;
+    /** Current turn object */
+    currentTurn: PlayPageTurn;
+    /** Turn number (1-based) */
+    turnNumber?: number;
 }
 
 /**
@@ -29,75 +18,275 @@ interface TurnDisplayProps {
  * Extracted from the original monolithic component turn display logic.
  */
 export const TurnDisplay: React.FC<TurnDisplayProps> = ({
-  currentTurn,
-  gameStatus,
-  isGameConcluded,
-  turnNumber,
-  selectedOptions,
-  freeTextInputs,
-  onOptionChange,
-  onFreeTextChange,
-  isProcessing
-}) => {
-  return (
-    <div style={{ marginTop: '15px', paddingTop: '15px', borderTop: '1px dashed #ccc' }}>
-      <div>
-        <TTSWrapper
-          text={currentTurn.description ? `Turn: ${currentTurn.turnId}, Turn ${turnNumber || currentTurn.turnNumber || 'Unknown'}. ${currentTurn.description}` : undefined}
-          buttonPosition="inline-end"
-          title="Read turn description aloud"
-        >
-          <strong>Turn: {currentTurn.turnId} (Turn {turnNumber || currentTurn.turnNumber || 'Unknown'})</strong>
-        </TTSWrapper>
-        {currentTurn.description && (
-          <p style={{ margin: '5px 0 10px 0', maxWidth: '90ch' }}>{currentTurn.description}</p>
-        )}
-      </div>
-      
-      {/* Chosen Options: Show if actions exist (player choices were made) */}
-      {currentTurn.actions && currentTurn.actions.length > 0 && (
-        <div style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#fff4e6', border: '1px solid #ffcc99', borderRadius: '3px' }}>
-          <TTSWrapper
-            text={`Chosen Options: ${currentTurn.actions.map(action => `${action.name}: ${action.message}`).join('. ')}`}
-            buttonPosition="inline-end"
-            title="Read chosen options aloud"
-          >
-            <strong>Chosen Options:</strong>
-          </TTSWrapper>
-          <div style={{ margin: '5px 0 0 0' }}>
-            {currentTurn.actions.map((action, index) => (
-              <p key={index} style={{ margin: '2px 0', maxWidth: '90ch' }}>
-                <strong>{action.name}:</strong> {action.message}
-              </p>
-            ))}
-          </div>
-        </div>
-      )}
+                                                            currentTurn,
+                                                            turnNumber
+                                                        }) => {
+    const {theme} = useTheme();
+    const styles = getThemeStyles(theme);
+    
+    // State for toggleable sections
+    const [isTurnExpanded, setIsTurnExpanded] = useState(false);
+    const [expandedCharacters, setExpandedCharacters] = useState<Record<string, boolean>>({});
+    
+    const toggleCharacter = (characterId: string) => {
+        setExpandedCharacters(prev => ({
+            ...prev,
+            [characterId]: !prev[characterId]
+        }));
+    };
 
-      {currentTurn.consequences && (
-        <div style={{ marginBottom: '10px', padding: '10px', backgroundColor: '#e6ffed', border: '1px solid #b2fab4', borderRadius: '3px' }}>
-          <TTSWrapper
-            text={`Resolution: ${currentTurn.consequences}`}
-            buttonPosition="inline-end"
-            title="Read turn resolution aloud"
-          >
-            <strong>Resolution:</strong>
-          </TTSWrapper>
-          <p style={{ margin: '5px 0 0 0', maxWidth: '90ch' }}>{currentTurn.consequences}</p>
-        </div>
-      )}
+    return (
+        <div className="flex flex-col items-center mt-4">
+            <div className={`rounded-2xl w-11/12 mx-auto text-center ${
+                theme === 'light' ? 'magical-scroll' : 
+                theme === 'dark' ? 'dark-fantasy-character' :
+                theme === 'performance' ? 'performance-character' :
+                theme !== 'matrix' ? styles.card : ''
+            }`}
+                 style={{
+                     backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
+                     border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.4)' : undefined,
+                     backdropFilter: theme === 'matrix' ? 'blur(8px)' : undefined,
+                     borderTop: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
+                 }}>
+                {/* Turn Main Header - Controls entire turn visibility */}
+                <div className="flex items-center justify-center gap-2 p-3 cursor-pointer border-b"
+                     style={{ borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : undefined }}
+                     onClick={() => setIsTurnExpanded(!isTurnExpanded)}>
+                    <Clock size={20} className={theme !== 'matrix' ? styles.text : ''}
+                           style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
+                    <div className="flex items-center gap-3 flex-1 justify-center">
+                        <strong className={`text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+                                style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                            Turn {turnNumber || currentTurn.turnNumber || 'Unknown'}: {currentTurn.turnId}
+                        </strong>
+                    </div>
+                    <button
+                        className={`transition-all duration-200 hover:opacity-80 p-1`}
+                        style={{ 
+                          color: theme === 'matrix' ? '#00ff41' : 
+                                 theme === 'dark' ? '#cc4444' : 
+                                 theme === 'performance' ? '#9ca3af' :
+                                 '#374151'
+                        }}
+                    >
+                        {isTurnExpanded ? (
+                            <ChevronDown size={20} style={{ 
+                              color: theme === 'matrix' ? '#00ff41' : 
+                                     theme === 'dark' ? '#cc4444' : 
+                                     theme === 'performance' ? '#9ca3af' :
+                                     '#374151'
+                            }} />
+                        ) : (
+                            <ChevronRight size={20} style={{ 
+                              color: theme === 'matrix' ? '#00ff41' : 
+                                     theme === 'dark' ? '#cc4444' : 
+                                     theme === 'performance' ? '#9ca3af' :
+                                     '#374151'
+                            }} />
+                        )}
+                    </button>
+                </div>
 
-      {/* Character Options/Input: Show if options exist, no consequences yet, game not over, and status is idle */}
-      {currentTurn.options && !currentTurn.consequences && !isGameConcluded && gameStatus === 'idle' && (
-        <CharacterActionForm
-          currentTurn={currentTurn}
-          selectedOptions={selectedOptions}
-          freeTextInputs={freeTextInputs}
-          onOptionChange={onOptionChange}
-          onFreeTextChange={onFreeTextChange}
-          isProcessing={isProcessing}
-        />
-      )}
-    </div>
-  );
+                {/* Turn Content - Only show when expanded */}
+                {isTurnExpanded && (
+                    <div className="p-6">
+                        {/* Turn Description */}
+                        {currentTurn.description && (
+                            <div className="mb-6">
+                                <div className={`rounded-lg p-4 ${
+                                  theme === 'dark' ? 'dark-fantasy-turn-description' :
+                                  theme === 'performance' ? 'performance-turn-description' :
+                                  theme !== 'matrix' ? styles.border : ''
+                                }`}
+                                     style={{
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
+                                     }}>
+                                    <div className="flex items-center justify-center gap-2 mb-4">
+                                        <FileText size={18} className={theme !== 'matrix' ? styles.text : ''}
+                                                  style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
+                                        <TTSWrapper
+                                            text={`Turn Description: ${currentTurn.description}`}
+                                            buttonPosition="inline-end"
+                                            title="Read turn description aloud"
+                                        >
+                                            <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                                                style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                                                Turn Description
+                                            </h6>
+                                        </TTSWrapper>
+                                    </div>
+                                    <TruncatedText
+                                        text={currentTurn.description}
+                                        textId={`turn-description-${currentTurn.turnId || turnNumber}`}
+                                        className={`text-base leading-relaxed text-center ${
+                                            theme === 'dark' ? 'dark-fantasy-text-light' :
+                                            theme === 'performance' ? 'performance-text-light' :
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
+                                        style={{
+                                            color: theme === 'matrix' ? '#00ff41' : undefined,
+                                            opacity: theme === 'matrix' ? 0.9 : 0.8
+                                        }}
+                                        as="p"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Chosen Options: Show if actions exist (player choices were made) */}
+                        {currentTurn.actions && currentTurn.actions.length > 0 && (
+                            <div className="mb-8">
+                                <div className={`rounded-lg p-4 ${
+                                  theme === 'dark' ? 'dark-fantasy-option-select' :
+                                  theme === 'performance' ? 'performance-option-select' :
+                                  theme !== 'matrix' ? styles.border : ''
+                                }`}
+                                     style={{
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.1)' : undefined,
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.5)' : undefined
+                                     }}>
+                                    <div className="flex items-center justify-center gap-2 mb-4">
+                                        <Users size={18} className={theme !== 'matrix' ? styles.text : ''}
+                                               style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
+                                        <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                                            style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                                            Chosen Options
+                                        </h6>
+                                    </div>
+                                    <div className="space-y-2 flex flex-col items-center">
+                                        {currentTurn.actions.map((action, index) => {
+                                            const characterId = action.characterId || `action-${index}`;
+                                            const isExpanded = expandedCharacters[characterId];
+                                            
+                                            return (
+                                                <div key={characterId} 
+                                                     className={`rounded-lg w-11/12 mx-auto ${
+                                                       theme === 'dark' ? 'dark-fantasy-character' :
+                                                       theme === 'performance' ? 'performance-character' :
+                                                       theme !== 'matrix' ? styles.border : ''
+                                                     }`}
+                                                     style={{
+                                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.05)' : undefined,
+                                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.2)' : undefined
+                                                     }}>
+                                                    {/* Character Name - Clickable Header with TTS */}
+                                                    <div className="p-4 flex items-center justify-between">
+                                                        <div className="flex items-center gap-3 flex-1 justify-center">
+                                                            <TTSWrapper
+                                                                text={`${action.name}: ${action.message}`}
+                                                                buttonPosition="inline-end"
+                                                                title={`Read ${action.name}'s choice aloud`}
+                                                            >
+                                                                <span className={`font-bold text-lg ${theme !== 'matrix' ? styles.text : ''}`}
+                                                                      style={{ color: theme === 'matrix' ? '#00ff41' : undefined }}>
+                                                                    {action.name}
+                                                                </span>
+                                                            </TTSWrapper>
+                                                        </div>
+                                                        <button
+                                                            onClick={() => toggleCharacter(characterId)}
+                                                            className={`transition-all duration-200 hover:opacity-80 p-1`}
+                                                            style={{ 
+                                                              color: theme === 'matrix' ? '#00ff41' : 
+                                                                     theme === 'dark' ? '#cc4444' : 
+                                                                     theme === 'performance' ? '#9ca3af' :
+                                                                     '#374151'
+                                                            }}
+                                                        >
+                                                            {isExpanded ? (
+                                                                <ChevronDown size={20} style={{ 
+                                                                  color: theme === 'matrix' ? '#00ff41' : 
+                                                                         theme === 'dark' ? '#cc4444' : 
+                                                                         theme === 'performance' ? '#9ca3af' :
+                                                                         '#374151'
+                                                                }} />
+                                                            ) : (
+                                                                <ChevronRight size={20} style={{ 
+                                                                  color: theme === 'matrix' ? '#00ff41' : 
+                                                                         theme === 'dark' ? '#cc4444' : 
+                                                                         theme === 'performance' ? '#9ca3af' :
+                                                                         '#374151'
+                                                                }} />
+                                                            )}
+                                                        </button>
+                                                    </div>
+                                                    
+                                                    {/* Character Choice - Expandable Content */}
+                                                    {isExpanded && (
+                                                        <div className="px-4 pb-4 border-t"
+                                                             style={{ borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.2)' : undefined }}>
+                                                            <div className="mt-3">
+                                                                <TruncatedText
+                                                                    text={action.message}
+                                                                    textId={`action-message-${characterId}`}
+                                                                    className={`text-sm leading-relaxed text-center ${theme !== 'matrix' ? styles.text : ''}`}
+                                                                    style={{ 
+                                                                        color: theme === 'matrix' ? '#00ff41' : undefined,
+                                                                        opacity: theme === 'matrix' ? 0.9 : 0.8
+                                                                    }}
+                                                                    as="p"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Turn Resolution */}
+                        {currentTurn.consequences && (
+                            <div className="mb-6">
+                                <div className={`rounded-lg p-4 ${
+                                  theme === 'dark' ? 'dark-fantasy-turn-conclusion' :
+                                  theme === 'performance' ? 'performance-turn-conclusion' :
+                                  theme !== 'matrix' ? styles.border : ''
+                                }`}
+                                     style={{
+                                         backgroundColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.15)' : undefined,
+                                         border: theme === 'matrix' ? '1px solid rgba(0, 255, 65, 0.6)' : undefined
+                                     }}>
+                                    <div className="flex items-center justify-center gap-2 mb-4">
+                                        <CheckCircle size={18} className={theme !== 'matrix' ? styles.text : ''}
+                                                     style={{color: theme === 'matrix' ? '#00ff41' : undefined}}/>
+                                        <TTSWrapper
+                                            text={`Turn Resolution: ${currentTurn.consequences}`}
+                                            buttonPosition="inline-end"
+                                            title="Read turn resolution aloud"
+                                        >
+                                            <h6 className={`text-lg font-bold ${theme !== 'matrix' ? styles.text : ''}`}
+                                                style={{color: theme === 'matrix' ? '#00ff41' : undefined}}>
+                                                Turn Resolution
+                                            </h6>
+                                        </TTSWrapper>
+                                    </div>
+                                    <TruncatedText
+                                        text={currentTurn.consequences}
+                                        textId={`turn-consequences-${currentTurn.turnId || turnNumber}`}
+                                        className={`text-base leading-relaxed text-center ${
+                                            theme === 'dark' ? 'dark-fantasy-text-light' :
+                                            theme === 'performance' ? 'performance-text-light' :
+                                            theme !== 'matrix' ? styles.text : ''
+                                        }`}
+                                        style={{
+                                            color: theme === 'matrix' ? '#00ff41' : undefined,
+                                            opacity: theme === 'matrix' ? 0.9 : 0.8
+                                        }}
+                                        as="p"
+                                    />
+                                </div>
+                            </div>
+                        )}
+
+
+                    </div>
+                )}
+            </div>
+        </div>
+    );
 };

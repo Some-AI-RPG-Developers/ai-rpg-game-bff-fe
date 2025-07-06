@@ -7,6 +7,8 @@
 
 import React, { useState } from 'react';
 import { useTextToSpeech } from '@/client/hooks/useTextToSpeech';
+import { useTheme } from '@/client/context/ThemeContext';
+import { Volume2, VolumeX, Pause } from 'lucide-react';
 
 export interface TTSButtonProps {
   text: string;
@@ -37,21 +39,27 @@ export function TTSButton({
   size = 'md'
 }: TTSButtonProps) {
   const tts = useTextToSpeech();
-  const [isCurrentlyPlaying, setIsCurrentlyPlaying] = useState(false);
+  const [isThisButtonSpeaking, setIsThisButtonSpeaking] = useState(false);
+  const { theme } = useTheme();
 
   const handlePlayClick = async () => {
     if (!text.trim()) return;
 
     try {
-      setIsCurrentlyPlaying(true);
+      // Stop any current speech before starting new one
+      if (tts.isSpeaking) {
+        tts.stop();
+      }
+      
+      setIsThisButtonSpeaking(true);
       onSpeakStart?.();
       
       await tts.speak(text);
       
-      setIsCurrentlyPlaying(false);
+      setIsThisButtonSpeaking(false);
       onSpeakEnd?.();
     } catch (error) {
-      setIsCurrentlyPlaying(false);
+      setIsThisButtonSpeaking(false);
       const errorMessage = error instanceof Error ? error.message : 'Speech synthesis failed';
       onError?.(errorMessage);
     }
@@ -67,7 +75,7 @@ export function TTSButton({
 
   const handleStopClick = () => {
     tts.stop();
-    setIsCurrentlyPlaying(false);
+    setIsThisButtonSpeaking(false);
     onSpeakEnd?.();
   };
 
@@ -85,77 +93,77 @@ export function TTSButton({
   const getIconSize = () => {
     switch (size) {
       case 'sm':
-        return 'w-4 h-4';
+        return 14;
       case 'lg':
-        return 'w-6 h-6';
+        return 20;
       default:
-        return 'w-5 h-5';
+        return 16;
     }
   };
 
   const isDisabled = disabled || !tts.isSupported || !text.trim();
 
-  const buttonClasses = `
-    inline-flex items-center justify-center gap-2 
-    rounded-md border border-gray-300 
-    bg-white hover:bg-gray-50 
-    disabled:opacity-50 disabled:cursor-not-allowed
-    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-    transition-colors duration-200
-    ${getSizeClasses()}
-    ${isCurrentlyPlaying ? 'bg-blue-50 border-blue-300 text-blue-700' : 'text-gray-700'}
-    ${className}
-  `.trim();
+  const getButtonStyle = (isActive = false) => {
+    if (theme === 'matrix') {
+      return {
+        backgroundColor: isActive ? 'rgba(0, 255, 65, 0.2)' : 'rgba(0, 0, 0, 0.8)',
+        color: '#00ff41',
+        border: isActive ? '2px solid #00ff41' : '1px solid rgba(0, 255, 65, 0.5)',
+        boxShadow: isActive ? '0 0 8px rgba(0, 255, 65, 0.3)' : undefined
+      };
+    }
+    
+    if (theme === 'light') {
+      return {
+        backgroundColor: isActive ? '#f59e0b' : '#f97316',
+        color: 'white'
+      };
+    }
+    
+    // Dark theme - let dedicated CSS classes handle all styling
+    return {};
+  };
 
-  const renderPlayIcon = () => (
-    <svg
-      className={getIconSize()}
-      fill="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M8 5v14l11-7z"/>
-    </svg>
-  );
+  const getButtonClasses = (isActive = false) => {
+    const baseClasses = `
+      inline-flex items-center justify-center gap-2 
+      rounded-md
+      disabled:opacity-50 disabled:cursor-not-allowed
+      focus:outline-none focus:ring-2 focus:ring-offset-2
+      transition-all duration-300 hover:scale-105
+      ${getSizeClasses()}
+      ${className}
+    `.trim();
+    
+    if (theme === 'dark') {
+      // Use dedicated TTS button classes with high specificity
+      return `${baseClasses} ${isActive ? 'dark-fantasy-tts-button-active' : 'dark-fantasy-tts-button'}`;
+    }
+    
+    return `${baseClasses} border`;
+  };
 
-  const renderPauseIcon = () => (
-    <svg
-      className={getIconSize()}
-      fill="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-    </svg>
-  );
-
-  const renderStopIcon = () => (
-    <svg
-      className={getIconSize()}
-      fill="currentColor"
-      viewBox="0 0 24 24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M6 6h12v12H6z"/>
-    </svg>
-  );
+  const renderTTSIcon = () => <Volume2 size={getIconSize()} />;
+  const renderTTSPausedIcon = () => <Pause size={getIconSize()} />;
+  const renderTTSStoppedIcon = () => <VolumeX size={getIconSize()} />;
 
   const renderPlayButton = () => (
     <button
       type="button"
       onClick={handlePlayClick}
       disabled={isDisabled}
-      title={title || 'Play audio'}
-      className={buttonClasses}
-      aria-label={title || 'Play audio'}
+      title={title || 'Read text aloud'}
+      className={getButtonClasses(false)}
+      style={getButtonStyle(false)}
+      aria-label={title || 'Read text aloud'}
     >
-      {variant === 'text' ? (children || 'Play') :
+      {variant === 'text' ? (children || 'Listen') :
        variant === 'both' ? (
          <>
-           {renderPlayIcon()}
-           {children || 'Play'}
+           {renderTTSIcon()}
+           {children || 'Listen'}
          </>
-       ) : renderPlayIcon()}
+       ) : renderTTSIcon()}
     </button>
   );
 
@@ -166,20 +174,22 @@ export function TTSButton({
         onClick={handlePauseClick}
         disabled={isDisabled}
         title={tts.isPaused ? 'Resume audio' : 'Pause audio'}
-        className={buttonClasses}
+        className={getButtonClasses(true)}
+        style={getButtonStyle(true)}
         aria-label={tts.isPaused ? 'Resume audio' : 'Pause audio'}
       >
-        {tts.isPaused ? renderPlayIcon() : renderPauseIcon()}
+        {tts.isPaused ? renderTTSIcon() : renderTTSPausedIcon()}
       </button>
       <button
         type="button"
         onClick={handleStopClick}
         disabled={isDisabled}
         title="Stop audio"
-        className={buttonClasses}
+        className={getButtonClasses(true)}
+        style={getButtonStyle(true)}
         aria-label="Stop audio"
       >
-        {renderStopIcon()}
+        {renderTTSStoppedIcon()}
       </button>
     </div>
   );
@@ -188,8 +198,8 @@ export function TTSButton({
     return null; // Don't render if TTS is not supported
   }
 
-  // If currently playing or speaking, show pause/stop controls
-  if (isCurrentlyPlaying || tts.isSpeaking) {
+  // Only show pause/stop controls for the button that initiated the speech
+  if (isThisButtonSpeaking && tts.isSpeaking) {
     return renderControlButtons();
   }
 

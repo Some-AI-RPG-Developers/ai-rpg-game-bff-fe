@@ -71,7 +71,7 @@ export function useTextToSpeech(ttsService?: TTSService): TTSState & TTSControls
         }
         return prev;
       });
-    }, 100);
+    }, 1000); // Reduced from 100ms to 1000ms for performance
 
     return () => clearInterval(interval);
   }, [service, state.isSupported]);

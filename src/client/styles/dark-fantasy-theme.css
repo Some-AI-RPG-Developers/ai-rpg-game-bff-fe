@@ -1,0 +1,803 @@
+/* 🧛 DARK VAMPIRE THEME - BLOOD AND SHADOWS 🧛 */
+
+/* Core Background - Vampire Castle in Eternal Night */
+.dark-fantasy-bg {
+    background:
+            linear-gradient(135deg,
+            #000000 0%,
+            #0a0000 25%,
+            #050000 50%,
+            #000000 75%,
+            #0a0000 100%
+            ),
+            radial-gradient(circle at 30% 70%, rgba(139, 0, 0, 0.15) 0%, transparent 50%),
+            radial-gradient(circle at 70% 30%, rgba(85, 0, 0, 0.1) 0%, transparent 50%);
+    background-size: 200% 200%, 100% 100%, 100% 100%;
+    animation: vampire-shadow-shift 60s ease-in-out infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-fantasy-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+            radial-gradient(circle at 20% 80%, rgba(139, 0, 0, 0.06) 0%, transparent 60%),
+            radial-gradient(circle at 80% 20%, rgba(85, 0, 0, 0.04) 0%, transparent 60%),
+            radial-gradient(circle at 50% 50%, rgba(55, 0, 0, 0.03) 0%, transparent 80%);
+    animation: vampire-mist-drift 120s linear infinite;
+    pointer-events: none;
+}
+
+.dark-fantasy-bg::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background:
+            repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 12px,
+                    rgba(139, 0, 0, 0.008) 12px,
+                    rgba(139, 0, 0, 0.008) 14px
+            ),
+            repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 8px,
+                    rgba(85, 0, 0, 0.006) 8px,
+                    rgba(85, 0, 0, 0.006) 10px
+            );
+    animation: vampire-blood-pattern 0.8s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes vampire-shadow-shift {
+    0%, 100% { background-position: 0% 50%, 0% 0%, 0% 0%; }
+    25% { background-position: 50% 25%, 10% 10%, 5% 5%; }
+    50% { background-position: 100% 50%, 20% 20%, 10% 10%; }
+    75% { background-position: 50% 75%, 10% 10%, 5% 5%; }
+}
+
+@keyframes vampire-mist-drift {
+    0% { transform: rotate(0deg) scale(1) translateX(0%); }
+    25% { transform: rotate(90deg) scale(1.05) translateX(5%); }
+    50% { transform: rotate(180deg) scale(0.95) translateX(-5%); }
+    75% { transform: rotate(270deg) scale(1.02) translateX(3%); }
+    100% { transform: rotate(360deg) scale(1) translateX(0%); }
+}
+
+@keyframes vampire-blood-pattern {
+    0% { transform: translateY(0) translateX(0); }
+    100% { transform: translateY(12px) translateX(8px); }
+}
+
+/* Dark Vampire Cards - Gothic Blood Panels */
+.dark-fantasy-card {
+    background:
+            linear-gradient(135deg,
+            rgba(139, 0, 0, 0.08) 0%,
+            rgba(8, 0, 0, 0.98) 20%,
+            rgba(12, 0, 0, 0.99) 80%,
+            rgba(85, 0, 0, 0.08) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.4);
+    background-clip: padding-box;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.15),
+            0 2px 4px rgba(85, 0, 0, 0.4);
+}
+
+.dark-fantasy-card::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(45deg,
+    rgba(139, 0, 0, 0.25), rgba(85, 0, 0, 0.18), rgba(139, 0, 0, 0.25)
+    );
+    background-size: 200% 200%;
+    border-radius: 13px;
+    z-index: -1;
+    animation: vampire-border-glow 15s linear infinite;
+}
+
+.dark-fantasy-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+    transparent,
+    rgba(139, 0, 0, 0.08),
+    transparent
+    );
+    animation: vampire-spirit-pass 10s ease-in-out infinite;
+}
+
+@keyframes vampire-border-glow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes vampire-spirit-pass {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Dark Vampire Glow Effects */
+.dark-fantasy-glow {
+    box-shadow:
+            0 0 15px rgba(139, 0, 0, 0.3),
+            0 0 30px rgba(85, 0, 0, 0.18),
+            inset 0 0 15px rgba(139, 0, 0, 0.12),
+            0 10px 20px rgba(0, 0, 0, 0.8);
+    animation: vampire-aura-pulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes vampire-aura-pulse {
+    0% {
+        box-shadow:
+                0 0 15px rgba(139, 0, 0, 0.3),
+                0 0 30px rgba(85, 0, 0, 0.18),
+                inset 0 0 15px rgba(139, 0, 0, 0.12),
+                0 10px 20px rgba(0, 0, 0, 0.8);
+    }
+    100% {
+        box-shadow:
+                0 0 25px rgba(139, 0, 0, 0.4),
+                0 0 45px rgba(85, 0, 0, 0.25),
+                inset 0 0 25px rgba(139, 0, 0, 0.18),
+                0 15px 30px rgba(0, 0, 0, 0.9);
+    }
+}
+
+/* Dark Vampire Text Styling */
+.dark-fantasy-text {
+    color: #cc4444;
+    font-family: 'Cinzel', serif;
+    text-shadow:
+            0 0 8px rgba(204, 68, 68, 0.6),
+            0 0 16px rgba(204, 68, 68, 0.3),
+            0 0 24px rgba(204, 68, 68, 0.15);
+    animation: vampire-text-whisper 12s ease-in-out infinite;
+}
+
+.dark-fantasy-text-neon {
+    background: linear-gradient(45deg, #cc4444, #8b0000);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: vampire-magic-flow 10s ease-in-out infinite;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    filter: drop-shadow(0 0 10px rgba(204, 68, 68, 0.7));
+}
+
+@keyframes vampire-text-whisper {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.9; }
+    75% { opacity: 1; }
+    76% { opacity: 0.95; }
+    77% { opacity: 1; }
+}
+
+@keyframes vampire-magic-flow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Dark Vampire Buttons */
+.dark-fantasy-button-primary {
+    background: linear-gradient(135deg,
+    rgba(139, 0, 0, 0.8) 0%,
+    rgba(85, 0, 0, 0.6) 50%,
+    rgba(107, 0, 0, 0.8) 100%
+    );
+    border: 2px solid #8b0000;
+    color: #cc4444;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow:
+            0 0 20px rgba(139, 0, 0, 0.5),
+            inset 0 0 20px rgba(204, 68, 68, 0.12),
+            0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.dark-fantasy-button-primary:hover {
+    background: linear-gradient(135deg,
+    rgba(139, 0, 0, 0.9) 0%,
+    rgba(85, 0, 0, 0.7) 50%,
+    rgba(107, 0, 0, 0.9) 100%
+    );
+    box-shadow:
+            0 0 25px rgba(139, 0, 0, 0.6),
+            0 0 40px rgba(139, 0, 0, 0.3),
+            inset 0 0 25px rgba(204, 68, 68, 0.15),
+            0 8px 16px rgba(0, 0, 0, 0.7);
+    transform: translateY(-2px);
+}
+
+.dark-fantasy-button-secondary {
+    background: linear-gradient(135deg,
+    rgba(85, 0, 0, 0.7) 0%,
+    rgba(55, 0, 0, 0.5) 50%,
+    rgba(70, 0, 0, 0.7) 100%
+    );
+    border: 2px solid #550000;
+    color: #bb3333;
+    font-weight: bold;
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    box-shadow:
+            0 0 15px rgba(85, 0, 0, 0.4),
+            inset 0 0 15px rgba(187, 51, 51, 0.1),
+            0 6px 12px rgba(0, 0, 0, 0.5);
+}
+
+.dark-fantasy-button-secondary:hover {
+    background: linear-gradient(135deg,
+    rgba(85, 0, 0, 0.8) 0%,
+    rgba(55, 0, 0, 0.6) 50%,
+    rgba(70, 0, 0, 0.8) 100%
+    );
+    box-shadow:
+            0 0 20px rgba(85, 0, 0, 0.5),
+            0 0 35px rgba(85, 0, 0, 0.25),
+            inset 0 0 20px rgba(187, 51, 51, 0.12),
+            0 8px 16px rgba(0, 0, 0, 0.6);
+    transform: translateY(-2px);
+}
+
+/* Spectral Effects */
+.dark-fantasy-glitch {
+    animation: vampire-spectral-shift 6s ease-in-out infinite;
+}
+
+@keyframes vampire-spectral-shift {
+    0%, 90%, 100% {
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+    10% {
+        transform: translate(-1px, 1px);
+        filter: hue-rotate(15deg);
+    }
+    20% {
+        transform: translate(1px, -1px);
+        filter: hue-rotate(30deg);
+    }
+    30% {
+        transform: translate(-1px, 1px);
+        filter: hue-rotate(45deg);
+    }
+    40% {
+        transform: translate(1px, -1px);
+        filter: hue-rotate(60deg);
+    }
+}
+
+/* Ethereal Pulse Effects */
+.dark-fantasy-pulse {
+    animation: vampire-ethereal-pulse 4s ease-in-out infinite;
+}
+
+@keyframes vampire-ethereal-pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.03);
+        opacity: 0.85;
+    }
+}
+
+/* Dark Vampire Borders */
+.dark-fantasy-border {
+    border: 2px solid transparent;
+    background: linear-gradient(45deg, #8b0000, #550000) border-box;
+    background-clip: border-box;
+}
+
+/* Gothic Input Fields */
+.dark-fantasy-input {
+    background: rgba(8, 0, 0, 0.95);
+    border: 2px solid rgba(139, 0, 0, 0.6);
+    color: #cc4444;
+    font-family: 'Cinzel', serif;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s ease;
+    position: relative;
+    box-shadow:
+            inset 0 3px 6px rgba(0, 0, 0, 0.7),
+            0 3px 6px rgba(0, 0, 0, 0.4);
+}
+
+.dark-fantasy-input:focus {
+    border-color: #8b0000;
+    box-shadow:
+            0 0 20px rgba(139, 0, 0, 0.6),
+            inset 0 0 20px rgba(139, 0, 0, 0.15),
+            inset 0 3px 6px rgba(0, 0, 0, 0.7);
+    outline: none;
+}
+
+.dark-fantasy-input::placeholder {
+    color: rgba(204, 68, 68, 0.7);
+    font-style: italic;
+}
+
+/* Modal Enhancements */
+.dark-fantasy-modal {
+    animation: vampire-portal-open 0.8s ease-out;
+}
+
+@keyframes vampire-portal-open {
+    0% {
+        opacity: 0;
+        transform: scale(0.7) rotateX(90deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotateX(0deg);
+    }
+}
+
+/* Dark Vampire Headers */
+.dark-fantasy-header {
+    background: linear-gradient(90deg,
+    rgba(12, 0, 0, 0.98) 0%,
+    rgba(8, 0, 0, 0.99) 20%,
+    rgba(8, 0, 0, 0.99) 80%,
+    rgba(12, 0, 0, 0.98) 100%
+    );
+    border-bottom: 2px solid;
+    border-image: linear-gradient(90deg, #8b0000, #550000) 1;
+    position: sticky;
+    top: 0;
+    z-index: 9999;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.9);
+}
+
+.dark-fantasy-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #8b0000, #550000);
+    animation: vampire-rampart-glow 8s ease-in-out infinite;
+}
+
+@keyframes vampire-rampart-glow {
+    0%, 100% { transform: translateX(-100%); opacity: 0.6; }
+    50% { transform: translateX(100%); opacity: 1; }
+}
+
+/* Ancient Runes Patterns */
+.dark-fantasy-circuit {
+    position: relative;
+}
+
+.dark-fantasy-circuit::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+            linear-gradient(0deg, transparent 24%, rgba(139, 0, 0, 0.06) 25%, rgba(139, 0, 0, 0.06) 26%, transparent 27%, transparent 74%, rgba(139, 0, 0, 0.06) 75%, rgba(139, 0, 0, 0.06) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(85, 0, 0, 0.06) 25%, rgba(85, 0, 0, 0.06) 26%, transparent 27%, transparent 74%, rgba(85, 0, 0, 0.06) 75%, rgba(85, 0, 0, 0.06) 76%, transparent 77%, transparent);
+    background-size: 50px 50px;
+    pointer-events: none;
+    animation: vampire-rune-weave 18s linear infinite;
+}
+
+@keyframes vampire-rune-weave {
+    0% { background-position: 0 0; }
+    100% { background-position: 50px 50px; }
+}
+
+/* Ancient Script Effect */
+.dark-fantasy-data-stream {
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-fantasy-data-stream::after {
+    content: '𝔦𝔫 𝔬𝔪𝔦𝔞 𝔦𝔪𝔭𝔢𝔯𝔦𝔞 𝔞𝔯𝔦 𝔦𝔞𝔪 𝔞𝔫𝔦𝔪𝔞';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    color: rgba(139, 0, 0, 0.3);
+    font-family: 'Cinzel', serif;
+    font-size: 11px;
+    line-height: 1.6;
+    white-space: nowrap;
+    animation: vampire-incantation-flow 20s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+
+@keyframes vampire-incantation-flow {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+/* Dark Vampire Loader */
+.dark-fantasy-loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(139, 0, 0, 0.4);
+    border-top: 4px solid #8b0000;
+    border-radius: 50%;
+    animation: vampire-portal-spin 2.5s linear infinite;
+    box-shadow:
+            0 0 20px rgba(139, 0, 0, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+@keyframes vampire-portal-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Gothic Decorations */
+.dark-fantasy-holo-corners {
+    position: relative;
+}
+
+.dark-fantasy-holo-corners::before,
+.dark-fantasy-holo-corners::after {
+    content: '♦';
+    position: absolute;
+    color: #8b0000;
+    font-size: 1.4rem;
+    text-shadow: 0 0 12px rgba(139, 0, 0, 0.7);
+    animation: vampire-gargoyle-watch 8s ease-in-out infinite alternate;
+}
+
+.dark-fantasy-holo-corners::before {
+    top: 1rem;
+    left: 1rem;
+    animation-delay: 0s;
+}
+
+.dark-fantasy-holo-corners::after {
+    bottom: 1rem;
+    right: 1rem;
+    animation-delay: 4s;
+}
+
+@keyframes vampire-gargoyle-watch {
+    0% {
+        opacity: 0.6;
+        transform: scale(1) rotate(0deg);
+        color: #8b0000;
+    }
+    100% {
+        opacity: 0.9;
+        transform: scale(1.15) rotate(20deg);
+        color: #550000;
+    }
+}
+
+/* Dark Vampire Components for Game Elements */
+.dark-fantasy-card-dark-blue {
+    background:
+            linear-gradient(135deg,
+            rgba(139, 0, 0, 0.08) 0%,
+            rgba(8, 0, 0, 0.98) 20%,
+            rgba(12, 0, 0, 0.99) 80%,
+            rgba(85, 0, 0, 0.08) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.4);
+    background-clip: padding-box;
+    backdrop-filter: blur(12px);
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.15),
+            0 2px 4px rgba(85, 0, 0, 0.4);
+}
+
+.dark-fantasy-card-dark-blue::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    right: -1px;
+    bottom: -1px;
+    background: linear-gradient(45deg,
+    rgba(139, 0, 0, 0.25), rgba(85, 0, 0, 0.18), rgba(139, 0, 0, 0.25)
+    );
+    background-size: 200% 200%;
+    border-radius: 13px;
+    z-index: -1;
+    animation: vampire-border-glow 15s linear infinite;
+}
+
+.dark-fantasy-card-dark-blue::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg,
+    transparent,
+    rgba(139, 0, 0, 0.08),
+    transparent
+    );
+    animation: vampire-spirit-pass 10s ease-in-out infinite;
+}
+
+/* Character Component Styling */
+.dark-fantasy-character {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 8px;
+    position: relative;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Synopsis Component Styling */
+.dark-fantasy-synopsis {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 10px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Scene Description Styling */
+.dark-fantasy-scene-description {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 8px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Scene Conclusion Styling */
+.dark-fantasy-scene-conclusion {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 8px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Turn Description Styling */
+.dark-fantasy-turn-description {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 8px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Turn Conclusion Styling */
+.dark-fantasy-turn-conclusion {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 8px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Game Conclusion Styling */
+.dark-fantasy-game-conclusion {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 12px;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Footer Styling */
+.dark-fantasy-footer {
+    background:
+            linear-gradient(135deg,
+            rgba(18, 0, 0, 0.99) 0%,
+            rgba(12, 0, 0, 0.995) 50%,
+            rgba(22, 0, 0, 0.99) 100%
+            );
+    border-top: 1px solid rgba(139, 0, 0, 0.8);
+    box-shadow:
+            0 -6px 12px rgba(0, 0, 0, 0.7),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+/* Option Select Component Styling */
+.dark-fantasy-option-select {
+    background:
+            linear-gradient(135deg,
+            rgba(15, 0, 0, 0.98) 0%,
+            rgba(12, 0, 0, 0.99) 50%,
+            rgba(18, 0, 0, 0.98) 100%
+            );
+    border: 1px solid rgba(139, 0, 0, 0.6);
+    border-radius: 6px;
+    transition: all 0.4s ease;
+    box-shadow:
+            0 6px 12px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.2);
+}
+
+.dark-fantasy-option-select:hover {
+    background:
+            linear-gradient(135deg,
+            rgba(22, 0, 0, 0.99) 0%,
+            rgba(18, 0, 0, 0.995) 50%,
+            rgba(28, 0, 0, 0.99) 100%
+            );
+    border-color: rgba(139, 0, 0, 0.7);
+    box-shadow:
+            0 0 12px rgba(139, 0, 0, 0.5),
+            0 8px 16px rgba(0, 0, 0, 0.9),
+            inset 0 1px 0 rgba(139, 0, 0, 0.25);
+}
+
+/* Text styling for dark vampire components */
+.dark-fantasy-text-light {
+    color: #aa3333;
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 6px rgba(170, 51, 51, 0.7);
+}
+
+.dark-fantasy-text-accent {
+    color: #cc4444;
+    font-family: 'Cinzel', serif;
+    text-shadow: 0 0 8px rgba(204, 68, 68, 0.8);
+}
+
+/* TTS Button specific styling with high specificity */
+.dark-fantasy-tts-button {
+    background: linear-gradient(135deg,
+    rgba(85, 0, 0, 0.7) 0%,
+    rgba(55, 0, 0, 0.5) 50%,
+    rgba(70, 0, 0, 0.7) 100%
+    ) !important;
+    border: 1px solid rgba(139, 0, 0, 0.6) !important;
+    color: #cc4444 !important;
+    font-family: 'Cinzel', serif !important;
+    transition: all 0.4s ease !important;
+    box-shadow:
+            0 0 15px rgba(85, 0, 0, 0.4),
+            inset 0 0 15px rgba(187, 51, 51, 0.1),
+            0 6px 12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.dark-fantasy-tts-button:hover {
+    background: linear-gradient(135deg,
+    rgba(85, 0, 0, 0.8) 0%,
+    rgba(55, 0, 0, 0.6) 50%,
+    rgba(70, 0, 0, 0.8) 100%
+    ) !important;
+    box-shadow:
+            0 0 20px rgba(85, 0, 0, 0.5),
+            0 0 35px rgba(85, 0, 0, 0.25),
+            inset 0 0 20px rgba(187, 51, 51, 0.12),
+            0 8px 16px rgba(0, 0, 0, 0.6) !important;
+    transform: translateY(-2px) !important;
+}
+
+.dark-fantasy-tts-button-active {
+    background: linear-gradient(135deg,
+    rgba(139, 0, 0, 0.8) 0%,
+    rgba(85, 0, 0, 0.6) 50%,
+    rgba(107, 0, 0, 0.8) 100%
+    ) !important;
+    border: 2px solid #8b0000 !important;
+    color: #cc4444 !important;
+    font-family: 'Cinzel', serif !important;
+    box-shadow:
+            0 0 20px rgba(139, 0, 0, 0.5),
+            inset 0 0 20px rgba(204, 68, 68, 0.12),
+            0 6px 12px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Responsive adjustments */
+@media (prefers-reduced-motion: reduce) {
+    .dark-fantasy-bg,
+    .dark-fantasy-card,
+    .dark-fantasy-glow,
+    .dark-fantasy-text,
+    .dark-fantasy-text-neon,
+    .dark-fantasy-button-primary,
+    .dark-fantasy-button-secondary,
+    .dark-fantasy-glitch,
+    .dark-fantasy-pulse,
+    .dark-fantasy-modal,
+    .dark-fantasy-header,
+    .dark-fantasy-circuit,
+    .dark-fantasy-data-stream,
+    .dark-fantasy-loader,
+    .dark-fantasy-holo-corners {
+        animation: none;
+    }
+
+    .dark-fantasy-holo-corners::before,
+    .dark-fantasy-holo-corners::after {
+        animation: none;
+        opacity: 0.7;
+    }
+}

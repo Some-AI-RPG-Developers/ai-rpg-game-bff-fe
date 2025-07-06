@@ -1,14 +1,16 @@
-import {GameConclusion} from "@/client/components/game/GameConclusion";
-import {GameDebugViewer} from "@/client/components/game/GameDebugViewer";
+import React, {useState} from 'react';
 import {GameDisplay} from "@/client/components/game/play/GameDisplay";
 import {CreateGameForm} from "@/client/components/game/setup/CreateGameForm";
 import {ResumeGameForm} from "@/client/components/game/setup/ResumeGameForm";
 import {WelcomeScreen} from "@/client/components/game/setup/WelcomeScreen";
 import {GameStatusIndicator} from "@/client/components/game/GameStatusIndicator";
-import {GameActionButtons} from "@/client/components/game/GameActionButtons";
 import {GameHeader} from "@/client/components/game/GameHeader";
+import {GameDebugModal} from "@/client/components/ui/GameDebugModal";
 import {ViewMode} from "@/client/types/ui.types";
 import {useGameContext} from "@/client/context/GameContext";
+import {useTheme} from "@/client/context/ThemeContext";
+import {getThemeStyles} from "@/client/utils/themeStyles";
+import {MatrixRain} from "@/client/components/ui/MatrixRain";
 
 /**
  * Main Play Page Component
@@ -28,7 +30,16 @@ import {useGameContext} from "@/client/context/GameContext";
  * ✅ Centralized button positioning
  */
 export default function PlayPage() {
+    // Debug modal state
+    const [isDebugModalOpen, setIsDebugModalOpen] = useState(false);
+
     // Use the centralized game context for all state and operations
+    const {
+        // Theme
+        theme
+    } = useTheme();
+    const styles = getThemeStyles(theme);
+    
     const {
         // Game state
         game,
@@ -44,6 +55,7 @@ export default function PlayPage() {
         // Form state
         gamePromptInput,
         maxScenesInput,
+        languageInput,
         charactersInput,
         resumeGameIdInput,
 
@@ -62,6 +74,7 @@ export default function PlayPage() {
         // Form operations
         setGamePromptInput,
         setMaxScenesInput,
+        setLanguageInput,
         handleCharacterInputChange,
         handleAddCharacterInput,
         handleRemoveCharacterInput,
@@ -86,9 +99,30 @@ export default function PlayPage() {
         clearError();
     };
 
+    // Handle debug modal toggle
+    const handleToggleDebug = () => {
+        console.log('Debug button clicked, current state:', isDebugModalOpen);
+        setIsDebugModalOpen(!isDebugModalOpen);
+        console.log('Debug modal state will be:', !isDebugModalOpen);
+    };
+
     return (
-        <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-            <GameHeader game={game} gameId={gameId} error={error} />
+        <div className={`min-h-screen ${styles.bg} relative`}>
+            {theme === 'matrix' && <MatrixRain />}
+            
+            <div className="relative z-10 min-h-screen flex flex-col">
+                {/* Header */}
+                <GameHeader 
+                    game={game} 
+                    gameId={gameId} 
+                    error={error}
+                    gameStatus={gameStatus}
+                    onToggleDebug={handleToggleDebug}
+                    isDebugOpen={isDebugModalOpen}
+                />
+
+                {/* Main Content */}
+                <main className={`flex-1 ${theme === 'matrix' ? 'px-6 py-8' : 'container mx-auto px-4 py-8'}`}>
 
             {/* Initial choice: Create or Resume (only if no gameId and not processing/waiting) */}
             {viewMode === 'choice' && !gameId && !isProcessing && !isWaitingForSSEResponse && gameStatus === 'idle' && (
@@ -120,10 +154,12 @@ export default function PlayPage() {
                     <CreateGameForm
                         gamePromptInput={gamePromptInput}
                         maxScenesInput={maxScenesInput}
+                        languageInput={languageInput}
                         charactersInput={charactersInput}
                         gameStatus={gameStatus}
                         onGamePromptChange={setGamePromptInput}
                         onMaxScenesChange={setMaxScenesInput}
+                        onLanguageChange={setLanguageInput}
                         onCharacterInputChange={handleCharacterInputChange}
                         onAddCharacterInput={handleAddCharacterInput}
                         onRemoveCharacterInput={handleRemoveCharacterInput}
@@ -145,20 +181,10 @@ export default function PlayPage() {
                         onOptionChange={handleOptionChange}
                         onFreeTextChange={handleFreeTextChange}
                         isProcessing={isProcessing}
-                    />
-
-                    <GameConclusion game={game} />
-
-                    {/* Centralized Action Buttons - positioned before status indicator */}
-                    <GameActionButtons
-                        game={game}
-                        gameStatus={gameStatus}
-                        onStartGame={startGame}
-                        onSubmitTurn={submitTurn}
-                        onStartNextTurn={startNextTurn}
                         allCharactersMadeChoice={allCharactersMadeChoice}
-                        isProcessing={isProcessing}
-                        isWaitingForSSEResponse={isWaitingForSSEResponse}
+                        onSubmitTurn={submitTurn}
+                        onStartGame={startGame}
+                        onStartNextTurn={startNextTurn}
                     />
 
                     <GameStatusIndicator
@@ -166,10 +192,44 @@ export default function PlayPage() {
                         gameId={gameId}
                         error={error}
                     />
-
-                    <GameDebugViewer game={game} gameStatus={gameStatus} />
                 </>
             )}
+                </main>
+
+                {/* Footer */}
+                <footer className={`${
+                  theme === 'dark' ? 'dark-fantasy-footer' :
+                  theme !== 'matrix' ? styles.card + ' ' + styles.border : ''
+                } border-t ${
+                  theme === 'light' ? 'fantasy-card' : ''
+                }`}
+                        style={{
+                          backgroundColor: theme === 'matrix' ? 'rgba(0, 0, 0, 0.7)' : undefined,
+                          borderColor: theme === 'matrix' ? 'rgba(0, 255, 65, 0.3)' : undefined,
+                          backdropFilter: theme === 'matrix' ? 'blur(5px)' : undefined
+                        }}>
+                    <div className="container mx-auto px-4 py-6">
+                        <p className={`text-center ${
+                          theme === 'dark' ? 'dark-fantasy-text-light' :
+                          theme !== 'matrix' ? styles.text : ''
+                        }`}
+                           style={{
+                             color: theme === 'matrix' ? '#00ff41' : undefined,
+                             opacity: theme === 'matrix' ? 0.8 : 0.7
+                           }}>
+                            {theme === 'light' ? '✨ © 2025 AI RPG Adventure - Powered by Advanced AI ⚡' : '© 2025 AI RPG Adventure - Powered by Advanced AI'}
+                        </p>
+                    </div>
+                </footer>
+            </div>
+
+            {/* Debug Modal */}
+            <GameDebugModal
+                isOpen={isDebugModalOpen}
+                onClose={() => setIsDebugModalOpen(false)}
+                game={game}
+                gameStatus={gameStatus}
+            />
         </div>
     );
 }

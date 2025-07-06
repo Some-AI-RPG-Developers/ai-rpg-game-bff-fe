@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Remove default margins and padding only from layout elements */
+html, body, #__next {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#__next {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.delay-75 {
+  animation-delay: 75ms;
+}
+
+.delay-150 {
+  animation-delay: 150ms;
+}
+
+[data-theme="light"] {
+  --color-primary: #8b5cf6;
+  --color-secondary: #f59e0b;
+  --bg-primary: linear-gradient(135deg, #fef7ff 0%, #f3e8ff 50%, #ede9fe 100%);
+  --bg-secondary: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+}
+
+[data-theme="dark"] {
+  --color-primary: #9333EA;
+  --color-secondary: #EC4899;
+}
+
+[data-theme="matrix"] {
+  --color-primary: #10B981;
+  --color-secondary: #059669;
+}
+
+[data-theme="performance"] {
+  --color-primary: #6B7280;
+  --color-secondary: #4B5563;
+  --bg-primary: #111827;
+  --bg-secondary: #1F2937;
+}

@@ -17,7 +17,8 @@ message CreateGameRequest {
   string game_id = 1;
   string game_prompt = 2;
   int32 max_scenes_number = 3;
-  repeated NewCharacter characters = 4;
+  string language = 4;
+  repeated NewCharacter characters = 5;
   
   message NewCharacter {
     string name = 1;
